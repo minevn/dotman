@@ -1,0 +1,34 @@
+input-cancel: '&aNhập &c&lHUY &ađể hủy nạp thẻ.'
+input-canceled: '&aBạn đã hủy nạp thẻ.'
+input-seri: '&aHãy nhập số seri thẻ vào khung chat.'
+input-pin: '&aHãy nhập mã thẻ vào khung chat.'
+
+card-charging:
+  - '&eThẻ &a%CARD_TYPE% &emệnh giá &a%CARD_PRICE%'
+  - '&eSố seri: &a%SERI%'
+  - '&eMã thẻ: &a%CODE%'
+  - '%PREFIX% &eĐang tiến hành nạp thẻ...'
+
+card-charged-successfully:
+  - '%PREFIX% &aNạp thẻ thành công.'
+  - '&aBạn nhận được &e%AMOUNT% %POINT_UNIT% &atừ thẻ nạp.'
+
+card-charged-with-extra: '&aBạn được khuyến mãi thêm &b&l%RATE%% &agiá trị nạp.'
+
+card-charged-sent:
+  - '%PREFIX% &aThẻ của bạn đang được xử lý, hãy đợi trong giây lát.'
+
+card-charged-failed:
+  - '%PREFIX% &cNạp thẻ thất bại: %ERROR%'
+  - '&cVui lòng liên hệ với admin để được hỗ trợ.'
+
+card-charged-error:
+  - '%PREFIX% &cCó lỗi xảy ra khi nạp thẻ.'
+  - '&cVui lòng liên hệ với admin để được hỗ trợ.'
+
+ui-no-annoucement: '&eKhông có thông báo. \n Dùng lệnh &a/dotman thongbao &eđể thay đổi thông báo.'
+ui-no-banking-location: '&cHiện tại chưa có hướng dẫn chuyển khoản. Hãy liên hệ Admin bổ sung nhé.'
+
+error-unknown: '&cLỗi không xác định.'
+error-unknown-card-type: '&cLoại thẻ không hợp lệ hoặc đang bảo trì.'
+error-unknown-card-price: '&cMệnh giá thẻ không hợp lệ.'

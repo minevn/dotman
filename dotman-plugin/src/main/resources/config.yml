@@ -1,0 +1,54 @@
+prefix: '&6&lDotMan >&r'
+
+# Tên server để ghi log
+server: 'server'
+
+# Tên đơn vị tiền tệ
+point-unit: 'xu'
+
+# API gạch thẻ sử dụng
+provider: thesieutoc
+
+# Lượng points được cộng ứng với giá trị nạp
+donate-amounts:
+  10000: 10
+  20000: 20
+  50000: 50
+  100000: 100
+  200000: 200
+  500000: 500
+  1000000: 1000
+
+# Giá trị khuyến mãi
+# 0: Không có khuyến mãi
+# 0.5: Khuyến mãi 50%, ví dụ: nạp 100k được 150k
+# 1: Khuyến mãi 100%, ví dụ: nạp 100k được 200k
+# 1.5: Khuyến mãi 150%, ví dụ: nạp 100k được 250k
+extra-rate: 0
+
+# Thời gian kết thúc khuyến mãi
+# Định dạng: dd/MM/yyyy HH:mm
+extra-until: 06/09/2023 17:00
+
+# Các loại thẻ được chấp nhận
+card-types:
+  viettel: true
+  mobifone: true
+  vinaphone: true
+  vietnammobile: true
+  garena: true
+  zing: false
+  vcoin: true
+  gate: false
+
+database:
+  # engine mặc định sử dụng h2 (lưu vào 1 file), có thể chuyển sang mysql
+  engine: h2
+  h2:
+    file: dotman
+  mysql:
+    host: localhost
+    port: 3306
+    user: 'root'
+    password: '123'
+    database: dotman

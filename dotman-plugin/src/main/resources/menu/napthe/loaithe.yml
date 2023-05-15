@@ -1,0 +1,75 @@
+# Tên giao diện nạp thẻ
+name: "&e&lNạp thẻ"
+# Số hàng của giao diện (tối đa 6)
+rows: 3
+
+# Tô nền cho Menu
+# Nền sẽ được fill trước tiên, các button khác sẽ được đặt lên nền
+background:
+  icon:
+    type: STAINED_GLASS_PANE
+    data: 15 # black
+  # với button fill, số hàng phải bằng số hàng của giao diện (rows), số cột phải là 9
+  # các vị trí đánh dấu bằng 'x' sẽ được fill
+  fill:
+    - 'xxxxxxxxx'
+    - 'xxxxxxxxx'
+    - 'xxxxxxxxx'
+
+# Button: Đóng Menu
+close:
+  icon:
+    type: BARRIER
+    data: 0
+  name: "&c&lĐóng lại"
+  lore:
+    - "&7Nhấn để đóng lại"
+  slot: 2
+
+# Button: Thông báo
+# Sử dụng lệnh /dotman thongbao để thay đổi thông báo
+info:
+  icon:
+    type: SIGN
+    data: 0
+  name: "&e&lThông tin"
+  slot: 4
+
+# Button: Khuyến khích nạp qua chuyển khoản
+# Khi click vào sẽ teleport người chơi đến vị trí mong muốn (ví dụ: QR code)
+banking-recommend:
+  icon:
+    type: EMERALD
+    data: 0
+  name: "&a&lKhuyến khích nạp qua chuyển khoản"
+  lore:
+      - "&7Nhấn để nạp qua chuyển khoản"
+  slot: 6
+
+# Danh sách các loại thẻ
+cards:
+  active:
+    glow: true
+    icon:
+      type: PAPER
+      data: 0
+    name: "&a&l%CARD_TYPE%"
+    lore:
+      - "&7Nhấn để tiến hành nạp thẻ %CARD_TYPE%"
+  disabled:
+    icon:
+      type: PAPER
+      data: 0
+    name: "&c&l%CARD_TYPE% &e(tạm bảo trì)"
+    lore:
+      - "&7Loại thẻ này đang bảo trì"
+      - "&7Nếu cần nạp hãy liên hệ Admin"
+  blank:
+    icon:
+      type: STAINED_GLASS_PANE
+      data: 14 # red
+  # các loại thẻ sẽ được fill lên các vị trí đánh dấu bằng 'x'
+  fill:
+    - '         '
+    - ' xxxxxxx '
+    - '  xxxxx  '

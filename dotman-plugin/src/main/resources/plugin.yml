@@ -1,0 +1,11 @@
+api-version: 1.13
+name: DotMan
+main: net.minevn.dotman.DotMan
+version: 1.0.0
+author: MineVN
+depend: [ PlayerPoints ]
+softdepend: [ PlaceholderAPI ]
+commands:
+  dotman:
+    permission: dotman.admin
+  napthe:

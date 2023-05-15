@@ -1,0 +1,38 @@
+# Tên giao diện
+name: "&e&lChọn mệnh giá"
+# Số hàng của giao diện (tối đa 6)
+rows: 2
+
+# Tô nền cho Menu
+# Nền sẽ được fill trước tiên, các button khác sẽ được đặt lên nền
+background:
+  icon:
+    type: STAINED_GLASS_PANE
+    data: 15 # black
+  # với button fill, số hàng phải bằng số hàng của giao diện (rows), số cột phải là 9
+  # các vị trí đánh dấu bằng 'x' sẽ được fill
+  fill:
+    - 'xxxxxxxxx'
+    - 'xxxxxxxxx'
+
+# Button: Quay lại menu chọn loại thẻ
+close:
+  icon:
+    type: BARRIER
+    data: 0
+  name: "&c&lQuay lại"
+  lore:
+    - "&7Nhấn để quay lại menu chọn loại thẻ"
+  slot: 13
+
+# Danh sách các mệnh giá
+prices:
+  icon:
+    type: PAPER
+    data: 0
+  name: "&c&l%PRICE%"
+  lore:
+    - "&7Nhấn để tiến hành nạp thẻ %CARD_TYPE% mệnh giá %PRICE% VNĐ"
+  fill:
+    - 'xxxxxxxxx'
+    - '         '

@@ -1,0 +1,19 @@
+# Phần thưởng nạp thẻ theo mốc
+moc-1: # Mốc nạp 5 triệu VNĐ toàn thời gian
+  type: all # Toàn thời gian
+  amount: 5000000 # Giá trị tích lũy
+  award-commands: # Các lệnh chạy cho player khi đạt mốc
+    - 'give %player% diamond 64'
+    - 'give %player% emerald 1'
+moc-2: # Mốc nạp 200,000 VNĐ mỗi tuần
+  type: week # Hằng tuần
+  amount: 200000
+  award-commands:
+    - 'give %player% diamond 64'
+    - 'give %player% emerald 1'
+moc-3: # Mốc nạp 1 triệu VNĐ mỗi tháng
+  type: month # Hằng tháng
+  amount: 1000000
+  award-commands:
+    - 'give %player% diamond 64'
+    - 'give %player% emerald 1'
