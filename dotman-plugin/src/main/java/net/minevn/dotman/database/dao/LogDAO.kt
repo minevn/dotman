@@ -101,8 +101,8 @@ interface LogDAO : DataAccess {
 	fun setTransactionId(id: Int, transactionId: String, isSuccess: Boolean) {
 		setTransactionIdScript().statement {
 			setString(1, transactionId)
-			setInt(2, id)
-			setInt(3, if (isSuccess) 1 else 0)
+			setInt(2, if (isSuccess) 1 else 0)
+			setInt(3, id)
 
 			executeUpdate()
 		}
