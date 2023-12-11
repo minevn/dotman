@@ -29,7 +29,6 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testImplementation("org.mockito:mockito-junit-jupiter:5.4.0")
 	testImplementation("io.mockk:mockk:1.13.7")
-	testImplementation("mysql:mysql-connector-java:8.0.33")
 }
 
 configurations {
