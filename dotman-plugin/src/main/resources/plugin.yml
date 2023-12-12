@@ -3,8 +3,7 @@ name: DotMan
 main: net.minevn.dotman.DotMan
 version: 1.0.0
 author: MineVN
-depend: [ PlayerPoints ]
-softdepend: [ PlaceholderAPI ]
+depend: [ MineVNLib, PlayerPoints, PlaceholderAPI ]
 commands:
   dotman:
     permission: dotman.admin
