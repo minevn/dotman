@@ -21,7 +21,7 @@ dependencies {
 
 	// libs
 	compileOnly("minevn.depend:minevnlib:1.0.0-b34")
-	compileOnly("minevn.depend:PlayerPoints:2.1.4")
+	compileOnly("minevn.depend:playerpoints:3.2.6")
 	compileOnly("me.clip:placeholderapi:2.11.3")
 
 	// JUnit
