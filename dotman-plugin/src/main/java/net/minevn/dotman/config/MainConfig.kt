@@ -7,35 +7,35 @@ import net.minevn.dotman.utils.dateAndTimeFormat
 
 class MainConfig : FileConfig("config") {
 
-	companion object {
-		private lateinit var instance: MainConfig
+    companion object {
+        private lateinit var instance: MainConfig
 
-		fun get(): MainConfig {
-			if (!::instance.isInitialized) {
-				instance = MainConfig()
-			}
-			return instance
-		}
+        fun get(): MainConfig {
+            if (!::instance.isInitialized) {
+                instance = MainConfig()
+            }
+            return instance
+        }
 
-		fun reload() {
-			instance = MainConfig()
-		}
-	}
+        fun reload() {
+            instance = MainConfig()
+        }
+    }
 
-	val prefix = config.getString("prefix", "&6&lDotMan > &r")!!.color()
-	val pointUnit = config.getString("point-unit", "point")!!.color()
-	val extraUntil = dateAndTimeFormat.parse(config.getString("extra-until", "01/01/1970 00:00")).time
-	val extraRate = config.getDouble("extra-rate")
-	val enableStatusNotification = config.getBoolean("enable-status-notification") // TODO
-	val dbEngine = config.getString("database.engine", "h2")!!
-	val provider = config.getString("provider", "")!!
-	val server = config.getString("server", "")!!
-	val cardTypes = config.getConfigurationSection("card-types").run {
-		CardType.entries.associateWith { getBoolean(it.name.lowercase()) }
-	}
+    val prefix = config.getString("prefix", "&6&lDotMan > &r")!!.color()
+    val pointUnit = config.getString("point-unit", "point")!!.color()
+    val extraUntil = dateAndTimeFormat.parse(config.getString("extra-until", "01/01/1970 00:00")).time
+    val extraRate = config.getDouble("extra-rate")
+    val enableStatusNotification = config.getBoolean("enable-status-notification") // TODO
+    val dbEngine = config.getString("database.engine", "h2")!!
+    val provider = config.getString("provider", "")!!
+    val server = config.getString("server", "")!!
+    val cardTypes = config.getConfigurationSection("card-types").run {
+        CardType.entries.associateWith { getBoolean(it.name.lowercase()) }
+    }
 
-	val amounts = run {
-		val section = config.getConfigurationSection("donate-amounts")!!
-		CardPrice.entries.associateWith { section.getInt(it.value.toString()) }
-	}
+    val amounts = run {
+        val section = config.getConfigurationSection("donate-amounts")!!
+        CardPrice.entries.associateWith { section.getInt(it.value.toString()) }
+    }
 }

@@ -12,53 +12,55 @@ import net.minevn.libs.bukkit.command
 import org.bukkit.entity.Player
 
 class MainCmd {
-	companion object { fun init() {
-		// lệnh nạp thẻ
-		// cú pháp nạp nhanh: /napthe <loại thẻ> <mệnh giá> <số seri> <mã thẻ>
-		command {
-			val provider = CardProvider.instance
+    companion object {
+        fun init() {
+            // lệnh nạp thẻ
+            // cú pháp nạp nhanh: /napthe <loại thẻ> <mệnh giá> <số seri> <mã thẻ>
+            command {
+                val provider = CardProvider.instance
 
-			// tab complete cho lệnh nạp nhanh
-			tabComplete {
-				when (args.size) {
-					1 -> provider.getAvailableCardType().map { it.name.lowercase() }
-					2 -> CardPrice.values().map { it.value.toString() }
-					3 -> listOf("seri")
-					4 -> listOf("code")
-					else -> emptyList()
-				}
-			}
+                // tab complete cho lệnh nạp nhanh
+                tabComplete {
+                    when (args.size) {
+                        1 -> provider.getAvailableCardType().map { it.name.lowercase() }
+                        2 -> CardPrice.values().map { it.value.toString() }
+                        3 -> listOf("seri")
+                        4 -> listOf("code")
+                        else -> emptyList()
+                    }
+                }
 
-			action a@{
-				if (sender !is Player) {
-					sender.sendMessage("§cLệnh này chỉ dành cho người chơi")
-					return@a
-				}
-				val player = sender as Player
+                action a@{
+                    if (sender !is Player) {
+                        sender.sendMessage("§cLệnh này chỉ dành cho người chơi")
+                        return@a
+                    }
+                    val player = sender as Player
 
-				// nạp nhanh
-				if (args.size == 4) {
-					val cardType = CardType[args[0]]
-					val cardPrice = CardPrice[args[1].toInt()]
-					val cardSeri = args[2]
-					val cardCode = args[3]
-					if (cardType == null) {
-						player.send(Language.get().errorUnknownCardType)
-						return@a
-					}
-					if (cardPrice == null) {
-						player.send(Language.get().errorUnknownCardPrice)
-						return@a
-					}
+                    // nạp nhanh
+                    if (args.size == 4) {
+                        val cardType = CardType[args[0]]
+                        val cardPrice = CardPrice[args[1].toInt()]
+                        val cardSeri = args[2]
+                        val cardCode = args[3]
+                        if (cardType == null) {
+                            player.send(Language.get().errorUnknownCardType)
+                            return@a
+                        }
+                        if (cardPrice == null) {
+                            player.send(Language.get().errorUnknownCardPrice)
+                            return@a
+                        }
 
-					val card = Card(cardSeri, cardCode, cardPrice, cardType)
-					CardProvider.instance.processCard(player, card)
-				} else {
-					CardTypeUI(player)
-				}
-			}
+                        val card = Card(cardSeri, cardCode, cardPrice, cardType)
+                        CardProvider.instance.processCard(player, card)
+                    } else {
+                        CardTypeUI(player)
+                    }
+                }
 
-			register(DotMan.instance, "napthe")
-		}
-	}}
+                register(DotMan.instance, "napthe")
+            }
+        }
+    }
 }

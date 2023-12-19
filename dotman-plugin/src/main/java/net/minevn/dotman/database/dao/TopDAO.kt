@@ -4,7 +4,7 @@ import net.minevn.dotman.database.DataAccess
 import net.minevn.dotman.database.getInstance
 
 interface TopDAO : DataAccess {
-	companion object {
-		fun getInstance() = TopDAO::class.getInstance()
-	}
+    companion object {
+        fun getInstance() = TopDAO::class.getInstance()
+    }
 }

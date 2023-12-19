@@ -48,9 +48,10 @@ class CardPriceUI(viewer: Player?, private val cardType: CardType) :
                 name = name
                     .replace("%CARD_TYPE%", cardType.name)
                     .replace("%PRICE%", price.value.toString())
-                lore = lore.map { it
-                    .replace("%CARD_TYPE%", cardType.name)
-                    .replace("%PRICE%", price.value.toString())
+                lore = lore.map {
+                    it
+                        .replace("%CARD_TYPE%", cardType.name)
+                        .replace("%PRICE%", price.value.toString())
                 }
             }.toGuiItemStack {
                 CardProvider.instance.askCardInfo(viewer, cardType, price)

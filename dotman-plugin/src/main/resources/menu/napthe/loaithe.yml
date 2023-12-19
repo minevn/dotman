@@ -43,7 +43,7 @@ banking-recommend:
     data: 0
   name: "&a&lKhuyến khích nạp qua chuyển khoản"
   lore:
-      - "&7Nhấn để nạp qua chuyển khoản"
+    - "&7Nhấn để nạp qua chuyển khoản"
   slot: 6
 
 # Danh sách các loại thẻ

@@ -21,151 +21,157 @@ import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 
 abstract class CardProvider {
-	val task = Bukkit.getScheduler()
-		.runTaskTimerAsynchronously(DotMan.instance, ::updateStatus, 0L, 20 * 60)!!
+    val task = Bukkit.getScheduler()
+        .runTaskTimerAsynchronously(DotMan.instance, ::updateStatus, 0L, 20 * 60)!!
 
-	companion object {
-		lateinit var instance : CardProvider private set
+    companion object {
+        lateinit var instance: CardProvider private set
 
-		fun init(provider : String, config : YamlConfiguration) {
-			if (::instance.isInitialized) {
-				instance.task.cancel()
-			}
+        fun init(provider: String, config: YamlConfiguration) {
+            if (::instance.isInitialized) {
+                instance.task.cancel()
+            }
 
-			instance = when(provider) {
-				"thesieutoc" -> {
-					val apiKey = config.getString("api-key")
-					val apiSecret = config.getString("api-secret")
-					TheSieuTocCP(apiKey, apiSecret)
-				}
-				"gamebank" -> {
-					val merchantID = config.getInt("merchant_id")
-					val apiUser = config.getString("api_user")
-					val apiPassword = config.getString("api_password")
-					GameBankCP(merchantID, apiUser, apiPassword)
-				}
-				else -> {
-					throw IllegalArgumentException("Provider $provider not found")
-				}
-			}
-		}
-	}
+            instance = when (provider) {
+                "thesieutoc" -> {
+                    val apiKey = config.getString("api-key")
+                    val apiSecret = config.getString("api-secret")
+                    TheSieuTocCP(apiKey, apiSecret)
+                }
 
-	protected val main = DotMan.instance
-	abstract fun getApiUrl(): String
-	open fun getStatusUrl() = ""
-	protected var statusCards = CardType.entries.associateWith { true }
+                "gamebank" -> {
+                    val merchantID = config.getInt("merchant_id")
+                    val apiUser = config.getString("api_user")
+                    val apiPassword = config.getString("api_password")
+                    GameBankCP(merchantID, apiUser, apiPassword)
+                }
 
-	fun processCard(player: Player, card: Card) {
-		val lang = Language.get()
-		player.sendMessages(lang.cardCharging.map {it
-			.replace("%CARD_TYPE%", card.type.name)
-			.replace("%CARD_PRICE%", card.price.value.toString())
-			.replace("%SERI%", card.seri)
-			.replace("%CODE%", card.pin)
-		})
+                else -> {
+                    throw IllegalArgumentException("Provider $provider not found")
+                }
+            }
+        }
+    }
 
-		runNotSync { runCatching {
-			val log = LogDAO.getInstance()
+    protected val main = DotMan.instance
+    abstract fun getApiUrl(): String
+    open fun getStatusUrl() = ""
+    protected var statusCards = CardType.entries.associateWith { true }
 
-			card.logId = log.insertLog(player, card)
-			val result = doRequest(player.name, card)
+    fun processCard(player: Player, card: Card) {
+        val lang = Language.get()
+        player.sendMessages(lang.cardCharging.map {
+            it
+                .replace("%CARD_TYPE%", card.type.name)
+                .replace("%CARD_PRICE%", card.price.value.toString())
+                .replace("%SERI%", card.seri)
+                .replace("%CODE%", card.pin)
+        })
 
-			if (result.isSuccess) {
-				onRequestSuccess(player, result)
-			} else {
-				player.sendMessages(lang.cardChargedFailed.map {
-					it.replace("%ERROR%", result.message ?: lang.errorUnknown)
-				})
-			}
-		}.onFailure {
-			it.warning("Loi nap the: ${it.message}")
-			player.sendMessages(lang.cardChargedError)
-		}}
-	}
+        runNotSync {
+            runCatching {
+                val log = LogDAO.getInstance()
 
-	open fun onRequestSuccess(player: Player, result: CardResult) {
-		onChargeSuccess(player, result.card)
-	}
+                card.logId = log.insertLog(player, card)
+                val result = doRequest(player.name, card)
 
-	protected open fun onChargeSuccess(player: Player, card: Card) {
-		var amount = card.price.getPointAmount()
-		val config = MainConfig.get()
-		val extraRate = config.extraRate
-		var extraPercent = 0
-		if (extraRate > 0 && config.extraUntil > System.currentTimeMillis()) {
-			amount += (amount * config.extraRate).toInt()
-			extraPercent = (extraRate * 100).toInt()
-		}
-		val reason = "nap the ${card.type.name.lowercase()} ${card.price.value} ${card.seri}"
-		DotMan.addPoints(player, amount, reason)
-		player.sendMessages(
-			Language.get().cardChargedSuccessfully.map {it
-				.replace("%AMOUNT%", amount.toString())
-				.replace("%POINT_UNIT%", MainConfig.get().pointUnit)
-			}
-		)
-		if (extraPercent > 0) {
-			player.send(Language.get().cardChargedWithExtra.replace("%RATE%", extraPercent.toString()))
-		}
-	}
+                if (result.isSuccess) {
+                    onRequestSuccess(player, result)
+                } else {
+                    player.sendMessages(lang.cardChargedFailed.map {
+                        it.replace("%ERROR%", result.message ?: lang.errorUnknown)
+                    })
+                }
+            }.onFailure {
+                it.warning("Loi nap the: ${it.message}")
+                player.sendMessages(lang.cardChargedError)
+            }
+        }
+    }
 
-	/**
-	 * Tiến hành nạp thẻ
-	 *
-	 * (nên chạy trong luồng khác)
-	 *
-	 * @param playerName Tên người chơi
-	 * @param card Thông tin thẻ cào
-	 */
-	open fun doRequest(playerName: String, card: Card): CardResult {
-		val parameters = getRequestParameters(playerName, card)
-		val headers = getRequestHeaders(playerName, card)
-		return parseResponse(card, post(getApiUrl(), parameters = parameters, headers = headers))
-	}
+    open fun onRequestSuccess(player: Player, result: CardResult) {
+        onChargeSuccess(player, result.card)
+    }
 
-	protected abstract fun parseResponse(card: Card, response: String): CardResult
+    protected open fun onChargeSuccess(player: Player, card: Card) {
+        var amount = card.price.getPointAmount()
+        val config = MainConfig.get()
+        val extraRate = config.extraRate
+        var extraPercent = 0
+        if (extraRate > 0 && config.extraUntil > System.currentTimeMillis()) {
+            amount += (amount * config.extraRate).toInt()
+            extraPercent = (extraRate * 100).toInt()
+        }
+        val reason = "nap the ${card.type.name.lowercase()} ${card.price.value} ${card.seri}"
+        DotMan.addPoints(player, amount, reason)
+        player.sendMessages(
+            Language.get().cardChargedSuccessfully.map {
+                it
+                    .replace("%AMOUNT%", amount.toString())
+                    .replace("%POINT_UNIT%", MainConfig.get().pointUnit)
+            }
+        )
+        if (extraPercent > 0) {
+            player.send(Language.get().cardChargedWithExtra.replace("%RATE%", extraPercent.toString()))
+        }
+    }
 
-	protected abstract fun getRequestParameters(playerName: String, card: Card): Map<String, String>
+    /**
+     * Tiến hành nạp thẻ
+     *
+     * (nên chạy trong luồng khác)
+     *
+     * @param playerName Tên người chơi
+     * @param card Thông tin thẻ cào
+     */
+    open fun doRequest(playerName: String, card: Card): CardResult {
+        val parameters = getRequestParameters(playerName, card)
+        val headers = getRequestHeaders(playerName, card)
+        return parseResponse(card, post(getApiUrl(), parameters = parameters, headers = headers))
+    }
 
-	protected open fun getRequestHeaders(playerName: String, card: Card): Map<String, String>? = null
+    protected abstract fun parseResponse(card: Card, response: String): CardResult
 
-	fun getStatus(type: CardType) = statusCards.getOrDefault(type, false)
+    protected abstract fun getRequestParameters(playerName: String, card: Card): Map<String, String>
 
-	fun getAvailableCardType() = statusCards.filter { it.value }.keys
+    protected open fun getRequestHeaders(playerName: String, card: Card): Map<String, String>? = null
 
-	fun askCardInfo(player: Player, type: CardType, price: CardPrice) {
-		val lang = Language.get()
-		player.send(lang.inputSeri)
-		player.send(lang.inputCancel)
+    fun getStatus(type: CardType) = statusCards.getOrDefault(type, false)
 
-		ChatListener(player) seri@{
-			if (message.equals("huy", true)) {
-				player.send(lang.inputCanceled)
-				return@seri
-			}
+    fun getAvailableCardType() = statusCards.filter { it.value }.keys
 
-			val seri = message
+    fun askCardInfo(player: Player, type: CardType, price: CardPrice) {
+        val lang = Language.get()
+        player.send(lang.inputSeri)
+        player.send(lang.inputCancel)
 
-			player.send(lang.inputPin)
-			player.send(lang.inputCancel)
+        ChatListener(player) seri@{
+            if (message.equals("huy", true)) {
+                player.send(lang.inputCanceled)
+                return@seri
+            }
 
-			ChatListener(player) pin@{
-				if (message.equals("huy", true)) {
-					player.send(lang.inputCanceled)
-					return@pin
-				}
-				val pin = message
+            val seri = message
 
-				val card = Card(seri, pin, price, type)
+            player.send(lang.inputPin)
+            player.send(lang.inputCancel)
 
-				runNotSync {
-					processCard(player, card)
-				}
-			}
-		}
-	}
+            ChatListener(player) pin@{
+                if (message.equals("huy", true)) {
+                    player.send(lang.inputCanceled)
+                    return@pin
+                }
+                val pin = message
 
-	protected open fun updateStatus() {
-	}
+                val card = Card(seri, pin, price, type)
+
+                runNotSync {
+                    processCard(player, card)
+                }
+            }
+        }
+    }
+
+    protected open fun updateStatus() {
+    }
 }

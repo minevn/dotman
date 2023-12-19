@@ -64,16 +64,18 @@ class CardTypeUI(viewer: Player?) : ConfiguredUI(viewer, "menu/napthe/loaithe.ym
         // banking recommendation button
         setItem(
             config.getInt("banking-recommend.slot"),
-            config.getGuiIcon("banking-recommend").toGuiItemStack { runNotSync {
-                val location = configDao.get("banking-location")?.asLocation() ?: run {
-                    viewer.send(lang.uiNoBankingLocation)
-                    return@runNotSync
+            config.getGuiIcon("banking-recommend").toGuiItemStack {
+                runNotSync {
+                    val location = configDao.get("banking-location")?.asLocation() ?: run {
+                        viewer.send(lang.uiNoBankingLocation)
+                        return@runNotSync
+                    }
+                    runSync {
+                        viewer.closeInventory()
+                        viewer.teleport(location)
+                    }
                 }
-                runSync {
-                    viewer.closeInventory()
-                    viewer.teleport(location)
-                }
-            }}
+            }
         )
 
         // cards list

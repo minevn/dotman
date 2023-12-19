@@ -14,94 +14,95 @@ import org.bukkit.entity.Player
 
 class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : CardProvider() {
 
-	init {
-		statusCards = CardType.entries.filter { it.getTypeId() != null }.associateWith { true }
-	}
+    init {
+        statusCards = CardType.entries.filter { it.getTypeId() != null }.associateWith { true }
+    }
 
-	override fun getApiUrl() = "https://thesieutoc.net/API/transaction"
+    override fun getApiUrl() = "https://thesieutoc.net/API/transaction"
 
-	private fun getCardCheckUrl() = "https://thesieutoc.net/API/get_status_card.php"
+    private fun getCardCheckUrl() = "https://thesieutoc.net/API/get_status_card.php"
 
-	override fun getRequestParameters(playerName: String, card: Card) = mapOf(
-		"APIkey" 	to apiKey,
-		"APIsecret" to apiSecret,
-		"mathe" 	to card.pin,
-		"seri" 		to card.seri,
-		"type" 		to card.type.getTypeId()!!,
-		"menhgia" 	to card.price.getPriceId(),
-		"content" 	to "dotman_${card.logId}"
-	)
+    override fun getRequestParameters(playerName: String, card: Card) = mapOf(
+        "APIkey" to apiKey,
+        "APIsecret" to apiSecret,
+        "mathe" to card.pin,
+        "seri" to card.seri,
+        "type" to card.type.getTypeId()!!,
+        "menhgia" to card.price.getPriceId(),
+        "content" to "dotman_${card.logId}"
+    )
 
-	override fun parseResponse(card: Card, response: String) = CardResult(card).apply {
-		println(response)
-		response.parseJson().asJsonObject.let {
-			isSuccess 			= it["status"].getOrNull()?.asString == "00"
-			message 			= it["msg"].getOrNull()?.asString
-		}
-	}
+    override fun parseResponse(card: Card, response: String) = CardResult(card).apply {
+        println(response)
+        response.parseJson().asJsonObject.let {
+            isSuccess = it["status"].getOrNull()?.asString == "00"
+            message = it["msg"].getOrNull()?.asString
+        }
+    }
 
-	override fun onRequestSuccess(player: Player, result: CardResult) {
-		LogDAO.getInstance().setWaiting(result.card.logId!!)
-		player.sendMessages(Language.get().cardChargedSent)
-	}
+    override fun onRequestSuccess(player: Player, result: CardResult) {
+        LogDAO.getInstance().setWaiting(result.card.logId!!)
+        player.sendMessages(Language.get().cardChargedSent)
+    }
 
-	private fun CardType.getTypeId() = when(this) {
-		CardType.VIETTEL,
-		CardType.MOBIFONE,
-		CardType.VINAPHONE,
-		CardType.GATE,
-		CardType.VIETNAMOBILE,
-		CardType.ZING,
-		CardType.GARENA,
-		CardType.VCOIN -> name.lowercase().replaceFirstChar { it.uppercase() }
-		else -> null
-	}
+    private fun CardType.getTypeId() = when (this) {
+        CardType.VIETTEL,
+        CardType.MOBIFONE,
+        CardType.VINAPHONE,
+        CardType.GATE,
+        CardType.VIETNAMOBILE,
+        CardType.ZING,
+        CardType.GARENA,
+        CardType.VCOIN -> name.lowercase().replaceFirstChar { it.uppercase() }
 
-	private fun CardPrice.getPriceId() = (CardPrice.entries.indexOf(this) + 1).toString()
+        else -> null
+    }
 
-	private fun CardWaiting.getTransactId() = "dotman_$id"
+    private fun CardPrice.getPriceId() = (CardPrice.entries.indexOf(this) + 1).toString()
 
-	private fun CardWaiting.isProcessed(): Boolean {
-		val params = mapOf(
-			"APIkey" 			to apiKey,
-			"APIsecret" 		to apiSecret,
-			"transaction_id" 	to getTransactId()
-		)
+    private fun CardWaiting.getTransactId() = "dotman_$id"
 
-		return get(getCardCheckUrl(), parameters = params)
-			.parseJson()
-			.asJsonObject
-			.let {
-				val status = it["status"].getOrNull()?.asString
-				message = it["msg"].getOrNull()?.asString
-				isSuccess = status == "00"
-				status != "-9"
-			}
-	}
+    private fun CardWaiting.isProcessed(): Boolean {
+        val params = mapOf(
+            "APIkey" to apiKey,
+            "APIsecret" to apiSecret,
+            "transaction_id" to getTransactId()
+        )
 
-	override fun updateStatus() {
-		val players = Bukkit.getOnlinePlayers().associateBy { it.uniqueId.toString() }
-		val uuids = players.keys.toTypedArray()
-		val server = MainConfig.get().server
-		val cardLogger = LogDAO.getInstance()
-		val lang = Language.get()
+        return get(getCardCheckUrl(), parameters = params)
+            .parseJson()
+            .asJsonObject
+            .let {
+                val status = it["status"].getOrNull()?.asString
+                message = it["msg"].getOrNull()?.asString
+                isSuccess = status == "00"
+                status != "-9"
+            }
+    }
 
-		cardLogger.getWaitingCards(uuids, server)
-			?.filter { it.isProcessed() }
-			?.forEach {
-				val player = players[it.uuid]
-				if (player?.isOnline != true) return@forEach
+    override fun updateStatus() {
+        val players = Bukkit.getOnlinePlayers().associateBy { it.uniqueId.toString() }
+        val uuids = players.keys.toTypedArray()
+        val server = MainConfig.get().server
+        val cardLogger = LogDAO.getInstance()
+        val lang = Language.get()
 
-				cardLogger.stopWaiting(it.id, it.isSuccess)
+        cardLogger.getWaitingCards(uuids, server)
+            ?.filter { it.isProcessed() }
+            ?.forEach {
+                val player = players[it.uuid]
+                if (player?.isOnline != true) return@forEach
 
-				if (it.isSuccess) {
-					onChargeSuccess(player, it.toCard())
-				} else {
-					val message = it.message ?: lang.errorUnknown
-					player.sendMessages(lang.cardChargedFailed.map { str ->
-						str.replace("%ERROR%", message)
-					})
-				}
-			}
-	}
+                cardLogger.stopWaiting(it.id, it.isSuccess)
+
+                if (it.isSuccess) {
+                    onChargeSuccess(player, it.toCard())
+                } else {
+                    val message = it.message ?: lang.errorUnknown
+                    player.sendMessages(lang.cardChargedFailed.map { str ->
+                        str.replace("%ERROR%", message)
+                    })
+                }
+            }
+    }
 }
