@@ -107,5 +107,40 @@ interface LogDAO : DataAccess {
             executeUpdate()
         }
     }
+
+    /**
+     * WIP Lấy lịch sử nạp thẻ
+     */
+    fun getHistory(playerName: String? = null, page: Int) {
+        val sqlTestScript = """
+            select
+                row_number() over (order by time desc) as rownum,
+                name, type, seri, price, pointsnhan, time
+            from dotman_napthe_log
+            where success = 1
+            order by time desc limit ?, 10;
+        """.trimIndent()
+        sqlTestScript.statement {
+            val offset = (page - 1) * 10
+            setInt(1, offset)
+
+        }
+    }
+
+    /**
+     * WIP Cập nhật point nhận được
+     */
+    fun updatePointReceived(id: Int, points: Int) {
+        val sqlTestScript = """
+            update dotman_napthe_log
+            set pointsnhan = ?
+            where id = ?;
+        """.trimIndent()
+        sqlTestScript.statement {
+            setInt(1, points)
+            setInt(2, id)
+            executeUpdate()
+        }
+    }
     // endregion
 }

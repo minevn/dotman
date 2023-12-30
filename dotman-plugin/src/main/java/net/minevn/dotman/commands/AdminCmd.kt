@@ -39,18 +39,16 @@ class AdminCmd {
 
             description("Thay đổi thông báo trong giao diện nạp thẻ")
 
-            action {
-                runNotSync {
-                    val message = args.joinToString(" ")
-                    if (message.isEmpty()) {
-                        config.delete("announcement")
-                        sender.send("§aĐã xóa thông báo thành công")
-                    } else {
-                        config.set("announcement", args.joinToString(" "))
-                        sender.send("§aĐã thay đổi thông báo thành công")
-                    }
+            action { runNotSync {
+                val message = args.joinToString(" ")
+                if (message.isEmpty()) {
+                    config.delete("announcement")
+                    sender.send("§aĐã xóa thông báo thành công")
+                } else {
+                    config.set("announcement", args.joinToString(" "))
+                    sender.send("§aĐã thay đổi thông báo thành công")
                 }
-            }
+            }}
         }
 
         private fun setBankLocation() = command {
@@ -58,16 +56,24 @@ class AdminCmd {
 
             description("Đặt vị trí xem hướng dẫn chuyển khoản")
 
-            action {
-                runNotSync {
-                    val player = sender as? Player ?: run {
-                        sender.send("Vào server rồi thực hiện lệnh này.")
-                        return@runNotSync
-                    }
-                    config.set("banking-location", player.location.asString())
-                    player.send("Đã đặt vị trí xem hướng dẫn chuyển khoản")
+            action { runNotSync {
+                val player = sender as? Player ?: run {
+                    sender.send("Vào server rồi thực hiện lệnh này.")
+                    return@runNotSync
                 }
-            }
+                config.set("banking-location", player.location.asString())
+                player.send("Đã đặt vị trí xem hướng dẫn chuyển khoản")
+            }}
+        }
+
+        private fun history() = command {
+            val config = ConfigDAO.getInstance()
+
+            description("Xem lịch sử nạp thẻ")
+
+            action { runNotSync {
+                // TODO
+            }}
         }
 
         private fun sendHelp(sender: CommandSender) {
