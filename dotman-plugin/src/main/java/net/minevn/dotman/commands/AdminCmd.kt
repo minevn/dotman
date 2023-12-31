@@ -2,6 +2,7 @@ package net.minevn.dotman.commands
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.database.dao.ConfigDAO
+import net.minevn.dotman.database.dao.LogDAO
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.libs.bukkit.Command
@@ -9,6 +10,7 @@ import net.minevn.libs.bukkit.asString
 import net.minevn.libs.bukkit.command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import java.time.format.DateTimeParseException
 
 class AdminCmd {
     companion object {
@@ -67,13 +69,38 @@ class AdminCmd {
         }
 
         private fun history() = command {
-            val config = ConfigDAO.getInstance()
+            val logDao = LogDAO.getInstance()
 
             description("Xem lịch sử nạp thẻ")
 
-            action { runNotSync {
-                // TODO
-            }}
+            action {
+                // parse args: [-p <player>] [-m <month>] <page>
+                val args = args.toMutableList()
+                var playerName: String? = null
+                var month: String? = null
+                var page = 1
+                while (args.isNotEmpty()) {
+                    when (args.removeAt(0)) {
+                        "-p" -> playerName = args.removeAt(0)
+                        "-m" -> month = args.removeAt(0)
+                        else -> page = args.last().toIntOrNull() ?: 1
+                    }
+                }
+
+                runNotSync {
+                    try {
+                        val sum = logDao.getSum(playerName, month)
+                        val title = "§aLịch sử nạp thẻ của §b%PLAYER_NAME%"
+                            .replace("%PLAYER_NAME%", playerName ?: "Tất cả người chơi")
+                        val total = if (month != null) {
+                            "Tổng nạp tháng $month: $sum" // TODO tiep tuc o day
+                        } else null
+                        val logs = logDao.getHistory(playerName, month, page)
+                    } catch (e: DateTimeParseException) {
+                        sender.send("§cSai định dạng tháng. Ví dụ: 01/2021")
+                    }
+                }
+            }
         }
 
         private fun sendHelp(sender: CommandSender) {

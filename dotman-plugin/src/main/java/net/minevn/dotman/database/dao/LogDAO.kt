@@ -2,9 +2,12 @@ package net.minevn.dotman.database.dao
 
 import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardWaiting
+import net.minevn.dotman.config.Language
 import net.minevn.dotman.config.MainConfig
 import net.minevn.dotman.database.*
 import net.minevn.dotman.utils.Utils
+import net.minevn.libs.minMaxEpochTimestamp
+import net.minevn.libs.timeToString
 import org.bukkit.entity.Player
 
 interface LogDAO : DataAccess {
@@ -18,6 +21,15 @@ interface LogDAO : DataAccess {
     fun getWaitingCardsScript(): String
     fun stopWaitingScript(): String
     fun setTransactionIdScript(): String
+    fun getHistoryScriptAllPlayerAllTime(): String
+    fun getHistoryScriptAllPlayerByMonth(): String
+    fun getHistoryScriptByPlayerAllTime(): String
+    fun getHistoryScriptByPlayerByMonth(): String
+    fun getSumScriptAllPlayerAllTime(): String
+    fun getSumScriptAllPlayerByMonth(): String
+    fun getSumScriptByPlayerAllTime(): String
+    fun getSumScriptByPlayerByMonth(): String
+    fun updatePointReceivedScript(): String
     // endregion
 
     // region queriers
@@ -109,34 +121,73 @@ interface LogDAO : DataAccess {
     }
 
     /**
-     * WIP Lấy lịch sử nạp thẻ
+     * Lấy lịch sử nạp thẻ
      */
-    fun getHistory(playerName: String? = null, page: Int) {
-        val sqlTestScript = """
-            select
-                row_number() over (order by time desc) as rownum,
-                name, type, seri, price, pointsnhan, time
-            from dotman_napthe_log
-            where success = 1
-            order by time desc limit ?, 10;
-        """.trimIndent()
-        sqlTestScript.statement {
-            val offset = (page - 1) * 10
-            setInt(1, offset)
+    @Suppress("UNUSED_CHANGED_VALUE")
+    fun getHistory(playerName: String? = null, yearMonth: String? = null, page: Int) = run {
+        val linePerPage = 20
+        val script = if (yearMonth == null) {
+            if (playerName == null) getHistoryScriptAllPlayerAllTime() else getHistoryScriptByPlayerAllTime()
+        } else {
+            if (playerName == null) getHistoryScriptAllPlayerByMonth() else getHistoryScriptByPlayerByMonth()
+        }
+        script.statement {
+            var columnIndex = 1
+            val offset = (page - 1) * linePerPage
+            if (playerName != null) setString(columnIndex++, playerName)
+            if (yearMonth != null) {
+                val (min, max) = minMaxEpochTimestamp(yearMonth)
+                setLong(columnIndex++, min)
+                setLong(columnIndex++, max)
+            }
+            setInt(columnIndex++, offset)
+            setInt(columnIndex++, linePerPage)
+            fetchRecords {
+                val rowNum = getInt("rownum")
+                val name = getString("name")
+                val type = getString("type")
+                val price = getInt("price")
+                val pointsReceived = getInt("pointsnhan")
+                val time = getLong("time").timeToString()
+                Language.get().logOutPut
+                    .replace("%ORDER%", rowNum.toString())
+                    .replace("%PLAYER%", name)
+                    .replace("%CARD_TYPE%", type)
+                    .replace("%CARD_PRICE%", price.toString())
+                    .replace("%POINTS_RECEIVED%", pointsReceived.toString())
+                    .replace("%POINT_UNIT%", MainConfig.get().pointUnit)
+                    .replace("%DATE%", time)
+            }
+        }
+    }
 
+    @Suppress("UNUSED_CHANGED_VALUE")
+    fun getSum(playerName: String? = null, yearMonth: String? = null) = run {
+        val script = if (yearMonth == null) {
+            if (playerName == null) getSumScriptAllPlayerAllTime() else getSumScriptByPlayerAllTime()
+        } else {
+            if (playerName == null) getSumScriptAllPlayerByMonth() else getSumScriptByPlayerByMonth()
+        }
+        script.statement {
+            var columnIndex = 1
+            if (playerName != null) setString(columnIndex++, playerName)
+            if (yearMonth != null) {
+                val (min, max) = minMaxEpochTimestamp(yearMonth)
+                setLong(columnIndex++, min)
+                setLong(columnIndex++, max)
+            }
+
+            fetch {
+                return@fetch getInt(1)
+            }
         }
     }
 
     /**
-     * WIP Cập nhật point nhận được
+     * Cập nhật point nhận được
      */
     fun updatePointReceived(id: Int, points: Int) {
-        val sqlTestScript = """
-            update dotman_napthe_log
-            set pointsnhan = ?
-            where id = ?;
-        """.trimIndent()
-        sqlTestScript.statement {
+        updatePointReceivedScript().statement {
             setInt(1, points)
             setInt(2, id)
             executeUpdate()

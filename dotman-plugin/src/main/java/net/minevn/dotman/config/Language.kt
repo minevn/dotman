@@ -45,4 +45,6 @@ class Language : FileConfig("messages") {
     val inputCanceled = get("input-canceled")
     val inputSeri = get("input-seri")
     val inputPin = get("input-pin")
+
+    val logOutPut = get("log-output")
 }
