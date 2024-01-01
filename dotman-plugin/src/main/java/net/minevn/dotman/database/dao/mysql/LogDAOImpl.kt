@@ -66,6 +66,36 @@ class LogDAOImpl : LogDAO {
             order by time desc limit ?, ?;
         """.trimIndent()
 
+    override fun getSumScriptAllPlayerAllTime() = """
+        SELECT
+            SUM(`price`), COUNT(`id`)
+        FROM `dotman_napthe_log`
+        WHERE `success` = 1
+    """.trimIndent()
+
+    override fun getSumScriptAllPlayerByMonth() = """
+        SELECT
+            SUM(`price`), COUNT(`id`)
+        FROM `dotman_napthe_log`
+        WHERE `success` = 1
+        and `time` >= ? and `time` <= ?
+    """.trimIndent()
+
+    override fun getSumScriptByPlayerAllTime() = """
+        SELECT
+            SUM(`price`), COUNT(`id`)
+        FROM `dotman_napthe_log`
+        WHERE `success` = 1 AND `name` = ?
+    """.trimIndent()
+
+    override fun getSumScriptByPlayerByMonth() = """
+        SELECT
+            SUM(`price`), COUNT(`id`)
+        FROM `dotman_napthe_log`
+        WHERE `success` = 1 AND `name` = ?
+        and `time` >= ? and `time` <= ?
+    """.trimIndent()
+
     override fun updatePointReceivedScript() = """
             UPDATE `dotman_napthe_log`
             SET `pointsnhan` = ?

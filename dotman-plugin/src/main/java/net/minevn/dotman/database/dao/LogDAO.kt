@@ -178,7 +178,7 @@ interface LogDAO : DataAccess {
             }
 
             fetch {
-                return@fetch getInt(1)
+                Pair(getInt(1), getInt(2))
             }
         }
     }

@@ -66,14 +66,14 @@ class LogDAOImpl : LogDAO {
 
     override fun getSumScriptAllPlayerAllTime() = """
         SELECT
-            SUM("price")
+            SUM("price"), COUNT("id")
         FROM "dotman_napthe_log"
         WHERE "success" = 1
     """.trimIndent()
 
     override fun getSumScriptAllPlayerByMonth() = """
         SELECT
-            SUM("price")
+            SUM("price"), COUNT("id")
         FROM "dotman_napthe_log"
         WHERE "success" = 1
         and "time" >= ? and "time" <= ?
@@ -81,14 +81,14 @@ class LogDAOImpl : LogDAO {
 
     override fun getSumScriptByPlayerAllTime() = """
         SELECT
-            SUM("price")
+            SUM("price"), COUNT("id")
         FROM "dotman_napthe_log"
         WHERE "success" = 1 AND "name" = ?
     """.trimIndent()
 
     override fun getSumScriptByPlayerByMonth() = """
         SELECT
-            SUM("price")
+            SUM("price"), COUNT("id")
         FROM "dotman_napthe_log"
         WHERE "success" = 1 AND "name" = ?
         and "time" >= ? and "time" <= ?

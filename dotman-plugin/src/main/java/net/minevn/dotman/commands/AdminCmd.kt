@@ -1,5 +1,7 @@
 package net.minevn.dotman.commands
 
+import net.md_5.bungee.api.ChatColor
+import net.md_5.bungee.api.chat.ComponentBuilder
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.database.dao.ConfigDAO
 import net.minevn.dotman.database.dao.LogDAO
@@ -11,6 +13,7 @@ import net.minevn.libs.bukkit.command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.time.format.DateTimeParseException
+import kotlin.math.ceil
 
 class AdminCmd {
     companion object {
@@ -21,6 +24,7 @@ class AdminCmd {
                 addSubCommand(reload(), "reload")
                 addSubCommand(thongbao(), "thongbao")
                 addSubCommand(setBankLocation(), "chuyenkhoan")
+                addSubCommand(history(), "lichsu", "history")
 
                 action { sendHelp(sender) }
                 register(DotMan.instance, "dotman")
@@ -74,30 +78,63 @@ class AdminCmd {
             description("Xem lịch sử nạp thẻ")
 
             action {
+                if (args.isEmpty()) {
+                    sender.send("Tra cứu lịch sử nạp thẻ của người chơi hoặc toàn server")
+                    sender.send("Cách dùng: /dotman history [-p <tên người chơi>] [-m <tháng cần tra>] <Số trang>")
+                    return@action
+                }
+
                 // parse args: [-p <player>] [-m <month>] <page>
                 val args = args.toMutableList()
                 var playerName: String? = null
                 var month: String? = null
                 var page = 1
                 while (args.isNotEmpty()) {
-                    when (args.removeAt(0)) {
-                        "-p" -> playerName = args.removeAt(0)
-                        "-m" -> month = args.removeAt(0)
-                        else -> page = args.last().toIntOrNull() ?: 1
+                    when (val current = args.removeFirst()) {
+                        "-p" -> playerName = args.removeFirst()
+                        "-m" -> month = args.removeFirst()
+                        else -> page = current.toIntOrNull() ?: 1
                     }
                 }
 
                 runNotSync {
                     try {
-                        val sum = logDao.getSum(playerName, month)
+                        val (sum, count) = logDao.getSum(playerName, month)
+                        val maxPage = ceil(count / 20.0).toInt()
                         val title = "§aLịch sử nạp thẻ của §b%PLAYER_NAME%"
-                            .replace("%PLAYER_NAME%", playerName ?: "Tất cả người chơi")
+                            .replace("%PLAYER_NAME%", playerName ?: "toàn server")
                         val total = if (month != null) {
-                            "Tổng nạp tháng $month: $sum" // TODO tiep tuc o day
-                        } else null
+                            "Tổng nạp tháng $month: $sum"
+                        } else "Tổng nạp từ trước đến nay: $sum"
                         val logs = logDao.getHistory(playerName, month, page)
+
+                        val pagination = ComponentBuilder("").run {
+                            if (page > 1) {
+                                append("<< Trang trước")
+                                color(ChatColor.GREEN)
+                                append(" | ").color(ChatColor.GRAY)
+                            }
+                            append("Trang $page")
+                            color(ChatColor.YELLOW)
+                            if (page < maxPage) {
+                                append(" | ").color(ChatColor.GRAY)
+                                append("Trang sau >>")
+                                color(ChatColor.GREEN)
+                            }
+                            create()
+                        }
+                        val paginationConsole = "Trang $page/$maxPage"
+
+                        sender.send(title)
+                        sender.sendMessage(total)
+                        logs.forEach(sender::sendMessage)
+                        if (sender is Player) {
+                            sender.spigot().sendMessage(*pagination)
+                        } else {
+                            sender.sendMessage(paginationConsole)
+                        }
                     } catch (e: DateTimeParseException) {
-                        sender.send("§cSai định dạng tháng. Ví dụ: 01/2021")
+                        sender.send("§cSai định dạng tháng. Ví dụ định dạng đúng: 01/2021")
                     }
                 }
             }
