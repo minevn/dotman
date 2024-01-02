@@ -32,3 +32,5 @@ ui-no-banking-location: '&cHiện tại chưa có hướng dẫn chuyển khoả
 error-unknown: '&cLỗi không xác định.'
 error-unknown-card-type: '&cLoại thẻ không hợp lệ hoặc đang bảo trì.'
 error-unknown-card-price: '&cMệnh giá thẻ không hợp lệ.'
+
+log-output: '&a%ORDER%. &b%PLAYER% &d%CARD_TYPE%(%CARD_PRICE% VNĐ) &anhận &e%POINTS_RECEIVED% %POINT_UNIT% &angày &e%DATE%'

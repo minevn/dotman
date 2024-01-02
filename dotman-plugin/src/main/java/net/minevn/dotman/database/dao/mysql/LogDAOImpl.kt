@@ -27,4 +27,78 @@ class LogDAOImpl : LogDAO {
             SET `transaction_id` = ?, `success` = ?
             WHERE `id` = ?;
         """.trimIndent()
+
+    override fun getHistoryScriptAllPlayerAllTime() = """
+            select
+                row_number() over (order by time desc) as rownum,
+                id, name, type, seri, price, pointsnhan, time
+            from dotman_napthe_log
+            where success = 1
+            order by time desc limit ?, ?;
+        """.trimIndent()
+
+    override fun getHistoryScriptAllPlayerByMonth() = """
+            select
+                row_number() over (order by time desc) as rownum,
+                id, name, type, seri, price, pointsnhan, time
+            from dotman_napthe_log
+            where success = 1
+            and time >= ? and time <= ?
+            order by time desc limit ?, ?;
+        """.trimIndent()
+
+    override fun getHistoryScriptByPlayerAllTime() = """
+            select
+                row_number() over (order by time desc) as rownum,
+                id, name, type, seri, price, pointsnhan, time
+            from dotman_napthe_log
+            where success = 1 and name = ?
+            order by time desc limit ?, ?;
+        """.trimIndent()
+
+    override fun getHistoryScriptByPlayerByMonth() = """
+            select
+                row_number() over (order by time desc) as rownum,
+                id, name, type, seri, price, pointsnhan, time
+            from dotman_napthe_log
+            where success = 1 and name = ?
+            and time >= ? and time <= ?
+            order by time desc limit ?, ?;
+        """.trimIndent()
+
+    override fun getSumScriptAllPlayerAllTime() = """
+        SELECT
+            SUM(`price`), COUNT(`id`)
+        FROM `dotman_napthe_log`
+        WHERE `success` = 1
+    """.trimIndent()
+
+    override fun getSumScriptAllPlayerByMonth() = """
+        SELECT
+            SUM(`price`), COUNT(`id`)
+        FROM `dotman_napthe_log`
+        WHERE `success` = 1
+        and `time` >= ? and `time` <= ?
+    """.trimIndent()
+
+    override fun getSumScriptByPlayerAllTime() = """
+        SELECT
+            SUM(`price`), COUNT(`id`)
+        FROM `dotman_napthe_log`
+        WHERE `success` = 1 AND `name` = ?
+    """.trimIndent()
+
+    override fun getSumScriptByPlayerByMonth() = """
+        SELECT
+            SUM(`price`), COUNT(`id`)
+        FROM `dotman_napthe_log`
+        WHERE `success` = 1 AND `name` = ?
+        and `time` >= ? and `time` <= ?
+    """.trimIndent()
+
+    override fun updatePointReceivedScript() = """
+            UPDATE `dotman_napthe_log`
+            SET `pointsnhan` = ?
+            WHERE `id` = ?;
+        """.trimIndent()
 }
