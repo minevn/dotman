@@ -85,7 +85,7 @@ class AdminCmd {
             tabComplete {
                 when(args.size) {
                     0 -> emptyList()
-                    1 -> listOf(usage)
+                    1 -> if(args.last().isEmpty()) listOf(usage) else emptyList()
                     else -> when(args.takeLast(2).first()) {
                         "-p" -> Bukkit.getOnlinePlayers().map { it.name }
                         "-m" -> run {
