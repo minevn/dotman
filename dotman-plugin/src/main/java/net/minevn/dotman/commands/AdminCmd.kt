@@ -87,7 +87,7 @@ class AdminCmd {
                     0 -> emptyList()
                     1 -> if(args.last().isEmpty()) listOf(usage) else emptyList()
                     else -> when(args.takeLast(2).first()) {
-                        "-p" -> Bukkit.getOnlinePlayers().map { it.name }
+                        "-p" -> Bukkit.getOnlinePlayers().map { it.name }.filter { it.startsWith(args.last()) }
                         "-m" -> run {
                             val value = args.last()
                             val year = LocalDate.now().year
