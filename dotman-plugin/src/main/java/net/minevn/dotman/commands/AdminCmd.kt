@@ -85,7 +85,7 @@ class AdminCmd {
             tabComplete {
                 when(args.size) {
                     0 -> emptyList()
-                    1 -> listOf("[-p <tên người chơi>] [-m <tháng cần tra>] <Số trang>")
+                    1 -> listOf(usage)
                     else -> when(args.takeLast(2).first()) {
                         "-p" -> Bukkit.getOnlinePlayers().map { it.name }
                         "-m" -> run {
