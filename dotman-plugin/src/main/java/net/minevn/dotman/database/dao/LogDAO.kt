@@ -178,6 +178,7 @@ interface LogDAO : DataAccess {
             }
 
             fetch {
+                next()
                 Pair(getInt(1), getInt(2))
             }
         }

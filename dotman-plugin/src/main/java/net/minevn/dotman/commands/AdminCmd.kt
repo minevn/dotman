@@ -1,7 +1,9 @@
 package net.minevn.dotman.commands
 
 import net.md_5.bungee.api.ChatColor
+import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.ComponentBuilder
+import net.md_5.bungee.api.chat.HoverEvent
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.database.dao.ConfigDAO
 import net.minevn.dotman.database.dao.LogDAO
@@ -10,8 +12,10 @@ import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.libs.bukkit.Command
 import net.minevn.libs.bukkit.asString
 import net.minevn.libs.bukkit.command
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import java.time.LocalDate
 import java.time.format.DateTimeParseException
 import kotlin.math.ceil
 
@@ -73,14 +77,28 @@ class AdminCmd {
         }
 
         private fun history() = command {
+            val usage= "[-p <tên người chơi>] [-m <tháng cần tra>] <Số trang>"
             val logDao = LogDAO.getInstance()
 
             description("Xem lịch sử nạp thẻ")
 
+            tabComplete {
+                when(args.size) {
+                    0 -> emptyList()
+                    1 -> listOf("[-p <tên người chơi>] [-m <tháng cần tra>] <Số trang>")
+                    else -> when(args.takeLast(2).first()) {
+                        "-p" -> Bukkit.getOnlinePlayers().map { it.name }
+                        "-m" -> (1..12)
+                            .map { "${it.toString().padStart(2, '0')}/${LocalDate.now().year}" }
+                        else -> listOf("1")
+                    }
+                }
+            }
+
             action {
                 if (args.isEmpty()) {
                     sender.send("Tra cứu lịch sử nạp thẻ của người chơi hoặc toàn server")
-                    sender.send("Cách dùng: /dotman history [-p <tên người chơi>] [-m <tháng cần tra>] <Số trang>")
+                    sender.send("Cách dùng: /dotman history $usage")
                     return@action
                 }
 
@@ -104,22 +122,36 @@ class AdminCmd {
                         val title = "§aLịch sử nạp thẻ của §b%PLAYER_NAME%"
                             .replace("%PLAYER_NAME%", playerName ?: "toàn server")
                         val total = if (month != null) {
-                            "Tổng nạp tháng $month: $sum"
-                        } else "Tổng nạp từ trước đến nay: $sum"
+                            "§eTổng nạp tháng $month: $sum"
+                        } else "§eTổng nạp từ trước đến nay: $sum"
                         val logs = logDao.getHistory(playerName, month, page)
+
+                        val paginationBuilder = StringBuilder("/dotman history").run {
+                            if (playerName != null) append(" -p $playerName")
+                            if (month != null) append(" -m $month")
+                            toString()
+                        }
 
                         val pagination = ComponentBuilder("").run {
                             if (page > 1) {
                                 append("<< Trang trước")
                                 color(ChatColor.GREEN)
+                                event(ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                                    "$paginationBuilder ${page - 1}"))
+                                event(HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                    ComponentBuilder("§aClick để quay về trang trước").create()))
                                 append(" | ").color(ChatColor.GRAY)
                             }
-                            append("Trang $page")
+                            append("Trang $page/$maxPage")
                             color(ChatColor.YELLOW)
                             if (page < maxPage) {
                                 append(" | ").color(ChatColor.GRAY)
                                 append("Trang sau >>")
                                 color(ChatColor.GREEN)
+                                event(ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                                    "$paginationBuilder ${page + 1}"))
+                                event(HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                    ComponentBuilder("§aClick để đi đến trang sau").create()))
                             }
                             create()
                         }
