@@ -1,7 +1,5 @@
 package net.minevn.dotman.config
 
-import net.minevn.libs.bukkit.color
-
 class Language : FileConfig("messages") {
 
     companion object {
@@ -18,12 +16,6 @@ class Language : FileConfig("messages") {
             instance = Language()
         }
     }
-
-    fun get(key: String): String = config.getString(key, "").color()
-
-    fun getList(key: String) = config.getStringList(key).map {
-        it.replace("%PREFIX%", MainConfig.get().prefix)
-    }.color()
 
     val errorUnknown = get("error-unknown")
     val errorUnknownCardType = get("error-unknown-card-type")
@@ -45,4 +37,6 @@ class Language : FileConfig("messages") {
     val inputCanceled = get("input-canceled")
     val inputSeri = get("input-seri")
     val inputPin = get("input-pin")
+
+    val logOutPut = get("log-output")
 }
