@@ -77,7 +77,7 @@ class AdminCmd {
         }
 
         private fun history() = command {
-            val usage= "[-p <tên người chơi>] [-m <tháng cần tra>] <Số trang>"
+            val usage = "[-p <tên người chơi>] [-m <tháng cần tra>] <Số trang>"
             val logDao = LogDAO.getInstance()
 
             description("Xem lịch sử nạp thẻ")
@@ -88,8 +88,12 @@ class AdminCmd {
                     1 -> listOf("[-p <tên người chơi>] [-m <tháng cần tra>] <Số trang>")
                     else -> when(args.takeLast(2).first()) {
                         "-p" -> Bukkit.getOnlinePlayers().map { it.name }
-                        "-m" -> (1..12)
-                            .map { "${it.toString().padStart(2, '0')}/${LocalDate.now().year}" }
+                        "-m" -> run {
+                            val value = args.last()
+                            val year = LocalDate.now().year
+                            (1..12).map { "${it.toString().padStart(2, '0')}/$year" }
+                                .filter { month -> month.startsWith(value) || month.startsWith("0$value") }
+                        }
                         else -> listOf("1")
                     }
                 }
@@ -122,8 +126,8 @@ class AdminCmd {
                         val title = "§aLịch sử nạp thẻ của §b%PLAYER_NAME%"
                             .replace("%PLAYER_NAME%", playerName ?: "toàn server")
                         val total = if (month != null) {
-                            "§eTổng nạp tháng $month: $sum"
-                        } else "§eTổng nạp từ trước đến nay: $sum"
+                            "§eTổng nạp tháng $month: §d§l$sum VNĐ"
+                        } else "§eTổng nạp từ trước đến nay: §d§l$sum VNĐ"
                         val logs = logDao.getHistory(playerName, month, page)
 
                         val paginationBuilder = StringBuilder("/dotman history").run {
@@ -140,7 +144,7 @@ class AdminCmd {
                                     "$paginationBuilder ${page - 1}"))
                                 event(HoverEvent(HoverEvent.Action.SHOW_TEXT,
                                     ComponentBuilder("§aClick để quay về trang trước").create()))
-                                append(" | ").color(ChatColor.GRAY)
+                                append(" | ").reset().color(ChatColor.GRAY)
                             }
                             append("Trang $page/$maxPage")
                             color(ChatColor.YELLOW)
@@ -159,6 +163,7 @@ class AdminCmd {
 
                         sender.send(title)
                         sender.sendMessage(total)
+                        sender.sendMessage("§f")
                         logs.forEach(sender::sendMessage)
                         if (sender is Player) {
                             sender.spigot().sendMessage(*pagination)
@@ -166,7 +171,7 @@ class AdminCmd {
                             sender.sendMessage(paginationConsole)
                         }
                     } catch (e: DateTimeParseException) {
-                        sender.send("§cSai định dạng tháng. Ví dụ định dạng đúng: 01/2021")
+                        sender.send("§cSai định dạng tháng. Ví dụ định dạng đúng: 01/2024")
                     }
                 }
             }
