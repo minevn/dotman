@@ -25,9 +25,7 @@ interface PlayerDataDAO : DataAccess {
         }
     }
 
-    fun insertAllType(player: Player, key: String, value: Int) {
-        TopType.entries.forEach { type ->
-            insertData(player, type.parseKey(key), value)
-        }
+    fun insertAllType(player: Player, key: String, value: Int) = TopType.entries.forEach {
+        insertData(player, it.parseKey(key), value)
     }
 }
