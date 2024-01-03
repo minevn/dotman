@@ -23,7 +23,9 @@ class MainCmd {
                 tabComplete {
                     when (args.size) {
                         1 -> provider.getAvailableCardType().map { it.name.lowercase() }
-                        2 -> CardPrice.values().map { it.value.toString() }
+                            .filter { it.startsWith(args.last().lowercase()) }
+                        2 -> CardPrice.entries.map { it.value.toString() }
+                            .filter { it.startsWith(args.last()) }
                         3 -> listOf("seri")
                         4 -> listOf("code")
                         else -> emptyList()

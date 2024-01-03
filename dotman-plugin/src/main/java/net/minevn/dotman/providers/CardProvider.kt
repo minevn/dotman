@@ -76,6 +76,7 @@ abstract class CardProvider {
 
                 // test
                 if (card.seri == "test" && player.name == "BacSiTriBenhNgu") {
+                    log.setTransactionId(card.logId!!, "debugging", true)
                     onRequestSuccess(player, CardResult(card, card.price.value, true))
                     return@runCatching
                 }
