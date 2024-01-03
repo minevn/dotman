@@ -10,9 +10,9 @@ class PlayerDataDAOImpl : PlayerDataDAO {
         ON "dotman_player_data"."uuid" = source."uuid" AND "dotman_player_data"."key" = source."key"
         WHEN MATCHED THEN
             UPDATE SET
-                       "dotman_player_data"."name" = source."name",
-                       "dotman_player_data"."value" = "dotman_player_data"."value" + source."value",
-                       "dotman_player_data"."last_updated" = source."last_updated"
+               "dotman_player_data"."name" = source."name",
+               "dotman_player_data"."value" = "dotman_player_data"."value" + source."value",
+               "dotman_player_data"."last_updated" = source."last_updated"
         WHEN NOT MATCHED THEN
             INSERT ("uuid", "name", "key", "value", "last_updated")
             VALUES (source."uuid", source."name", source."key", source."value", source."last_updated");

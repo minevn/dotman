@@ -62,8 +62,7 @@ abstract class CardProvider {
     fun processCard(player: Player, card: Card) {
         val lang = Language.get()
         player.sendMessages(lang.cardCharging.map {
-            it
-                .replace("%CARD_TYPE%", card.type.name)
+            it  .replace("%CARD_TYPE%", card.type.name)
                 .replace("%CARD_PRICE%", card.price.value.toString())
                 .replace("%SERI%", card.seri)
                 .replace("%CODE%", card.pin)
