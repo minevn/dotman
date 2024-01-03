@@ -126,7 +126,8 @@ abstract class CardProvider {
         }
 
         // Tích điểm
-        PlayerDataDAO.getInstance().insertData(player, "DONATE_AMOUNT_ALL", amount)
+        PlayerDataDAO.getInstance().insertAllType(player, "DONATE_TOTAL", card.price.value)
+        PlayerDataDAO.getInstance().insertAllType(player, "POINT_FROM_CARD", amount)
     }
 
     /**
