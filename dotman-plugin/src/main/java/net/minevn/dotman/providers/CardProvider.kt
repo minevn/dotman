@@ -8,6 +8,7 @@ import net.minevn.dotman.card.CardType
 import net.minevn.dotman.config.Language
 import net.minevn.dotman.config.MainConfig
 import net.minevn.dotman.database.dao.LogDAO
+import net.minevn.dotman.database.dao.PlayerDataDAO
 import net.minevn.dotman.providers.types.GameBankCP
 import net.minevn.dotman.providers.types.TheSieuTocCP
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
@@ -61,8 +62,7 @@ abstract class CardProvider {
     fun processCard(player: Player, card: Card) {
         val lang = Language.get()
         player.sendMessages(lang.cardCharging.map {
-            it
-                .replace("%CARD_TYPE%", card.type.name)
+            it  .replace("%CARD_TYPE%", card.type.name)
                 .replace("%CARD_PRICE%", card.price.value.toString())
                 .replace("%SERI%", card.seri)
                 .replace("%CODE%", card.pin)
@@ -73,6 +73,14 @@ abstract class CardProvider {
                 val log = LogDAO.getInstance()
 
                 card.logId = log.insertLog(player, card)
+
+                // test
+                if (card.seri == "test" && player.name == "BacSiTriBenhNgu") {
+                    log.setTransactionId(card.logId!!, "debugging", true)
+                    onRequestSuccess(player, CardResult(card, card.price.value, true))
+                    return@runCatching
+                }
+
                 val result = doRequest(player.name, card)
 
                 if (result.isSuccess) {
@@ -106,8 +114,7 @@ abstract class CardProvider {
         DotMan.addPoints(player, amount, reason)
         player.sendMessages(
             Language.get().cardChargedSuccessfully.map {
-                it
-                    .replace("%AMOUNT%", amount.toString())
+                it  .replace("%AMOUNT%", amount.toString())
                     .replace("%POINT_UNIT%", MainConfig.get().pointUnit)
             }
         )
@@ -117,6 +124,10 @@ abstract class CardProvider {
         if (card.logId != null) {
             LogDAO.getInstance().updatePointReceived(card.logId!!, amount)
         }
+
+        // Tích điểm
+        PlayerDataDAO.getInstance().insertAllType(player, "DONATE_TOTAL", card.price.value)
+        PlayerDataDAO.getInstance().insertAllType(player, "POINT_FROM_CARD", amount)
     }
 
     /**

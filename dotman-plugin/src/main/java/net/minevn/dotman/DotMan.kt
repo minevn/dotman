@@ -6,6 +6,7 @@ import net.minevn.dotman.config.FileConfig
 import net.minevn.dotman.config.Language
 import net.minevn.dotman.config.MainConfig
 import net.minevn.dotman.database.connections.DatabaseConnection
+import net.minevn.dotman.database.dao.PlayerDataDAO
 import net.minevn.dotman.database.dao.PointsLoggerDAO
 import net.minevn.dotman.gui.CardPriceUI
 import net.minevn.dotman.gui.CardTypeUI
@@ -21,6 +22,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
+import kotlin.math.absoluteValue
 
 class DotMan : JavaPlugin(), Listener {
 
@@ -76,6 +78,8 @@ class DotMan : JavaPlugin(), Listener {
         val pointTo = pointFrom + amount
         runNotSync {
             PointsLoggerDAO.getInstance().insertLog(player, amount, pointFrom, pointTo)
+            val dataKey = if (amount > 0) "POINT_RECEIVED" else "POINT_USED"
+            PlayerDataDAO.getInstance().insertAllType(player, dataKey, amount.absoluteValue)
         }
     }
     // endregion
@@ -85,11 +89,20 @@ class DotMan : JavaPlugin(), Listener {
         lateinit var instance: DotMan private set
         val ignoreLoggingList = mutableSetOf<Player>()
 
+        /**
+         * Cộng point: Nên chạy async
+         *
+         * @param player Người chơi
+         * @param amount Số point cộng
+         * @param reason Lý do cộng
+         */
         @JvmStatic
         fun addPoints(player: Player, amount: Int, reason: String) {
             val pointFrom = instance.playerPoints.api.look(player.uniqueId)
             val pointTo = pointFrom + amount
             PointsLoggerDAO.getInstance().insertLog(player, amount, pointFrom, pointTo, reason)
+            val dataKey = if (amount > 0) "POINT_RECEIVED" else "POINT_USED"
+            PlayerDataDAO.getInstance().insertAllType(player, dataKey, amount.absoluteValue)
             ignoreLoggingList.add(player)
             try {
                 instance.playerPoints.api.give(player.uniqueId, amount)
