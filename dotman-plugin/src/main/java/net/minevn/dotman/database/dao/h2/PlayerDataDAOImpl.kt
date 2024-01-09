@@ -18,4 +18,12 @@ class PlayerDataDAOImpl : PlayerDataDAO {
             INSERT ("uuid", "name", "key", "value", "last_updated")
             VALUES (source."uuid", source."name", source."key", source."value", source."last_updated");
     """.trimIndent()
+
+    override fun getTopScript(): String = """
+        SELECT *
+        FROM "dotman_player_data"
+        WHERE "key" = ?
+        ORDER BY "value" DESC
+        LIMIT ?;
+    """.trimIndent()
 }

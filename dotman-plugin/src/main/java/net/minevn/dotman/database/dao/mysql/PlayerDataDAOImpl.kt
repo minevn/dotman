@@ -11,4 +11,12 @@ class PlayerDataDAOImpl : PlayerDataDAO {
             `value` = `value` + VALUES(`value`),
             `last_updated` = VALUES(`last_updated`);
     """.trimIndent()
+
+    override fun getTopScript(): String = """
+        SELECT *
+        FROM `dotman_player_data`
+        WHERE `key` = ?
+        ORDER BY `value` DESC
+        LIMIT ?;
+    """.trimIndent()
 }
