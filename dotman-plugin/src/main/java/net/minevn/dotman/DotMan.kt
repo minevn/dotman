@@ -2,6 +2,7 @@ package net.minevn.dotman
 
 import net.minevn.dotman.commands.AdminCmd
 import net.minevn.dotman.commands.MainCmd
+import net.minevn.dotman.commands.TopNapCmd
 import net.minevn.dotman.config.FileConfig
 import net.minevn.dotman.config.Language
 import net.minevn.dotman.config.MainConfig
@@ -43,6 +44,7 @@ class DotMan : JavaPlugin(), Listener {
         reload()
         MainCmd.init()
         AdminCmd.init()
+        TopNapCmd.init()
         expansion = Expansion().apply { register() }
     }
 

@@ -1,5 +1,8 @@
 package net.minevn.dotman.utils
 
+import net.md_5.bungee.api.chat.ClickEvent
+import net.md_5.bungee.api.chat.ComponentBuilder
+import net.md_5.bungee.api.chat.HoverEvent
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.config.MainConfig
 import org.bukkit.Bukkit
@@ -50,5 +53,34 @@ class Utils {
         fun List<String>.color() = map { it.color() }
 
         fun String.color(): String = ChatColor.translateAlternateColorCodes('&', this)
+
+        fun makePagination(command: String, page: Int, maxPage: Int, makeButton: Boolean) = ComponentBuilder("")
+            .run {
+                if (makeButton && page > 1) {
+                    append("<< Trang trước")
+                    color(net.md_5.bungee.api.ChatColor.GREEN)
+                    event(ClickEvent(ClickEvent.Action.RUN_COMMAND, "$command ${page - 1}"))
+                    event(HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        ComponentBuilder("§aClick để quay về trang trước").create()
+                    ))
+                    append(" | ").reset().color(net.md_5.bungee.api.ChatColor.GRAY)
+                }
+
+                append("Trang $page/$maxPage")
+
+                color(net.md_5.bungee.api.ChatColor.YELLOW)
+                if (makeButton && page < maxPage) {
+                    append(" | ").color(net.md_5.bungee.api.ChatColor.GRAY)
+                    append("Trang sau >>")
+                    color(net.md_5.bungee.api.ChatColor.GREEN)
+                    event(ClickEvent(ClickEvent.Action.RUN_COMMAND, "$command ${page + 1}"))
+                    event(HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        ComponentBuilder("§aClick để đi đến trang sau").create()
+                    ))
+                }
+                create()
+            }
     }
 }
