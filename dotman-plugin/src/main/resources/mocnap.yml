@@ -1,0 +1,18 @@
+# Phần thưởng nạp thẻ theo mốc
+- type: all # Toàn thời gian
+  amount: 5000000 # Giá trị tích lũy
+  award-commands: # Các lệnh chạy cho player khi đạt mốc
+    - 'tell %player% Chúc mừng bạn đã đạt mốc 5 triệu tích lũy'
+    - 'give %player% emerald 1'
+
+- type: week # Hằng tuần (tính năng premium)
+  amount: 200000
+  award-commands:
+    - 'tell %player% Chúc mừng bạn đã đạt mốc 200k tích lũy (hằng tuần)'
+    - 'give %player% emerald 1'
+
+- type: month # Hằng tháng (tính năng premium)
+  amount: 1000000
+  award-commands:
+    - 'tell %player% Chúc mừng bạn đã đạt mốc 1 triệu tích lũy (hằng tháng)'
+    - 'give %player% emerald 1'

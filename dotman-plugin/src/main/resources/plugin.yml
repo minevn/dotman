@@ -7,4 +7,6 @@ depend: [ MineVNLib, PlayerPoints, PlaceholderAPI ]
 commands:
   dotman:
     permission: dotman.admin
+  topnap:
+    permission: dotman.topnap
   napthe:

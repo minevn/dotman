@@ -20,7 +20,9 @@ class PlayerDataDAOImpl : PlayerDataDAO {
     """.trimIndent()
 
     override fun getTopScript(): String = """
-        SELECT *
+        SELECT 
+            ROW_NUMBER() OVER (ORDER BY "value" DESC) AS "rownum",
+            "uuid", "name", "key", "value"
         FROM "dotman_player_data"
         WHERE "key" = ?
         ORDER BY "value" DESC
