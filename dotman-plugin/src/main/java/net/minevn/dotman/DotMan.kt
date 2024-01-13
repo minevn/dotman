@@ -78,7 +78,7 @@ class DotMan : JavaPlugin(), Listener {
         val pointTo = pointFrom + amount
         runNotSync {
             PointsLoggerDAO.getInstance().insertLog(player, amount, pointFrom, pointTo)
-            val dataKey = if (amount > 0) "POINT_RECEIVED" else "POINT_USED"
+            val dataKey = if (amount > 0) TOP_KEY_POINT_RECEIVED else TOP_KEY_POINT_USED
             PlayerDataDAO.getInstance().insertAllType(player, dataKey, amount.absoluteValue)
         }
     }

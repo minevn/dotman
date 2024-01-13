@@ -37,7 +37,7 @@ interface PlayerDataDAO : DataAccess {
             setInt(2, limit)
 
             fetchRecords {
-                getString("uuid")!! to getInt("value")
+                getString("name")!! to getInt("value")
             }
         }
     }

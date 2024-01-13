@@ -1,6 +1,8 @@
 package net.minevn.dotman.providers
 
 import net.minevn.dotman.DotMan
+import net.minevn.dotman.TOP_KEY_DONATE_TOTAL
+import net.minevn.dotman.TOP_KEY_POINT_FROM_CARD
 import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardPrice
 import net.minevn.dotman.card.CardResult
@@ -126,8 +128,8 @@ abstract class CardProvider {
         }
 
         // Tích điểm
-        PlayerDataDAO.getInstance().insertAllType(player, "DONATE_TOTAL", card.price.value)
-        PlayerDataDAO.getInstance().insertAllType(player, "POINT_FROM_CARD", amount)
+        PlayerDataDAO.getInstance().insertAllType(player, TOP_KEY_DONATE_TOTAL, card.price.value)
+        PlayerDataDAO.getInstance().insertAllType(player, TOP_KEY_POINT_FROM_CARD, amount)
     }
 
     /**
