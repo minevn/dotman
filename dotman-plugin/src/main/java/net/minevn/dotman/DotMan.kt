@@ -109,7 +109,7 @@ class DotMan : JavaPlugin(), Listener {
             val pointFrom = instance.playerPoints.api.look(player.uniqueId)
             val pointTo = pointFrom + amount
             PointsLoggerDAO.getInstance().insertLog(player, amount, pointFrom, pointTo, reason)
-            val dataKey = if (amount > 0) "POINT_RECEIVED" else "POINT_USED"
+            val dataKey = if (amount > 0) TOP_KEY_POINT_RECEIVED else TOP_KEY_POINT_USED
             PlayerDataDAO.getInstance().insertAllType(player, dataKey, amount.absoluteValue)
             ignoreLoggingList.add(player)
             try {

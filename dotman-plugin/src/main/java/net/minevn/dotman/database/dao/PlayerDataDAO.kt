@@ -14,6 +14,7 @@ interface PlayerDataDAO : DataAccess {
 
     fun insertDataScript(): String
     fun getTopScript(): String
+    fun getDataScript(): String
 
     fun insertData(player: Player, key: String, value: Int) {
         insertDataScript().statement {
@@ -25,6 +26,15 @@ interface PlayerDataDAO : DataAccess {
 
             executeUpdate()
         }
+    }
+
+    fun getData(player: Player, key: String) = getDataScript().statement {
+        setString(1, player.uniqueId.toString())
+        setString(2, key)
+
+        fetchRecords {
+            getInt("value")
+        }.firstOrNull() ?: 0
     }
 
     fun insertAllType(player: Player, key: String, value: Int) = TopType.entries.forEach {

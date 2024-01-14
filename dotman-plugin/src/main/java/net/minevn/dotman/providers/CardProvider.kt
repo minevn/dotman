@@ -125,9 +125,16 @@ abstract class CardProvider {
             LogDAO.getInstance().updatePointReceived(card.logId!!, amount)
         }
 
+        val dataDAO = PlayerDataDAO.getInstance()
+
         // Tích điểm
-        PlayerDataDAO.getInstance().insertAllType(player, TOP_KEY_DONATE_TOTAL, card.price.value)
-        PlayerDataDAO.getInstance().insertAllType(player, TOP_KEY_POINT_FROM_CARD, amount)
+        dataDAO.insertAllType(player, TOP_KEY_DONATE_TOTAL, card.price.value)
+        dataDAO.insertAllType(player, TOP_KEY_POINT_FROM_CARD, amount)
+
+        // Mốc nạp
+        main.minestones.getAll().filter { it.type == "all" }.forEach {
+            it.check(player, dataDAO.getData(player, "${TOP_KEY_DONATE_TOTAL}_ALL"), card.price.value)
+        }
     }
 
     /**

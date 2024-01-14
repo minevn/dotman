@@ -21,4 +21,10 @@ class PlayerDataDAOImpl : PlayerDataDAO {
         ORDER BY `value` DESC
         LIMIT ?;
     """.trimIndent()
+
+    override fun getDataScript() = """
+        SELECT `value`
+        FROM `dotman_player_data`
+        WHERE `uuid` = ? AND `key` = ?;
+    """.trimIndent()
 }

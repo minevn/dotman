@@ -2,6 +2,8 @@ package net.minevn.dotman.config
 
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.warning
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 
 class Milestones : FileConfig("mocnap") {
 
@@ -49,6 +51,30 @@ class Milestones : FileConfig("mocnap") {
 
     fun getAll() = components.toList()
 
-    class Component(val type: String, val amount: Int, val commands: List<String>)
+    class Component(val type: String, val amount: Int, val commands: List<String>) {
 
+        private val typeName = when (type) {
+            "all" -> "toàn thời gian"
+            "week" -> "tuần"
+            "month" -> "tháng"
+            else -> throw IllegalArgumentException()
+        }
+
+        /**
+         * Kiểm tra xem người chơi đã đạt mốc nạp này chưa,
+         * nếu đạt thì thực hiện các lệnh trong config
+         *
+         * @param current số tiền sau khi nạp
+         * @param amount số tiền nạp
+         */
+        fun check(player: Player, current: Int, amount: Int) {
+            if (current - amount >= this.amount) {
+                info("${player.name} đã đạt mốc nạp $amount ($typeName)")
+                commands.forEach {
+                    val command = it.replace("%player%", player.name)
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.format(player.name))
+                }
+            }
+        }
+    }
 }
