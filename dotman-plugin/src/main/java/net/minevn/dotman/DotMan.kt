@@ -57,12 +57,12 @@ class DotMan : JavaPlugin(), Listener {
     fun reload() {
         config = MainConfig()
         DatabaseConnection.init(config.dbEngine, config.config)
+        language = Language()
+        minestones = Milestones()
 
         // init Gui configs
         CardTypeUI()
         CardPriceUI()
-        language = Language()
-        minestones = Milestones()
         ConfiguredUI.reloadConfigs(this)
         val providerConfig = FileConfig("providers/${config.provider}").apply { reload() }
         CardProvider.init(config.provider, providerConfig.config)
