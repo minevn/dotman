@@ -1,8 +1,6 @@
 package net.minevn.dotman.providers.types
 
 import net.minevn.dotman.card.*
-import net.minevn.dotman.config.Language
-import net.minevn.dotman.config.MainConfig
 import net.minevn.dotman.database.dao.LogDAO
 import net.minevn.dotman.providers.CardProvider
 import net.minevn.libs.bukkit.getOrNull
@@ -42,7 +40,7 @@ class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : 
 
     override fun onRequestSuccess(player: Player, result: CardResult) {
         LogDAO.getInstance().setWaiting(result.card.logId!!)
-        player.sendMessages(Language.get().cardChargedSent)
+        player.sendMessages(main.language.cardChargedSent)
     }
 
     private fun CardType.getTypeId() = when (this) {
@@ -83,9 +81,9 @@ class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : 
     override fun updateStatus() {
         val players = Bukkit.getOnlinePlayers().associateBy { it.uniqueId.toString() }
         val uuids = players.keys.toTypedArray()
-        val server = MainConfig.get().server
+        val server = main.config.server
         val cardLogger = LogDAO.getInstance()
-        val lang = Language.get()
+        val lang = main.language
 
         cardLogger.getWaitingCards(uuids, server)
             ?.filter { it.isProcessed() }

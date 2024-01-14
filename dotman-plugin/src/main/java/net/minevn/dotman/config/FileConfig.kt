@@ -32,7 +32,7 @@ open class FileConfig(val name: String) {
     fun get(key: String): String = (config.getString(key) ?: baseConfig.getString(key, "")).color()
 
     fun getList(key: String) = (config.getStringList(key)?.takeIf { it.isNotEmpty() } ?: baseConfig.getStringList(key))
-        .map { it.replace("%PREFIX%", MainConfig.get().prefix) }
+        .map { it.replace("%PREFIX%", DotMan.instance.config.prefix) }
         .color()
 
     open fun reload() {

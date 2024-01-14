@@ -7,21 +7,6 @@ import net.minevn.dotman.utils.dateAndTimeFormat
 
 class MainConfig : FileConfig("config") {
 
-    companion object {
-        private lateinit var instance: MainConfig
-
-        fun get(): MainConfig {
-            if (!::instance.isInitialized) {
-                instance = MainConfig()
-            }
-            return instance
-        }
-
-        fun reload() {
-            instance = MainConfig()
-        }
-    }
-
     val prefix = config.getString("prefix", "&6&lDotMan > &r")!!.color()
     val pointUnit = config.getString("point-unit", "point")!!.color()
     val extraUntil = dateAndTimeFormat.parse(config.getString("extra-until", "01/01/1970 00:00")).time

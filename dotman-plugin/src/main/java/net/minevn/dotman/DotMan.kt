@@ -6,6 +6,7 @@ import net.minevn.dotman.commands.TopNapCmd
 import net.minevn.dotman.config.FileConfig
 import net.minevn.dotman.config.Language
 import net.minevn.dotman.config.MainConfig
+import net.minevn.dotman.config.Milestones
 import net.minevn.dotman.database.connections.DatabaseConnection
 import net.minevn.dotman.database.dao.PlayerDataDAO
 import net.minevn.dotman.database.dao.PointsLoggerDAO
@@ -30,6 +31,11 @@ class DotMan : JavaPlugin(), Listener {
     lateinit var expansion: Expansion private set
     lateinit var playerPoints: PlayerPoints private set
 
+    // configurations
+    lateinit var config: MainConfig private set
+    lateinit var language: Language private set
+    lateinit var minestones: Milestones private set
+
     override fun onEnable() {
         instance = this
         server.pluginManager.registerEvents(this, this)
@@ -49,15 +55,15 @@ class DotMan : JavaPlugin(), Listener {
     }
 
     fun reload() {
-        MainConfig.reload()
-        val config = MainConfig.get()
+        config = MainConfig()
         DatabaseConnection.init(config.dbEngine, config.config)
 
         // init Gui configs
         CardTypeUI()
         CardPriceUI()
-        Language.reload()
-        ConfiguredUI.reloadConfigs()
+        language = Language()
+        minestones = Milestones()
+        ConfiguredUI.reloadConfigs(this)
         val providerConfig = FileConfig("providers/${config.provider}").apply { reload() }
         CardProvider.init(config.provider, providerConfig.config)
     }

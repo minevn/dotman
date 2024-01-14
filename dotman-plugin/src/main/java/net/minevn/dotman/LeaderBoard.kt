@@ -2,10 +2,11 @@ package net.minevn.dotman
 
 import net.minevn.dotman.database.dao.PlayerDataDAO
 import net.minevn.dotman.utils.Utils.Companion.runAsync
+import net.minevn.libs.bukkit.runSync
 import org.bukkit.Bukkit
 import java.util.concurrent.ConcurrentHashMap
 
-const val TOP_EXPIRE = 10 * 60 * 1000L // 10 phút
+const val TOP_EXPIRE = 5 * 60 * 1000L // 5 phút
 const val TOP_COUNT = 100
 
 const val TOP_KEY_POINT_USED = "POINT_USED"
@@ -13,8 +14,11 @@ const val TOP_KEY_POINT_RECEIVED = "POINT_RECEIVED"
 const val TOP_KEY_DONATE_TOTAL = "DONATE_TOTAL"
 const val TOP_KEY_POINT_FROM_CARD = "POINT_FROM_CARD"
 
-class LeaderBoard(private val list: List<Pair<String, Int>>) {
-    private val inititalTime = System.currentTimeMillis()
+class LeaderBoard(
+    private val list: List<Pair<String, Int>>,
+    private val inititalTime: Long = System.currentTimeMillis()
+) {
+
 
     fun isExpired() = System.currentTimeMillis() - inititalTime > TOP_EXPIRE
 
@@ -38,16 +42,18 @@ class LeaderBoard(private val list: List<Pair<String, Int>>) {
          * @param key Khóa định danh duy nhất cho LeaderBoard.
          * @return LeaderBoard liên kết với khóa đã cho.
          */
-        operator fun get(key: String) : LeaderBoard {
-            val cached = topCache[key]
-            if (cached?.isExpired() == false) return cached
+        operator fun get(key: String) = topCache[key]?.takeUnless { it.isExpired() } ?: run {
             if (Bukkit.isPrimaryThread()) {
-                runAsync { topCache[key] = getFromDB(key) }
-                return cached ?: LeaderBoard(emptyList())
+                runAsync {
+                    val updated = getFromDB(key)
+                    runSync { topCache[key] = updated }
+                }
+                LeaderBoard(emptyList(), 0L)
+            } else {
+                val updated = getFromDB(key)
+                topCache[key] = updated
+                updated
             }
-            val updated = getFromDB(key)
-            topCache[key] = updated
-            return updated
         }
     }
 }

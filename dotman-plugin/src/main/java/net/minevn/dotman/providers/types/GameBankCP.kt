@@ -1,9 +1,9 @@
 package net.minevn.dotman.providers.types
 
+import net.minevn.dotman.DotMan
 import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardResult
 import net.minevn.dotman.card.CardType
-import net.minevn.dotman.config.MainConfig
 import net.minevn.dotman.database.dao.LogDAO
 import net.minevn.dotman.providers.CardProvider
 import net.minevn.dotman.utils.Utils.Companion.warning
@@ -31,7 +31,7 @@ open class GameBankCP(
         "seri" to card.seri,
         "card_type" to card.type.getTypeId().toString(),
         "price_guest" to card.price.value.toString(),
-        "note" to "$playerName from ${MainConfig.get().server}"
+        "note" to "$playerName from ${DotMan.instance.config.server}"
     )
 
     override fun getRequestHeaders(playerName: String, card: Card): Map<String, String>? {

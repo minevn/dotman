@@ -4,7 +4,6 @@ import net.minevn.dotman.DotMan
 import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardPrice
 import net.minevn.dotman.card.CardType
-import net.minevn.dotman.config.Language
 import net.minevn.dotman.gui.CardTypeUI
 import net.minevn.dotman.providers.CardProvider
 import net.minevn.dotman.utils.Utils.Companion.send
@@ -14,6 +13,8 @@ import org.bukkit.entity.Player
 class MainCmd {
     companion object {
         fun init() {
+            val main = DotMan.instance
+
             // lệnh nạp thẻ
             // cú pháp nạp nhanh: /napthe <loại thẻ> <mệnh giá> <số seri> <mã thẻ>
             command {
@@ -46,11 +47,11 @@ class MainCmd {
                         val cardSeri = args[2]
                         val cardCode = args[3]
                         if (cardType == null) {
-                            player.send(Language.get().errorUnknownCardType)
+                            player.send(main.language.errorUnknownCardType)
                             return@a
                         }
                         if (cardPrice == null) {
-                            player.send(Language.get().errorUnknownCardPrice)
+                            player.send(main.language.errorUnknownCardPrice)
                             return@a
                         }
 

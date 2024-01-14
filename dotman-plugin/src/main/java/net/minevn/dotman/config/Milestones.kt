@@ -2,7 +2,7 @@ package net.minevn.dotman.config
 
 import net.minevn.dotman.utils.Utils.Companion.warning
 
-class Milestone : FileConfig("milestone") {
+class Milestones : FileConfig("mocnap") {
 
     private var components: List<Component> = emptyList()
 
@@ -18,7 +18,8 @@ class Milestone : FileConfig("milestone") {
             val component = Component(it["type"] as String, it["amount"] as Int, it["commands"] as List<String>)
             if (component.type != "all" && !premiumWarning) {
                 premiumWarning = true
-                warning("Tính năng mốc nạp chỉ có ở phiên bản DotMan premium. Hãy mua plugin để ủng hộ author nhé!")
+                warning("Tính năng mốc nạp theo tuần, tháng chỉ có ở phiên bản DotMan premium. " +
+                        "Hãy mua plugin để ủng hộ author nhé!")
             }
             component
         }

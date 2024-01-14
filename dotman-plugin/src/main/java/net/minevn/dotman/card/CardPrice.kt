@@ -1,6 +1,6 @@
 package net.minevn.dotman.card
 
-import net.minevn.dotman.config.MainConfig
+import net.minevn.dotman.DotMan
 
 enum class CardPrice(val value: Int) {
     CP_10K(10000),
@@ -13,7 +13,7 @@ enum class CardPrice(val value: Int) {
     CP_500K(500000),
     CP_1000K(1000000);
 
-    fun getPointAmount() = MainConfig.get().amounts[this]!!
+    fun getPointAmount() = DotMan.instance.config.amounts[this]!!
 
     companion object {
         operator fun get(value: Int): CardPrice? = entries.find { type -> type.value == value }

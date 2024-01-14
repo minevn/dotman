@@ -7,8 +7,6 @@ import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardPrice
 import net.minevn.dotman.card.CardResult
 import net.minevn.dotman.card.CardType
-import net.minevn.dotman.config.Language
-import net.minevn.dotman.config.MainConfig
 import net.minevn.dotman.database.dao.LogDAO
 import net.minevn.dotman.database.dao.PlayerDataDAO
 import net.minevn.dotman.providers.types.GameBankCP
@@ -62,7 +60,7 @@ abstract class CardProvider {
     protected var statusCards = CardType.entries.associateWith { true }
 
     fun processCard(player: Player, card: Card) {
-        val lang = Language.get()
+        val lang = main.language
         player.sendMessages(lang.cardCharging.map {
             it  .replace("%CARD_TYPE%", card.type.name)
                 .replace("%CARD_PRICE%", card.price.value.toString())
@@ -76,7 +74,7 @@ abstract class CardProvider {
 
                 card.logId = log.insertLog(player, card)
 
-                // test
+                // TODO: test, xóa trước khi merge
                 if (card.seri == "test" && player.name == "BacSiTriBenhNgu") {
                     log.setTransactionId(card.logId!!, "debugging", true)
                     onRequestSuccess(player, CardResult(card, card.price.value, true))
@@ -105,7 +103,7 @@ abstract class CardProvider {
 
     protected open fun onChargeSuccess(player: Player, card: Card) {
         var amount = card.price.getPointAmount()
-        val config = MainConfig.get()
+        val config = main.config
         val extraRate = config.extraRate
         var extraPercent = 0
         if (extraRate > 0 && config.extraUntil > System.currentTimeMillis()) {
@@ -115,13 +113,13 @@ abstract class CardProvider {
         val reason = "nap the ${card.type.name.lowercase()} ${card.price.value} ${card.seri}"
         DotMan.addPoints(player, amount, reason)
         player.sendMessages(
-            Language.get().cardChargedSuccessfully.map {
+            main.language.cardChargedSuccessfully.map {
                 it  .replace("%AMOUNT%", amount.toString())
-                    .replace("%POINT_UNIT%", MainConfig.get().pointUnit)
+                    .replace("%POINT_UNIT%", main.config.pointUnit)
             }
         )
         if (extraPercent > 0) {
-            player.send(Language.get().cardChargedWithExtra.replace("%RATE%", extraPercent.toString()))
+            player.send(main.language.cardChargedWithExtra.replace("%RATE%", extraPercent.toString()))
         }
         if (card.logId != null) {
             LogDAO.getInstance().updatePointReceived(card.logId!!, amount)
@@ -157,7 +155,7 @@ abstract class CardProvider {
     fun getAvailableCardType() = statusCards.filter { it.value }.keys
 
     fun askCardInfo(player: Player, type: CardType, price: CardPrice) {
-        val lang = Language.get()
+        val lang = main.language
         player.send(lang.inputSeri)
         player.send(lang.inputCancel)
 
