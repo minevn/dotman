@@ -12,7 +12,7 @@ fun formatLocationDouble(value: Double) = locationFormat.format(value)
 fun formatFloat(value: Float) = String.format("%.1f", value)
 
 val dateAndTimeFormat = SimpleDateFormat("dd/MM/yyyy HH:mm")
-fun getDateAndTime(time: Long) = dateAndTimeFormat.format(time)
+fun Long.formatDate() = dateAndTimeFormat.format(this)
 
 fun getTimeString(time: Long): String {
     val totalsecond = time / 1000

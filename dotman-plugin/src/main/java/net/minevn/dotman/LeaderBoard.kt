@@ -42,18 +42,15 @@ class LeaderBoard(
          * @param key Khóa định danh duy nhất cho LeaderBoard.
          * @return LeaderBoard liên kết với khóa đã cho.
          */
-        operator fun get(key: String) = topCache[key]?.takeUnless { it.isExpired() } ?: run {
-            if (Bukkit.isPrimaryThread()) {
-                runAsync {
-                    val updated = getFromDB(key)
-                    runSync { topCache[key] = updated }
+        operator fun get(key: String) = topCache[key].run {
+            if (this?.isExpired() != false) {
+                if (Bukkit.isPrimaryThread()) {
+                    runAsync { getFromDB(key).also { runSync { topCache[key] = it } } }
+                    this ?: LeaderBoard(emptyList(), 0L)
+                } else {
+                    getFromDB(key).also { topCache[key] = it }
                 }
-                LeaderBoard(emptyList(), 0L)
-            } else {
-                val updated = getFromDB(key)
-                topCache[key] = updated
-                updated
-            }
+            } else this
         }
     }
 }
