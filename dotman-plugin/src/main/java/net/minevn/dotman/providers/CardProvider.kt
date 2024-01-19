@@ -71,16 +71,7 @@ abstract class CardProvider {
         runNotSync {
             runCatching {
                 val log = LogDAO.getInstance()
-
                 card.logId = log.insertLog(player, card)
-
-                // TODO: test, xóa trước khi merge
-                if (card.seri == "test" && player.name == "BacSiTriBenhNgu") {
-                    log.setTransactionId(card.logId!!, "debugging", true)
-                    onRequestSuccess(player, CardResult(card, card.price.value, true))
-                    return@runCatching
-                }
-
                 val result = doRequest(player.name, card)
 
                 if (result.isSuccess) {

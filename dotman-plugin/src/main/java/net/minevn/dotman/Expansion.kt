@@ -11,7 +11,7 @@ class Expansion : PlaceholderExpansion() {
     override fun getVersion() = "1.0"
 
     @Suppress("NAME_SHADOWING")
-    override fun onPlaceholderRequest(player: Player, params: String): String {
+    override fun onPlaceholderRequest(player: Player, params: String): String? {
         val params = params.lowercase()
         val args = params.lowercase().split("_").dropLastWhile { it.isEmpty() }
 
@@ -26,6 +26,6 @@ class Expansion : PlaceholderExpansion() {
             return if (isPlayer) target.first else target.second.toString()
         }
 
-        return params
+        return null
     }
 }
