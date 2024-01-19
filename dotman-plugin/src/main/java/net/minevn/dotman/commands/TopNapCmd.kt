@@ -15,8 +15,19 @@ class TopNapCmd { companion object { fun init() {
         description("Xem top nạp thẻ")
 
         action { runNotSync {
+            if (args.size > 1) {
+                sender.sendMessage("§cCách sử dụng: /topnap [số trang]")
+                return@runNotSync
+            }
+
             val page = args.getOrNull(0)?.toIntOrNull() ?: 1
             val top = LeaderBoard["${TOP_KEY_DONATE_TOTAL}_ALL"]
+
+            if (top.size() == 0) {
+                sender.sendMessage("§cChưa có dữ liệu top nạp thẻ.")
+                return@runNotSync
+            }
+
             val maxPage = ceil(top.size() / 20.0).toInt()
             if (page > maxPage) {
                 sender.sendMessage("§cKhông tìm thấy trang $page")

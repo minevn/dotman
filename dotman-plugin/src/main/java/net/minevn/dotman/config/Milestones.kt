@@ -1,13 +1,12 @@
 package net.minevn.dotman.config
 
-import net.minevn.dotman.DotMan
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.warning
-import net.minevn.libs.bukkit.FileConfig
+import net.minevn.libs.bukkit.runSync
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
-class Milestones : FileConfig(DotMan.instance, "mocnap") {
+class Milestones : FileConfig("mocnap") {
 
     private var components: List<Component> = emptyList()
 
@@ -70,11 +69,13 @@ class Milestones : FileConfig(DotMan.instance, "mocnap") {
          * @param amount số tiền nạp
          */
         fun check(player: Player, current: Int, amount: Int) {
-            if (current - amount < this.amount) {
+            if (current >= this.amount && current - amount < this.amount) {
                 info("${player.name} đã đạt mốc nạp $amount ($typeName)")
-                commands.forEach {
-                    val command = it.replace("%player%", player.name)
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.format(player.name))
+                runSync {
+                    commands.forEach {
+                        val command = it.replace("%player%", player.name)
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.format(player.name))
+                    }
                 }
             }
         }
