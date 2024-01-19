@@ -1,11 +1,13 @@
 package net.minevn.dotman.config
 
+import net.minevn.dotman.DotMan
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.warning
+import net.minevn.libs.bukkit.FileConfig
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
-class Milestones : FileConfig("mocnap") {
+class Milestones : FileConfig(DotMan.instance, "mocnap") {
 
     private var components: List<Component> = emptyList()
 

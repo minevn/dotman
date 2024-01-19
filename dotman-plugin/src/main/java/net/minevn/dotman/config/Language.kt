@@ -1,6 +1,9 @@
 package net.minevn.dotman.config
 
-class Language : FileConfig("messages") {
+import net.minevn.dotman.DotMan
+import net.minevn.libs.bukkit.FileConfig
+
+class Language : FileConfig(DotMan.instance, "messages") {
 
     val errorUnknown = get("error-unknown")
     val errorUnknownCardType = get("error-unknown-card-type")

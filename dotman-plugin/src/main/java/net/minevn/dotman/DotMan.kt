@@ -3,7 +3,6 @@ package net.minevn.dotman
 import net.minevn.dotman.commands.AdminCmd
 import net.minevn.dotman.commands.MainCmd
 import net.minevn.dotman.commands.TopNapCmd
-import net.minevn.dotman.config.FileConfig
 import net.minevn.dotman.config.Language
 import net.minevn.dotman.config.MainConfig
 import net.minevn.dotman.config.Milestones
@@ -16,6 +15,7 @@ import net.minevn.dotman.providers.CardProvider
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.guiapi.ConfiguredUI
+import net.minevn.libs.bukkit.FileConfig
 import org.black_ixx.playerpoints.PlayerPoints
 import org.black_ixx.playerpoints.event.PlayerPointsChangeEvent
 import org.bukkit.Bukkit
@@ -64,7 +64,7 @@ class DotMan : JavaPlugin(), Listener {
         CardTypeUI()
         CardPriceUI()
         ConfiguredUI.reloadConfigs(this)
-        val providerConfig = FileConfig("providers/${config.provider}").apply { reload() }
+        val providerConfig = FileConfig(this, "providers/${config.provider}").apply { reload() }
         CardProvider.init(config.provider, providerConfig.config)
     }
 
