@@ -70,7 +70,7 @@ class Milestones : FileConfig(DotMan.instance, "mocnap") {
          * @param amount số tiền nạp
          */
         fun check(player: Player, current: Int, amount: Int) {
-            if (current - amount >= this.amount) {
+            if (current - amount < this.amount) {
                 info("${player.name} đã đạt mốc nạp $amount ($typeName)")
                 commands.forEach {
                     val command = it.replace("%player%", player.name)
