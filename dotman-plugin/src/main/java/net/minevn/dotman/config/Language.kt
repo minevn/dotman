@@ -2,21 +2,6 @@ package net.minevn.dotman.config
 
 class Language : FileConfig("messages") {
 
-    companion object {
-        private lateinit var instance: Language
-
-        fun get(): Language {
-            if (!::instance.isInitialized) {
-                instance = Language()
-            }
-            return instance
-        }
-
-        fun reload() {
-            instance = Language()
-        }
-    }
-
     val errorUnknown = get("error-unknown")
     val errorUnknownCardType = get("error-unknown-card-type")
     val errorUnknownCardPrice = get("error-unknown-card-price")

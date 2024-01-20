@@ -1,13 +1,14 @@
 package net.minevn.dotman.providers
 
 import net.minevn.dotman.DotMan
+import net.minevn.dotman.TOP_KEY_DONATE_TOTAL
+import net.minevn.dotman.TOP_KEY_POINT_FROM_CARD
 import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardPrice
 import net.minevn.dotman.card.CardResult
 import net.minevn.dotman.card.CardType
-import net.minevn.dotman.config.Language
-import net.minevn.dotman.config.MainConfig
 import net.minevn.dotman.database.dao.LogDAO
+import net.minevn.dotman.database.dao.PlayerDataDAO
 import net.minevn.dotman.providers.types.GameBankCP
 import net.minevn.dotman.providers.types.TheSieuTocCP
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
@@ -59,10 +60,9 @@ abstract class CardProvider {
     protected var statusCards = CardType.entries.associateWith { true }
 
     fun processCard(player: Player, card: Card) {
-        val lang = Language.get()
+        val lang = main.language
         player.sendMessages(lang.cardCharging.map {
-            it
-                .replace("%CARD_TYPE%", card.type.name)
+            it  .replace("%CARD_TYPE%", card.type.name)
                 .replace("%CARD_PRICE%", card.price.value.toString())
                 .replace("%SERI%", card.seri)
                 .replace("%CODE%", card.pin)
@@ -71,7 +71,6 @@ abstract class CardProvider {
         runNotSync {
             runCatching {
                 val log = LogDAO.getInstance()
-
                 card.logId = log.insertLog(player, card)
                 val result = doRequest(player.name, card)
 
@@ -95,27 +94,36 @@ abstract class CardProvider {
 
     protected open fun onChargeSuccess(player: Player, card: Card) {
         var amount = card.price.getPointAmount()
-        val config = MainConfig.get()
+        val config = main.config
         val extraRate = config.extraRate
         var extraPercent = 0
         if (extraRate > 0 && config.extraUntil > System.currentTimeMillis()) {
             amount += (amount * config.extraRate).toInt()
             extraPercent = (extraRate * 100).toInt()
         }
-        val reason = "nap the ${card.type.name.lowercase()} ${card.price.value} ${card.seri}"
-        DotMan.addPoints(player, amount, reason)
+        DotMan.instance.playerPoints.api.give(player.uniqueId, amount)
         player.sendMessages(
-            Language.get().cardChargedSuccessfully.map {
-                it
-                    .replace("%AMOUNT%", amount.toString())
-                    .replace("%POINT_UNIT%", MainConfig.get().pointUnit)
+            main.language.cardChargedSuccessfully.map {
+                it  .replace("%AMOUNT%", amount.toString())
+                    .replace("%POINT_UNIT%", main.config.pointUnit)
             }
         )
         if (extraPercent > 0) {
-            player.send(Language.get().cardChargedWithExtra.replace("%RATE%", extraPercent.toString()))
+            player.send(main.language.cardChargedWithExtra.replace("%RATE%", extraPercent.toString()))
         }
         if (card.logId != null) {
             LogDAO.getInstance().updatePointReceived(card.logId!!, amount)
+        }
+
+        val dataDAO = PlayerDataDAO.getInstance()
+
+        // Tích điểm
+        dataDAO.insertAllType(player, TOP_KEY_DONATE_TOTAL, card.price.value)
+        dataDAO.insertAllType(player, TOP_KEY_POINT_FROM_CARD, amount)
+
+        // Mốc nạp
+        main.minestones.getAll().filter { it.type == "all" }.forEach {
+            it.check(player, dataDAO.getData(player, "${TOP_KEY_DONATE_TOTAL}_ALL"), card.price.value)
         }
     }
 
@@ -144,7 +152,7 @@ abstract class CardProvider {
     fun getAvailableCardType() = statusCards.filter { it.value }.keys
 
     fun askCardInfo(player: Player, type: CardType, price: CardPrice) {
-        val lang = Language.get()
+        val lang = main.language
         player.send(lang.inputSeri)
         player.send(lang.inputCancel)
 

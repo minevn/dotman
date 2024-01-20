@@ -1,6 +1,6 @@
 package net.minevn.dotman.database.dao
 
-import net.minevn.dotman.config.MainConfig
+import net.minevn.dotman.DotMan
 import net.minevn.dotman.database.DataAccess
 import net.minevn.dotman.database.getInstance
 import net.minevn.dotman.database.statement
@@ -21,7 +21,7 @@ interface PointsLoggerDAO : DataAccess {
             setInt(4, pointFrom)
             setInt(5, pointTo)
             setLong(6, System.currentTimeMillis())
-            setString(7, MainConfig.get().server)
+            setString(7, DotMan.instance.config.server)
             setString(8, content)
 
             executeUpdate()

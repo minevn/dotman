@@ -1,9 +1,8 @@
 package net.minevn.dotman.database.dao
 
+import net.minevn.dotman.DotMan
 import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardWaiting
-import net.minevn.dotman.config.Language
-import net.minevn.dotman.config.MainConfig
 import net.minevn.dotman.database.*
 import net.minevn.dotman.utils.Utils
 import net.minevn.libs.minMaxEpochTimestamp
@@ -14,6 +13,8 @@ interface LogDAO : DataAccess {
     companion object {
         fun getInstance() = LogDAO::class.getInstance()
     }
+
+    private fun getMain() = DotMan.instance
 
     // region scripts
     fun insertLogScript(): String
@@ -49,7 +50,7 @@ interface LogDAO : DataAccess {
             setString(5, card.type.name)
             setInt(6, card.price.value)
             setLong(7, System.currentTimeMillis())
-            setString(8, MainConfig.get().server)
+            setString(8, getMain().config.server)
 
             executeUpdate()
             generatedKeys.use {
@@ -149,13 +150,13 @@ interface LogDAO : DataAccess {
                 val price = getInt("price")
                 val pointsReceived = getInt("pointsnhan")
                 val time = getLong("time").timeToString()
-                Language.get().logOutPut
+                getMain().language.logOutPut
                     .replace("%ORDER%", rowNum.toString())
                     .replace("%PLAYER%", name)
                     .replace("%CARD_TYPE%", type)
                     .replace("%CARD_PRICE%", price.toString())
                     .replace("%POINTS_RECEIVED%", pointsReceived.toString())
-                    .replace("%POINT_UNIT%", MainConfig.get().pointUnit)
+                    .replace("%POINT_UNIT%", getMain().config.pointUnit)
                     .replace("%DATE%", time)
             }
         }

@@ -2,7 +2,6 @@ package net.minevn.dotman.gui
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.card.CardType
-import net.minevn.dotman.config.Language
 import net.minevn.dotman.database.dao.ConfigDAO
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
@@ -25,7 +24,7 @@ class CardTypeUI(viewer: Player?) : ConfiguredUI(viewer, "menu/napthe/loaithe.ym
     constructor() : this(null)
 
     private val configDao = ConfigDAO.getInstance()
-    private val lang = Language.get()
+    private val lang = DotMan.instance.language
 
     init {
         if (viewer?.isOnline == true) buildAsync()

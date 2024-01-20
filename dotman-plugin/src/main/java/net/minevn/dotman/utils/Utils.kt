@@ -1,9 +1,12 @@
 package net.minevn.dotman.utils
 
+import net.md_5.bungee.api.ChatColor
+import net.md_5.bungee.api.chat.BaseComponent
+import net.md_5.bungee.api.chat.ClickEvent
+import net.md_5.bungee.api.chat.ComponentBuilder
+import net.md_5.bungee.api.chat.HoverEvent
 import net.minevn.dotman.DotMan
-import net.minevn.dotman.config.MainConfig
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.scheduler.BukkitTask
 import java.util.logging.Level
@@ -19,10 +22,10 @@ class Utils {
         fun info(message: String) = DotMan.instance.logger.info(message)
 
         fun sendServerMessages(statusMessages: List<String>) = statusMessages.forEach {
-            Bukkit.broadcastMessage("${MainConfig.get().prefix} $it".color())
+            Bukkit.broadcastMessage("${DotMan.instance.config.prefix} $it".color())
         }
 
-        fun CommandSender.send(message: String) = sendMessage("${MainConfig.get().prefix} $message".color())
+        fun CommandSender.send(message: String) = sendMessage("${DotMan.instance.config.prefix} $message".color())
 
         fun runAsyncTimer(delay: Long, period: Long, r: Runnable): BukkitTask =
             Bukkit.getScheduler().runTaskTimerAsynchronously(DotMan.instance, r, delay, period)
@@ -50,5 +53,35 @@ class Utils {
         fun List<String>.color() = map { it.color() }
 
         fun String.color(): String = ChatColor.translateAlternateColorCodes('&', this)
+
+        fun makePagination(command: String, page: Int, maxPage: Int, makeButton: Boolean) : Array<BaseComponent> {
+            return ComponentBuilder("\n§r").run {
+                if (makeButton && page > 1) {
+                    append("<< Trang trước")
+                    color(ChatColor.GREEN)
+                    event(ClickEvent(ClickEvent.Action.RUN_COMMAND, "$command ${page - 1}"))
+                    event(HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        ComponentBuilder("§aClick để quay về trang trước").create()
+                    ))
+                    append(" | ").reset().color(ChatColor.GRAY)
+                }
+
+                append("Trang $page/$maxPage")
+
+                color(ChatColor.YELLOW)
+                if (makeButton && page < maxPage) {
+                    append(" | ").color(ChatColor.GRAY)
+                    append("Trang sau >>")
+                    color(ChatColor.GREEN)
+                    event(ClickEvent(ClickEvent.Action.RUN_COMMAND, "$command ${page + 1}"))
+                    event(HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        ComponentBuilder("§aClick để đi đến trang sau").create()
+                    ))
+                }
+                create()
+            }
+        }
     }
 }

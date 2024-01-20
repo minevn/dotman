@@ -1,12 +1,9 @@
 package net.minevn.dotman.commands
 
-import net.md_5.bungee.api.ChatColor
-import net.md_5.bungee.api.chat.ClickEvent
-import net.md_5.bungee.api.chat.ComponentBuilder
-import net.md_5.bungee.api.chat.HoverEvent
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.database.dao.ConfigDAO
 import net.minevn.dotman.database.dao.LogDAO
+import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.libs.bukkit.Command
@@ -136,40 +133,13 @@ class AdminCmd {
                             toString()
                         }
 
-                        val pagination = ComponentBuilder("").run {
-                            if (page > 1) {
-                                append("<< Trang trước")
-                                color(ChatColor.GREEN)
-                                event(ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                                    "$paginationBuilder ${page - 1}"))
-                                event(HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                    ComponentBuilder("§aClick để quay về trang trước").create()))
-                                append(" | ").reset().color(ChatColor.GRAY)
-                            }
-                            append("Trang $page/$maxPage")
-                            color(ChatColor.YELLOW)
-                            if (page < maxPage) {
-                                append(" | ").color(ChatColor.GRAY)
-                                append("Trang sau >>")
-                                color(ChatColor.GREEN)
-                                event(ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                                    "$paginationBuilder ${page + 1}"))
-                                event(HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                    ComponentBuilder("§aClick để đi đến trang sau").create()))
-                            }
-                            create()
-                        }
-                        val paginationConsole = "Trang $page/$maxPage"
+                        val pagination = makePagination(paginationBuilder, page, maxPage, sender is Player)
 
                         sender.send(title)
                         sender.sendMessage(total)
                         sender.sendMessage("§f")
                         logs.forEach(sender::sendMessage)
-                        if (sender is Player) {
-                            sender.spigot().sendMessage(*pagination)
-                        } else {
-                            sender.sendMessage(paginationConsole)
-                        }
+                        sender.spigot().sendMessage(*pagination)
                     } catch (e: DateTimeParseException) {
                         sender.send("§cSai định dạng tháng. Ví dụ định dạng đúng: 01/2024")
                     }
