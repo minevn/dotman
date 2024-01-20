@@ -101,8 +101,7 @@ abstract class CardProvider {
             amount += (amount * config.extraRate).toInt()
             extraPercent = (extraRate * 100).toInt()
         }
-        val reason = "nap the ${card.type.name.lowercase()} ${card.price.value} ${card.seri}"
-        DotMan.addPoints(player, amount, reason)
+        DotMan.instance.playerPoints.api.give(player.uniqueId, amount)
         player.sendMessages(
             main.language.cardChargedSuccessfully.map {
                 it  .replace("%AMOUNT%", amount.toString())

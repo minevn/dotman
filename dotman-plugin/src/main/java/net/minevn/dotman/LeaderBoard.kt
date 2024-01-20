@@ -9,8 +9,6 @@ import java.util.concurrent.ConcurrentHashMap
 const val TOP_EXPIRE = 5 * 60 * 1000L // 5 phút
 const val TOP_COUNT = 100
 
-const val TOP_KEY_POINT_USED = "POINT_USED"
-const val TOP_KEY_POINT_RECEIVED = "POINT_RECEIVED"
 const val TOP_KEY_DONATE_TOTAL = "DONATE_TOTAL"
 const val TOP_KEY_POINT_FROM_CARD = "POINT_FROM_CARD"
 
