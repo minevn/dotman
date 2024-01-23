@@ -26,7 +26,7 @@ Hướng dẫn sử dụng
 
 **Danh sách lệnh:**
 
-| Lệnh | Chức năng | Quyền sử dụng |
+| Lệnh | Chức năng | Permission |
 | -----| ---------- | ------- |
 | /napthe | Mở menu nạp thẻ | Người chơi |
 | /napthe <loại thẻ> <mệnh giá> <số seri> <mã thẻ> | Nạp thẻ nhanh | Người chơi |
@@ -53,7 +53,7 @@ DotMan/
 ```
 
 - Bạn có thể config giao diện tại các file `loaithe.yml` và `menhgia.yml`
-- Để thêm API Key cho các dịch vụ tương ứng, hãy thêm tại các file `gamebanj.yml` và `thesieutoc.yml`
+- Để thêm API Key cho các dịch vụ tương ứng, hãy thêm tại các file `gamebank.yml` và `thesieutoc.yml`
 - Cài đặt chung của plugin được đặt tại `config.yml`, các message đặt tại `messages.yml`
 - Cài đặt mốc nạp tích luỹ tại `mocnap.yml`
 
