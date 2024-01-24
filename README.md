@@ -30,10 +30,11 @@ Hướng dẫn sử dụng
 | -----| ---------- | ------- |
 | /napthe | Mở menu nạp thẻ | Người chơi |
 | /napthe <loại thẻ> <mệnh giá> <số seri> <mã thẻ> | Nạp thẻ nhanh | Người chơi |
-| /dotman reload | Reload lại config | OP |
-| /dotman thongbao | Thay đổi thông báo trong menu nạp thẻ | OP |
-| /dotman chuyenkhoan | Đặt vị trí xem hướng dẫn chuyển khoản | OP |
-| /dotman lichsu | Xem lịch sử nạp thẻ | OP |
+| /topnap | Xem top nạp thẻ | dotman.topnap |
+| /dotman reload | Reload lại config | dotman.admin |
+| /dotman thongbao | Thay đổi thông báo trong menu nạp thẻ | dotman.admin |
+| /dotman chuyenkhoan | Đặt vị trí xem hướng dẫn chuyển khoản | dotman.admin |
+| /dotman lichsu | Xem lịch sử nạp thẻ | dotman.admin |
 
 **Config plugin:**
 
