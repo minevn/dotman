@@ -1,8 +1,8 @@
 package net.minevn.dotman.commands
 
 import net.minevn.dotman.DotMan
-import net.minevn.dotman.database.dao.ConfigDAO
-import net.minevn.dotman.database.dao.LogDAO
+import net.minevn.dotman.database.ConfigDAO
+import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
@@ -138,7 +138,7 @@ class AdminCmd {
                         sender.send(title)
                         sender.sendMessage(total)
                         sender.sendMessage("§f")
-                        logs.forEach(sender::sendMessage)
+//                        logs.forEach(sender::sendMessage)
                         sender.spigot().sendMessage(*pagination)
                     } catch (e: DateTimeParseException) {
                         sender.send("§cSai định dạng tháng. Ví dụ định dạng đúng: 01/2024")

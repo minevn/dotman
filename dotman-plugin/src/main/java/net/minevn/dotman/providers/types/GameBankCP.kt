@@ -4,7 +4,7 @@ import net.minevn.dotman.DotMan
 import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardResult
 import net.minevn.dotman.card.CardType
-import net.minevn.dotman.database.dao.LogDAO
+import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.providers.CardProvider
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.libs.bukkit.getOrNull

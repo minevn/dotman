@@ -7,8 +7,8 @@ import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardPrice
 import net.minevn.dotman.card.CardResult
 import net.minevn.dotman.card.CardType
-import net.minevn.dotman.database.dao.LogDAO
-import net.minevn.dotman.database.dao.PlayerDataDAO
+import net.minevn.dotman.database.LogDAO
+import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.providers.types.GameBankCP
 import net.minevn.dotman.providers.types.TheSieuTocCP
 import net.minevn.dotman.utils.Utils.Companion.runNotSync

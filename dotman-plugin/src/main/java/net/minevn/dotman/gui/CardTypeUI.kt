@@ -2,7 +2,7 @@ package net.minevn.dotman.gui
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.card.CardType
-import net.minevn.dotman.database.dao.ConfigDAO
+import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.guiapi.ConfiguredUI

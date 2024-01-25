@@ -1,20 +1,18 @@
-package net.minevn.dotman.database.dao
+package net.minevn.dotman.database
 
-import net.minevn.dotman.database.DataAccess
-import net.minevn.dotman.database.fetchRecords
-import net.minevn.dotman.database.getInstance
-import net.minevn.dotman.database.statement
+import net.minevn.dotman.DotMan
 import net.minevn.dotman.utils.TopType
+import net.minevn.libs.bukkit.db.DataAccess
 import org.bukkit.entity.Player
 
-interface PlayerDataDAO : DataAccess {
+abstract class PlayerDataDAO : DataAccess() {
     companion object {
-        fun getInstance() = PlayerDataDAO::class.getInstance()
+        fun getInstance() = DotMan.instance.getDAO(PlayerDataDAO::class)
     }
 
-    fun insertDataScript(): String
-    fun getTopScript(): String
-    fun getDataScript(): String
+    abstract fun insertDataScript(): String
+    abstract fun getTopScript(): String
+    abstract fun getDataScript(): String
 
     fun insertData(player: Player, key: String, value: Int) {
         insertDataScript().statement {

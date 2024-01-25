@@ -1,36 +1,37 @@
-package net.minevn.dotman.database.dao
+package net.minevn.dotman.database
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardWaiting
 import net.minevn.dotman.database.*
 import net.minevn.dotman.utils.Utils
+import net.minevn.libs.bukkit.db.DataAccess
 import net.minevn.libs.minMaxEpochTimestamp
 import net.minevn.libs.timeToString
 import org.bukkit.entity.Player
 
-interface LogDAO : DataAccess {
+abstract class LogDAO : DataAccess() {
     companion object {
-        fun getInstance() = LogDAO::class.getInstance()
+        fun getInstance() = DotMan.instance.getDAO(LogDAO::class)
     }
 
     private fun getMain() = DotMan.instance
 
     // region scripts
-    fun insertLogScript(): String
-    fun setWaitingScript(): String
-    fun getWaitingCardsScript(): String
-    fun stopWaitingScript(): String
-    fun setTransactionIdScript(): String
-    fun getHistoryScriptAllPlayerAllTime(): String
-    fun getHistoryScriptAllPlayerByMonth(): String
-    fun getHistoryScriptByPlayerAllTime(): String
-    fun getHistoryScriptByPlayerByMonth(): String
-    fun getSumScriptAllPlayerAllTime(): String
-    fun getSumScriptAllPlayerByMonth(): String
-    fun getSumScriptByPlayerAllTime(): String
-    fun getSumScriptByPlayerByMonth(): String
-    fun updatePointReceivedScript(): String
+    abstract fun insertLogScript(): String
+    abstract fun setWaitingScript(): String
+    abstract fun getWaitingCardsScript(): String
+    abstract fun stopWaitingScript(): String
+    abstract fun setTransactionIdScript(): String
+    abstract fun getHistoryScriptAllPlayerAllTime(): String
+    abstract fun getHistoryScriptAllPlayerByMonth(): String
+    abstract fun getHistoryScriptByPlayerAllTime(): String
+    abstract fun getHistoryScriptByPlayerByMonth(): String
+    abstract fun getSumScriptAllPlayerAllTime(): String
+    abstract fun getSumScriptAllPlayerByMonth(): String
+    abstract fun getSumScriptByPlayerAllTime(): String
+    abstract fun getSumScriptByPlayerByMonth(): String
+    abstract fun updatePointReceivedScript(): String
     // endregion
 
     // region queriers

@@ -1,8 +1,8 @@
-package net.minevn.dotman.database.dao.mysql
+package net.minevn.dotman.database.mysql
 
-import net.minevn.dotman.database.dao.LogDAO
+import net.minevn.dotman.database.LogDAO
 
-class LogDAOImpl : LogDAO {
+class LogDAOImpl : LogDAO() {
     override fun insertLogScript() = """
             INSERT INTO `dotman_napthe_log`
                 (`name`, `uuid`, `seri`, `pin`, `type`, `price`, `time`, `server`)
