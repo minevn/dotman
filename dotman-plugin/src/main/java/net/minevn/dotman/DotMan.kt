@@ -46,7 +46,7 @@ class DotMan : MineVNPlugin() {
         expansion = Expansion().apply { register() }
     }
 
-    fun migrate() {
+    private fun migrate() {
         val configDao = ConfigDAO.getInstance()
         val schemaVersion = configDao.get("migration_version") ?: "0"
         val path = "db/migrations/${dbConnection!!.getTypeName()}"
