@@ -35,7 +35,7 @@ class DotMan : MineVNPlugin() {
         val playerPoints = server.pluginManager.getPlugin("PlayerPoints") as PlayerPoints?
         if (playerPoints == null) {
             logger.log(Level.WARNING, "Could not find PlayerPoints.")
-            server.pluginManager.disablePlugin(instance)
+            server.pluginManager.disablePlugin(this)
             return
         }
         this.playerPoints = playerPoints
@@ -50,8 +50,7 @@ class DotMan : MineVNPlugin() {
         val configDao = ConfigDAO.getInstance()
         val schemaVersion = configDao.get("migration_version") ?: "0"
         val path = "db/migrations/${dbConnection!!.getTypeName()}"
-        val updated = BukkitDBMigrator(DotMan.instance, dbConnection!!.connection, path, schemaVersion.toInt())
-            .migrate()
+        val updated = BukkitDBMigrator(this, dbConnection!!.connection, path, schemaVersion.toInt()).migrate()
         configDao.set("migration_version", updated.toString())
     }
 
