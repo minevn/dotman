@@ -138,7 +138,7 @@ class AdminCmd {
                         sender.send(title)
                         sender.sendMessage(total)
                         sender.sendMessage("§f")
-//                        logs.forEach(sender::sendMessage)
+                        logs.forEach(sender::sendMessage)
                         sender.spigot().sendMessage(*pagination)
                     } catch (e: DateTimeParseException) {
                         sender.send("§cSai định dạng tháng. Ví dụ định dạng đúng: 01/2024")
