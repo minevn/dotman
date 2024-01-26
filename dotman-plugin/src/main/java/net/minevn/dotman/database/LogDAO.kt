@@ -5,7 +5,7 @@ import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardWaiting
 import net.minevn.dotman.database.*
 import net.minevn.dotman.utils.Utils
-import net.minevn.libs.bukkit.db.DataAccess
+import net.minevn.libs.db.DataAccess
 import net.minevn.libs.minMaxEpochTimestamp
 import net.minevn.libs.timeToString
 import org.bukkit.entity.Player

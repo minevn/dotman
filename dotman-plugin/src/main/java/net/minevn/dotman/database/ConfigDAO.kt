@@ -1,7 +1,7 @@
 package net.minevn.dotman.database
 
 import net.minevn.dotman.DotMan
-import net.minevn.libs.bukkit.db.DataAccess
+import net.minevn.libs.db.DataAccess
 
 abstract class ConfigDAO : DataAccess() {
     companion object {

@@ -49,15 +49,17 @@ class DotMan : MineVNPlugin() {
     private fun migrate() {
         val configDao = ConfigDAO.getInstance()
         val schemaVersion = configDao.get("migration_version") ?: "0"
-        val path = "db/migrations/${dbConnection!!.getTypeName()}"
-        val updated = BukkitDBMigrator(this, dbConnection!!.connection, path, schemaVersion.toInt()).migrate()
+        val path = "db/migrations/${dbPool!!.getTypeName()}"
+        val updated = dbPool!!.getConnection().use {
+            BukkitDBMigrator(this, it, path, schemaVersion.toInt()).migrate()
+        }
         configDao.set("migration_version", updated.toString())
     }
 
     fun reload() {
         config = MainConfig()
         prefix = config.prefix
-        initDatabase(config.dbEngine, config.config)
+        initDatabase(config.config.getConfigurationSection("database"))
         migrate()
         language = Language()
         minestones = Milestones()
@@ -72,7 +74,7 @@ class DotMan : MineVNPlugin() {
 
     override fun onDisable() {
         expansion.unregister()
-        dbConnection?.disconnect()
+        dbPool?.disconnect()
     }
 
     companion object {

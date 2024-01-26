@@ -2,7 +2,7 @@ package net.minevn.dotman.database
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.utils.TopType
-import net.minevn.libs.bukkit.db.DataAccess
+import net.minevn.libs.db.DataAccess
 import org.bukkit.entity.Player
 
 abstract class PlayerDataDAO : DataAccess() {
