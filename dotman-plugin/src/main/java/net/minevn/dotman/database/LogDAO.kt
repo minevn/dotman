@@ -3,7 +3,6 @@ package net.minevn.dotman.database
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardWaiting
-import net.minevn.dotman.database.*
 import net.minevn.dotman.utils.Utils
 import net.minevn.libs.db.DataAccess
 import net.minevn.libs.minMaxEpochTimestamp
