@@ -15,7 +15,9 @@ import net.minevn.guiapi.ConfiguredUI
 import net.minevn.libs.bukkit.MineVNPlugin
 import net.minevn.libs.bukkit.color
 import net.minevn.libs.bukkit.db.BukkitDBMigrator
+import net.minevn.libs.db.Transaction
 import org.black_ixx.playerpoints.PlayerPoints
+import org.bukkit.Bukkit
 import java.util.logging.Level
 
 class DotMan : MineVNPlugin() {
@@ -79,5 +81,12 @@ class DotMan : MineVNPlugin() {
 
     companion object {
         lateinit var instance: DotMan private set
+
+        fun transactional(action: Transaction.() -> Unit) {
+            if (Bukkit.isPrimaryThread()) {
+                throw IllegalStateException("Cannot run transactional code on the main thread")
+            }
+            net.minevn.libs.db.transactional(instance.dbPool!!.getConnection(), action)
+        }
     }
 }
