@@ -22,8 +22,6 @@ import org.bukkit.entity.Player
 class CardTypeUI(viewer: Player?) : ConfiguredUI(viewer, "menu/napthe/loaithe.yml", DotMan.instance) {
 
     constructor() : this(null)
-
-    private val configDao = ConfigDAO.getInstance()
     private val lang = DotMan.instance.language
 
     init {
@@ -31,6 +29,7 @@ class CardTypeUI(viewer: Player?) : ConfiguredUI(viewer, "menu/napthe/loaithe.ym
     }
 
     private fun build() {
+        val configDao = ConfigDAO.getInstance()
         val viewer = viewer!!
         val config = getConfig()
         lock()

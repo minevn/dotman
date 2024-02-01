@@ -42,11 +42,11 @@ class AdminCmd {
         }
 
         private fun thongbao() = command {
-            val config = ConfigDAO.getInstance()
-
             description("Thay đổi thông báo trong giao diện nạp thẻ")
 
             action { runNotSync {
+                val config = ConfigDAO.getInstance()
+
                 val message = args.joinToString(" ")
                 if (message.isEmpty()) {
                     config.delete("announcement")
@@ -59,11 +59,11 @@ class AdminCmd {
         }
 
         private fun setBankLocation() = command {
-            val config = ConfigDAO.getInstance()
-
             description("Đặt vị trí xem hướng dẫn chuyển khoản")
 
             action { runNotSync {
+                val config = ConfigDAO.getInstance()
+
                 val player = sender as? Player ?: run {
                     sender.send("Vào server rồi thực hiện lệnh này.")
                     return@runNotSync
