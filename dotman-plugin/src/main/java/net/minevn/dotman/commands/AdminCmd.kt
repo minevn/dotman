@@ -75,7 +75,6 @@ class AdminCmd {
 
         private fun history() = command {
             val usage = "[-p <tên người chơi>] [-m <tháng cần tra>] <Số trang>"
-            val logDao = LogDAO.getInstance()
 
             description("Xem lịch sử nạp thẻ")
 
@@ -97,6 +96,8 @@ class AdminCmd {
             }
 
             action {
+                val logDao = LogDAO.getInstance()
+
                 if (args.isEmpty()) {
                     sender.send("Tra cứu lịch sử nạp thẻ của người chơi hoặc toàn server")
                     sender.send("Cách dùng: /dotman history $usage")
