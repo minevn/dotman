@@ -1,8 +1,8 @@
-package net.minevn.dotman.database.dao.h2
+package net.minevn.dotman.database.h2
 
-import net.minevn.dotman.database.dao.ConfigDAO
+import net.minevn.dotman.database.ConfigDAO
 
-class ConfigDAOImpl : ConfigDAO {
+class ConfigDAOImpl : ConfigDAO() {
     override fun isTableExistsScript() =
         "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'dotman_config' and TABLE_SCHEMA = 'PUBLIC'"
 

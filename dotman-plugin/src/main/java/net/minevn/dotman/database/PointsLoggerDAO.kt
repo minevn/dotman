@@ -1,17 +1,15 @@
-package net.minevn.dotman.database.dao
+package net.minevn.dotman.database
 
 import net.minevn.dotman.DotMan
-import net.minevn.dotman.database.DataAccess
-import net.minevn.dotman.database.getInstance
-import net.minevn.dotman.database.statement
+import net.minevn.libs.db.DataAccess
 import org.bukkit.entity.Player
 
-interface PointsLoggerDAO : DataAccess {
+abstract class PointsLoggerDAO : DataAccess() {
     companion object {
-        fun getInstance() = PointsLoggerDAO::class.getInstance()
+        fun getInstance() = DotMan.instance.getDAO(PointsLoggerDAO::class)
     }
 
-    fun insertLogScript(): String
+    abstract fun insertLogScript(): String
 
     fun insertLog(player: Player, amount: Int, pointFrom: Int, pointTo: Int, content: String? = null) {
         insertLogScript().statement {

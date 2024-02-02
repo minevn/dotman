@@ -1,6 +1,6 @@
 package net.minevn.dotman
 
-import net.minevn.dotman.database.dao.PlayerDataDAO
+import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.utils.Utils.Companion.runAsync
 import net.minevn.libs.bukkit.runSync
 import org.bukkit.Bukkit

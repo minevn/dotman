@@ -1,8 +1,8 @@
-package net.minevn.dotman.database.dao.h2
+package net.minevn.dotman.database.h2
 
-import net.minevn.dotman.database.dao.PlayerDataDAO
+import net.minevn.dotman.database.PlayerDataDAO
 
-class PlayerDataDAOImpl : PlayerDataDAO {
+class PlayerDataDAOImpl : PlayerDataDAO() {
     override fun insertDataScript() = """
         MERGE INTO "dotman_player_data" AS target
         USING (

@@ -1,8 +1,8 @@
 package net.minevn.dotman.commands
 
 import net.minevn.dotman.DotMan
-import net.minevn.dotman.database.dao.ConfigDAO
-import net.minevn.dotman.database.dao.LogDAO
+import net.minevn.dotman.database.ConfigDAO
+import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
@@ -42,11 +42,11 @@ class AdminCmd {
         }
 
         private fun thongbao() = command {
-            val config = ConfigDAO.getInstance()
-
             description("Thay đổi thông báo trong giao diện nạp thẻ")
 
             action { runNotSync {
+                val config = ConfigDAO.getInstance()
+
                 val message = args.joinToString(" ")
                 if (message.isEmpty()) {
                     config.delete("announcement")
@@ -59,11 +59,11 @@ class AdminCmd {
         }
 
         private fun setBankLocation() = command {
-            val config = ConfigDAO.getInstance()
-
             description("Đặt vị trí xem hướng dẫn chuyển khoản")
 
             action { runNotSync {
+                val config = ConfigDAO.getInstance()
+
                 val player = sender as? Player ?: run {
                     sender.send("Vào server rồi thực hiện lệnh này.")
                     return@runNotSync
@@ -75,7 +75,6 @@ class AdminCmd {
 
         private fun history() = command {
             val usage = "[-p <tên người chơi>] [-m <tháng cần tra>] <Số trang>"
-            val logDao = LogDAO.getInstance()
 
             description("Xem lịch sử nạp thẻ")
 
@@ -97,6 +96,8 @@ class AdminCmd {
             }
 
             action {
+                val logDao = LogDAO.getInstance()
+
                 if (args.isEmpty()) {
                     sender.send("Tra cứu lịch sử nạp thẻ của người chơi hoặc toàn server")
                     sender.send("Cách dùng: /dotman history $usage")

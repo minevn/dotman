@@ -2,7 +2,7 @@ package net.minevn.dotman.gui
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.card.CardType
-import net.minevn.dotman.database.dao.ConfigDAO
+import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.guiapi.ConfiguredUI
@@ -22,8 +22,6 @@ import org.bukkit.entity.Player
 class CardTypeUI(viewer: Player?) : ConfiguredUI(viewer, "menu/napthe/loaithe.yml", DotMan.instance) {
 
     constructor() : this(null)
-
-    private val configDao = ConfigDAO.getInstance()
     private val lang = DotMan.instance.language
 
     init {
@@ -31,6 +29,7 @@ class CardTypeUI(viewer: Player?) : ConfiguredUI(viewer, "menu/napthe/loaithe.ym
     }
 
     private fun build() {
+        val configDao = ConfigDAO.getInstance()
         val viewer = viewer!!
         val config = getConfig()
         lock()

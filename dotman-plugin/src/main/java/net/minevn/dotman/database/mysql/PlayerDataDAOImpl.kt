@@ -1,8 +1,8 @@
-package net.minevn.dotman.database.dao.mysql
+package net.minevn.dotman.database.mysql
 
-import net.minevn.dotman.database.dao.PlayerDataDAO
+import net.minevn.dotman.database.PlayerDataDAO
 
-class PlayerDataDAOImpl : PlayerDataDAO {
+class PlayerDataDAOImpl : PlayerDataDAO() {
     override fun insertDataScript() = """
         INSERT INTO `dotman_player_data` (`uuid`, `name`, `key`, `value`, `last_updated`)
         VALUES (?, ?, ?, ?, ?)
@@ -14,8 +14,8 @@ class PlayerDataDAOImpl : PlayerDataDAO {
 
     override fun getTopScript(): String = """
         SELECT
-            row_number() over (order by time desc) as rownum,
-            uuid, name, key, value
+            row_number() over (order by `value` desc) as rownum,
+            uuid, name, `key`, value
         FROM `dotman_player_data`
         WHERE `key` = ?
         ORDER BY `value` DESC

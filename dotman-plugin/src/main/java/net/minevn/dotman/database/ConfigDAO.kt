@@ -1,20 +1,18 @@
-package net.minevn.dotman.database.dao
+package net.minevn.dotman.database
 
-import net.minevn.dotman.database.DataAccess
-import net.minevn.dotman.database.fetch
-import net.minevn.dotman.database.getInstance
-import net.minevn.dotman.database.statement
+import net.minevn.dotman.DotMan
+import net.minevn.libs.db.DataAccess
 
-interface ConfigDAO : DataAccess {
+abstract class ConfigDAO : DataAccess() {
     companion object {
-        fun getInstance() = ConfigDAO::class.getInstance()
+        fun getInstance() = DotMan.instance.getDAO(ConfigDAO::class)
     }
 
     // region scripts
-    fun isTableExistsScript(): String
-    fun getScript(): String
-    fun setScript(): String
-    fun deleteScript(): String
+    abstract fun isTableExistsScript(): String
+    abstract fun getScript(): String
+    abstract fun setScript(): String
+    abstract fun deleteScript(): String
     // endregion
 
     // region queriers

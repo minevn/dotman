@@ -1,7 +1,7 @@
 package net.minevn.dotman.providers.types
 
 import net.minevn.dotman.card.*
-import net.minevn.dotman.database.dao.LogDAO
+import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.providers.CardProvider
 import net.minevn.libs.bukkit.getOrNull
 import net.minevn.libs.bukkit.parseJson
