@@ -7,6 +7,7 @@ import net.minevn.dotman.utils.dateAndTimeFormat
 
 class MainConfig : FileConfig("config") {
 
+    val announceCharge = config.getBoolean("announce-charge", true)
     val prefix = config.getString("prefix", "&6&lDotMan > &r")!!.color()
     val pointUnit = config.getString("point-unit", "point")!!.color()
     val extraUntil = dateAndTimeFormat.parse(config.getString("extra-until", "01/01/1970 00:00")).time

@@ -108,6 +108,15 @@ abstract class CardProvider {
                     .replace("%POINT_UNIT%", main.config.pointUnit)
             }
         )
+        if (config.announceCharge) {
+            main.language.cardChargedAnnounce.forEach {
+                Bukkit.broadcastMessage(it
+                    .replace("%PLAYER%", player.name)
+                    .replace("%AMOUNT%", amount.toString())
+                    .replace("%POINT_UNIT%", main.config.pointUnit)
+                )
+            }
+        }
         if (extraPercent > 0) {
             player.send(main.language.cardChargedWithExtra.replace("%RATE%", extraPercent.toString()))
         }
