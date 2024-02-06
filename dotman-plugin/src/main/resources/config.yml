@@ -52,3 +52,6 @@ database:
     user: 'root'
     password: '123'
     database: dotman
+
+# Bật/tắt tính năng thông báo người chơi khác khi nạp thẻ thành công
+announce-charge: true

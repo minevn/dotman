@@ -112,6 +112,7 @@ abstract class CardProvider {
             main.language.cardChargedAnnounce.forEach {
                 Bukkit.broadcastMessage(it
                     .replace("%PLAYER%", player.name)
+                    .replace("%CARD_PRICE%", card.price.value.toString())
                     .replace("%AMOUNT%", amount.toString())
                     .replace("%POINT_UNIT%", main.config.pointUnit)
                 )
