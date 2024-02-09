@@ -6,7 +6,6 @@ import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
-import net.minevn.libs.bukkit.Command
 import net.minevn.libs.bukkit.asString
 import net.minevn.libs.bukkit.command
 import org.bukkit.Bukkit
@@ -17,22 +16,18 @@ import kotlin.math.ceil
 
 class AdminCmd {
     companion object {
-        private lateinit var instance: Command
+        fun init() = command {
+            addSubCommand(reload(), "reload")
+            addSubCommand(thongbao(), "thongbao")
+            addSubCommand(setBankLocation(), "chuyenkhoan")
+            addSubCommand(history(), "lichsu", "history")
 
-        fun init() {
-            instance = command {
-                addSubCommand(reload(), "reload")
-                addSubCommand(thongbao(), "thongbao")
-                addSubCommand(setBankLocation(), "chuyenkhoan")
-                addSubCommand(history(), "lichsu", "history")
-
-                action {
-                    sender.sendMessage("§b§lCác lệnh của plugin DotMan")
-                    sendSubCommandsUsage(sender, commandTree)
-                }
-
-                register(DotMan.instance, "dotman")
+            action {
+                sender.sendMessage("§b§lCác lệnh của plugin DotMan")
+                sendSubCommandsUsage(sender, commandTree)
             }
+
+            register(DotMan.instance, "dotman")
         }
 
         private fun reload() = command {
@@ -93,7 +88,7 @@ class AdminCmd {
                             (1..12).map { "${it.toString().padStart(2, '0')}/$year" }
                                 .filter { month -> month.startsWith(value) || month.startsWith("0$value") }
                         }
-                        else -> listOf("1")
+                        else -> listOf("<số trang>", "-p", "-m").filter { it.startsWith(args.last()) }
                     }
                 }
             }
