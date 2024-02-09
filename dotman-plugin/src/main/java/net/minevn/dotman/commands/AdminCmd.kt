@@ -10,7 +10,6 @@ import net.minevn.libs.bukkit.Command
 import net.minevn.libs.bukkit.asString
 import net.minevn.libs.bukkit.command
 import org.bukkit.Bukkit
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
@@ -27,7 +26,11 @@ class AdminCmd {
                 addSubCommand(setBankLocation(), "chuyenkhoan")
                 addSubCommand(history(), "lichsu", "history")
 
-                action { sendHelp(sender) }
+                action {
+                    sender.sendMessage("§b§lCác lệnh của plugin DotMan")
+                    sendSubCommandsUsage(sender, commandTree)
+                }
+
                 register(DotMan.instance, "dotman")
             }
         }
@@ -145,14 +148,6 @@ class AdminCmd {
                         sender.send("§cSai định dạng tháng. Ví dụ định dạng đúng: 01/2024")
                     }
                 }
-            }
-        }
-
-        private fun sendHelp(sender: CommandSender) {
-            // TODO: Trang trí cho đẹp
-            sender.sendMessage("§b§lCác lệnh của plugin DotMan")
-            instance.getSubCommands().distinctBy { it.second }.filter { it.second.getDescription() != null }.forEach {
-                sender.sendMessage("§a/dotman ${it.first} §7- ${it.second.getDescription()}")
             }
         }
     }
