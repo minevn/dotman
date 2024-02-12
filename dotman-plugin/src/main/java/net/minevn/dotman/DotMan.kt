@@ -8,9 +8,11 @@ import net.minevn.dotman.config.Language
 import net.minevn.dotman.config.MainConfig
 import net.minevn.dotman.config.Milestones
 import net.minevn.dotman.database.ConfigDAO
+import net.minevn.dotman.database.PlayerInfoDAO
 import net.minevn.dotman.gui.CardPriceUI
 import net.minevn.dotman.gui.CardTypeUI
 import net.minevn.dotman.providers.CardProvider
+import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.guiapi.ConfiguredUI
 import net.minevn.libs.bukkit.MineVNPlugin
 import net.minevn.libs.bukkit.color
@@ -18,9 +20,14 @@ import net.minevn.libs.bukkit.db.BukkitDBMigrator
 import net.minevn.libs.db.Transaction
 import org.black_ixx.playerpoints.PlayerPoints
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerLoginEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import java.util.logging.Level
 
-class DotMan : MineVNPlugin() {
+class DotMan : MineVNPlugin(), Listener {
 
     lateinit var expansion: Expansion private set
     lateinit var playerPoints: PlayerPoints private set
@@ -33,6 +40,7 @@ class DotMan : MineVNPlugin() {
 
     override fun onEnable() {
         instance = this
+        server.pluginManager.registerEvents(this, this)
 
         val playerPoints = server.pluginManager.getPlugin("PlayerPoints") as PlayerPoints?
         if (playerPoints == null) {
@@ -78,6 +86,21 @@ class DotMan : MineVNPlugin() {
         expansion.unregister()
         dbPool?.disconnect()
     }
+
+    // region events
+    private fun updateUUID(player: Player) {
+        val uuid = player.uniqueId.toString()
+        val name = player.name
+        runNotSync { PlayerInfoDAO.getInstance().updateData(uuid, name) }
+    }
+
+    @EventHandler
+    fun onLogin(e: PlayerLoginEvent) = updateUUID(e.player)
+
+    @EventHandler
+    fun onQuit(e: PlayerQuitEvent) = updateUUID(e.player)
+    // endregion
+
 
     companion object {
         lateinit var instance: DotMan private set

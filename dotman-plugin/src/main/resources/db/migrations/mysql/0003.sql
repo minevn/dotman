@@ -20,6 +20,9 @@ create table dotman_player_info
 (
     uuid char(36)    not null,
     name varchar(32) not null,
+    last_updated bigint not null,
     constraint dotman_player_info_pk
         primary key (uuid)
 );
+create index dotman_player_info_name_index
+    on dotman_player_info (name);

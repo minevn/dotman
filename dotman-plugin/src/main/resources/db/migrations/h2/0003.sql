@@ -21,12 +21,14 @@ create index dotman_napthe_log_uuid_index
 create index dotman_point_log_uuid_index
     on "dotman_point_log" ("uuid");
 
-
 -- Create table to store uuid
 CREATE TABLE "dotman_player_info"
 (
     "uuid" VARCHAR(36) NOT NULL,
     "name" VARCHAR(32) NOT NULL,
+    "last_updated" BIGINT NOT NULL,
     CONSTRAINT "dotman_player_info_pk"
         PRIMARY KEY ("uuid")
 );
+create index dotman_player_info_name_index
+    on "dotman_player_info" ("name");
