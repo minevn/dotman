@@ -101,7 +101,6 @@ class DotMan : MineVNPlugin(), Listener {
     fun onQuit(e: PlayerQuitEvent) = updateUUID(e.player)
     // endregion
 
-
     companion object {
         lateinit var instance: DotMan private set
 
