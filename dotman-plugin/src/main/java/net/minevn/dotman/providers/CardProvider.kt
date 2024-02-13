@@ -110,12 +110,11 @@ abstract class CardProvider {
         )
         if (config.announceCharge) {
             main.language.cardChargedAnnounce.forEach {
-                Bukkit.broadcastMessage(it
-                    .replace("%PLAYER%", player.name)
+                it  .replace("%PLAYER%", player.name)
                     .replace("%CARD_PRICE%", card.price.value.toString())
                     .replace("%AMOUNT%", amount.toString())
                     .replace("%POINT_UNIT%", main.config.pointUnit)
-                )
+                    .apply { Bukkit.broadcastMessage(this) }
             }
         }
         if (extraPercent > 0) {
