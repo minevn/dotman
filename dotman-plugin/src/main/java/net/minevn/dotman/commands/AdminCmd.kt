@@ -6,11 +6,9 @@ import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
-import net.minevn.libs.bukkit.Command
 import net.minevn.libs.bukkit.asString
 import net.minevn.libs.bukkit.command
 import org.bukkit.Bukkit
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
@@ -18,18 +16,18 @@ import kotlin.math.ceil
 
 class AdminCmd {
     companion object {
-        private lateinit var instance: Command
+        fun init() = command {
+            addSubCommand(reload(), "reload")
+            addSubCommand(thongbao(), "thongbao")
+            addSubCommand(setBankLocation(), "chuyenkhoan")
+            addSubCommand(history(), "lichsu", "history")
 
-        fun init() {
-            instance = command {
-                addSubCommand(reload(), "reload")
-                addSubCommand(thongbao(), "thongbao")
-                addSubCommand(setBankLocation(), "chuyenkhoan")
-                addSubCommand(history(), "lichsu", "history")
-
-                action { sendHelp(sender) }
-                register(DotMan.instance, "dotman")
+            action {
+                sender.sendMessage("§b§lCác lệnh của plugin DotMan")
+                sendSubCommandsUsage(sender, commandTree)
             }
+
+            register(DotMan.instance, "dotman")
         }
 
         private fun reload() = command {
@@ -90,7 +88,7 @@ class AdminCmd {
                             (1..12).map { "${it.toString().padStart(2, '0')}/$year" }
                                 .filter { month -> month.startsWith(value) || month.startsWith("0$value") }
                         }
-                        else -> listOf("1")
+                        else -> listOf("<số trang>", "-p", "-m").filter { it.startsWith(args.last()) }
                     }
                 }
             }
@@ -145,14 +143,6 @@ class AdminCmd {
                         sender.send("§cSai định dạng tháng. Ví dụ định dạng đúng: 01/2024")
                     }
                 }
-            }
-        }
-
-        private fun sendHelp(sender: CommandSender) {
-            // TODO: Trang trí cho đẹp
-            sender.sendMessage("§b§lCác lệnh của plugin DotMan")
-            instance.getSubCommands().distinctBy { it.second }.filter { it.second.getDescription() != null }.forEach {
-                sender.sendMessage("§a/dotman ${it.first} §7- ${it.second.getDescription()}")
             }
         }
     }
