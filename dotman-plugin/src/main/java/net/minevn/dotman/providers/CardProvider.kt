@@ -102,12 +102,21 @@ abstract class CardProvider {
             extraPercent = (extraRate * 100).toInt()
         }
         DotMan.instance.playerPoints.api.give(player.uniqueId, amount)
-        player.sendMessages(
-            main.language.cardChargedSuccessfully.map {
-                it  .replace("%AMOUNT%", amount.toString())
+
+        main.language.cardChargedSuccessfully.map { it
+            .replace("%AMOUNT%", amount.toString())
+            .replace("%POINT_UNIT%", main.config.pointUnit)
+        }.let { player.sendMessages(it) }
+
+        if (config.announceCharge) {
+            main.language.cardChargedAnnounce.forEach {
+                it  .replace("%PLAYER%", player.name)
+                    .replace("%CARD_PRICE%", card.price.value.toString())
+                    .replace("%AMOUNT%", amount.toString())
                     .replace("%POINT_UNIT%", main.config.pointUnit)
+                    .apply { Bukkit.broadcastMessage(this) }
             }
-        )
+        }
         if (extraPercent > 0) {
             player.send(main.language.cardChargedWithExtra.replace("%RATE%", extraPercent.toString()))
         }

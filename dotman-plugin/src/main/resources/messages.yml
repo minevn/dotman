@@ -18,6 +18,9 @@ card-charged-with-extra: '&aBạn được khuyến mãi thêm &b&l%RATE%% &agi�
 card-charged-sent:
   - '%PREFIX% &aThẻ của bạn đang được xử lý, hãy đợi trong giây lát.'
 
+card-charged-announce:
+  - '%PREFIX% &aNgười chơi &b%PLAYER% &ađã nạp thẻ mệnh giá &e%CARD_PRICE% VNĐ &avà nhận được &e%AMOUNT% %POINT_UNIT%'
+
 card-charged-failed:
   - '%PREFIX% &cNạp thẻ thất bại: %ERROR%'
   - '&cVui lòng liên hệ với admin để được hỗ trợ.'

@@ -12,6 +12,7 @@ class Language : FileConfig("messages") {
     val cardChargedSuccessfully = getList("card-charged-successfully")
     val cardChargedWithExtra = get("card-charged-with-extra")
     val cardChargedSent = getList("card-charged-sent")
+    val cardChargedAnnounce = getList("card-charged-announce")
     val cardChargedFailed = getList("card-charged-failed")
     val cardChargedError = getList("card-charged-error")
 

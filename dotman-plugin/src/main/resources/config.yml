@@ -42,7 +42,9 @@ card-types:
   gate: false
 
 database:
-  # engine mặc định sử dụng h2 (lưu vào 1 file), có thể chuyển sang mysql
+  # Loại cơ sở dữ liệu
+  # Các engine hỗ trợ: h2, mysql, mariadb
+  # mặc định là h2 (lưu vào 1 file)
   engine: h2
   h2:
     file: dotman
@@ -52,3 +54,6 @@ database:
     user: 'root'
     password: '123'
     database: dotman
+
+# Bật/tắt tính năng thông báo người chơi khác khi nạp thẻ thành công
+announce-charge: true
