@@ -18,10 +18,16 @@ jobs:
           ssh_private_key:                              # <-- use 'secrets' to pass credential information.
             ${{ secrets.GITLAB_SSH_PRIVATE_KEY }}
   artifact:
-    name: Upload a Build Artifact
+    name: Build Artifact
     runs-on: ubuntu-latest
     
     steps:
+    - name: Checkout sources
+      uses: actions/checkout@v4
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v3
+    - name: Build with Gradle
+      run: ./gradlew build
     - uses: actions/upload-artifact@v4.3.1
       with:
         # Artifact name
