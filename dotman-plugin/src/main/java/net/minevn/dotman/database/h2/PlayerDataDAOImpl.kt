@@ -20,10 +20,11 @@ class PlayerDataDAOImpl : PlayerDataDAO() {
     """.trimIndent()
 
     override fun getTopScript(): String = """
-        SELECT 
+        SELECT
             ROW_NUMBER() OVER (ORDER BY "value" DESC) AS "rownum",
-            "uuid", "name", "key", "value"
-        FROM "dotman_player_data"
+            d."uuid", COALESCE(i."name", d."name") as "name", "key", "value"
+        FROM "dotman_player_data" d
+        LEFT JOIN "dotman_player_info" i ON d."uuid" = i."uuid"
         WHERE "key" = ?
         ORDER BY "value" DESC
         LIMIT ?;
