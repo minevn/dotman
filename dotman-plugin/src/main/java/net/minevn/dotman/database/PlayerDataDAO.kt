@@ -3,7 +3,6 @@ package net.minevn.dotman.database
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.utils.TopType
 import net.minevn.libs.db.DataAccess
-import org.bukkit.entity.Player
 
 abstract class PlayerDataDAO : DataAccess() {
     companion object {
@@ -14,10 +13,10 @@ abstract class PlayerDataDAO : DataAccess() {
     abstract fun getTopScript(): String
     abstract fun getDataScript(): String
 
-    fun insertData(player: Player, key: String, value: Int) {
+    fun insertData(uuid: String, key: String, value: Int) {
         insertDataScript().statement {
-            setString(1, player.uniqueId.toString())
-            setString(2, player.name)
+            setString(1, uuid)
+            setString(2, "converted_to_uuid")
             setString(3, key)
             setInt(4, value)
             setLong(5, System.currentTimeMillis())
@@ -26,8 +25,8 @@ abstract class PlayerDataDAO : DataAccess() {
         }
     }
 
-    fun getData(player: Player, key: String) = getDataScript().statement {
-        setString(1, player.uniqueId.toString())
+    fun getData(uuid: String, key: String) = getDataScript().statement {
+        setString(1, uuid)
         setString(2, key)
 
         fetchRecords {
@@ -35,8 +34,8 @@ abstract class PlayerDataDAO : DataAccess() {
         }.firstOrNull() ?: 0
     }
 
-    fun insertAllType(player: Player, key: String, value: Int) = TopType.entries.forEach {
-        insertData(player, it.parseKey(key), value)
+    fun insertAllType(uuid: String, key: String, value: Int) = TopType.entries.forEach {
+        insertData(uuid, it.parseKey(key), value)
     }
 
     fun getTop(key: String, limit: Int) = run {

@@ -127,12 +127,13 @@ abstract class CardProvider {
         val dataDAO = PlayerDataDAO.getInstance()
 
         // Tích điểm
-        dataDAO.insertAllType(player, TOP_KEY_DONATE_TOTAL, card.price.value)
-        dataDAO.insertAllType(player, TOP_KEY_POINT_FROM_CARD, amount)
+        val uuid = player.uniqueId.toString()
+        dataDAO.insertAllType(uuid, TOP_KEY_DONATE_TOTAL, card.price.value)
+        dataDAO.insertAllType(uuid, TOP_KEY_POINT_FROM_CARD, amount)
 
         // Mốc nạp
         main.minestones.getAll().filter { it.type == "all" }.forEach {
-            it.check(player, dataDAO.getData(player, "${TOP_KEY_DONATE_TOTAL}_ALL"), card.price.value)
+            it.check(player, dataDAO.getData(uuid, "${TOP_KEY_DONATE_TOTAL}_ALL"), card.price.value)
         }
     }
 
