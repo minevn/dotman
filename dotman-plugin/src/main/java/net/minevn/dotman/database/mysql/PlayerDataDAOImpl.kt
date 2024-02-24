@@ -15,8 +15,9 @@ class PlayerDataDAOImpl : PlayerDataDAO() {
     override fun getTopScript(): String = """
         SELECT
             row_number() over (order by `value` desc) as rownum,
-            uuid, name, `key`, value
-        FROM `dotman_player_data`
+            d.uuid, ifnull(i.name, d.name) as name, `key`, value
+        FROM `dotman_player_data` d
+        LEFT JOIN `dotman_player_info` i ON d.uuid = i.uuid
         WHERE `key` = ?
         ORDER BY `value` DESC
         LIMIT ?;
