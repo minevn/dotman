@@ -3,12 +3,10 @@ package net.minevn.dotman.providers.types
 import net.minevn.dotman.card.*
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.providers.CardProvider
-import net.minevn.dotman.utils.Utils.Companion.severe
 import net.minevn.libs.bukkit.getOrNull
 import net.minevn.libs.bukkit.parseJson
 import net.minevn.libs.bukkit.sendMessages
 import net.minevn.libs.get
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : CardProvider() {
@@ -61,7 +59,7 @@ class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : 
 
     private fun CardWaiting.getTransactId() = "dotman_$id"
 
-    private fun CardWaiting.isProcessed(): Boolean {
+    override fun CardWaiting.isProcessed(): Boolean {
         val params = mapOf(
             "APIkey" to apiKey,
             "APIsecret" to apiSecret,
@@ -79,34 +77,5 @@ class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : 
             }
     }
 
-    override fun updateStatus() {
-        val players = Bukkit.getOnlinePlayers().associateBy { it.uniqueId.toString() }
-        val uuids = players.keys.toTypedArray()
-        val server = main.config.server
-        val cardLogger = LogDAO.getInstance()
-        val lang = main.language
-
-        cardLogger.getWaitingCards(uuids, server)
-            ?.filter { it.isProcessed() }
-            ?.forEach {
-                val player = players[it.uuid]
-                if (player?.isOnline != true) return@forEach
-
-                cardLogger.stopWaiting(it.id, it.isSuccess)
-
-                if (it.isSuccess) {
-                    try {
-                        onChargeSuccess(player, it.toCard())
-                    } catch (e: Exception) {
-                        player.sendMessages(lang.cardChargedError)
-                        e.severe("Error onChargeSuccess: Player ${player.name}, ${it.toCard()}")
-                    }
-                } else {
-                    val message = it.message ?: lang.errorUnknown
-                    player.sendMessages(lang.cardChargedFailed.map { str ->
-                        str.replace("%ERROR%", message)
-                    })
-                }
-            }
-    }
+    override fun updateStatus() = checkWaitingCards()
 }
