@@ -1,6 +1,7 @@
 package net.minevn.dotman.providers
 
 import net.minevn.dotman.DotMan
+import net.minevn.dotman.DotMan.Companion.transactional
 import net.minevn.dotman.TOP_KEY_DONATE_TOTAL
 import net.minevn.dotman.TOP_KEY_POINT_FROM_CARD
 import net.minevn.dotman.card.Card
@@ -92,7 +93,7 @@ abstract class CardProvider {
         onChargeSuccess(player, result.card)
     }
 
-    protected open fun onChargeSuccess(player: Player, card: Card) {
+    protected open fun onChargeSuccess(player: Player, card: Card) = transactional {
         var amount = card.price.getPointAmount()
         val config = main.config
         val extraRate = config.extraRate

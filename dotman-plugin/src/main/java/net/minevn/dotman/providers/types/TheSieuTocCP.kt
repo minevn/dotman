@@ -3,6 +3,7 @@ package net.minevn.dotman.providers.types
 import net.minevn.dotman.card.*
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.providers.CardProvider
+import net.minevn.dotman.utils.Utils.Companion.severe
 import net.minevn.libs.bukkit.getOrNull
 import net.minevn.libs.bukkit.parseJson
 import net.minevn.libs.bukkit.sendMessages
@@ -94,7 +95,12 @@ class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : 
                 cardLogger.stopWaiting(it.id, it.isSuccess)
 
                 if (it.isSuccess) {
-                    onChargeSuccess(player, it.toCard())
+                    try {
+                        onChargeSuccess(player, it.toCard())
+                    } catch (e: Exception) {
+                        player.sendMessages(lang.cardChargedError)
+                        e.severe("Error onChargeSuccess: Player ${player.name}, ${it.toCard()}")
+                    }
                 } else {
                     val message = it.message ?: lang.errorUnknown
                     player.sendMessages(lang.cardChargedFailed.map { str ->
