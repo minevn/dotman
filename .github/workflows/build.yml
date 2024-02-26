@@ -1,5 +1,8 @@
 name: Build
-on: push
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -12,10 +15,6 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: "gradle"
-      - name: Get version
-        run: |
-          echo "::set-output name=version::$(awk '/version =/ {gsub("\"", "", $NF); print $NF}' build.gradle.kts | sed 's/[[:space:]]//g')"
-        id: version
       - name: Build DotMan
         run: |
           chmod +x ./gradlew
@@ -25,13 +24,5 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: "DotMan-${{ steps.version.outputs.version }}"
+          name: "DotMan"
           path: ./target/DotMan.jar
-      #- name: Release
-      #  uses: "marvinpinto/action-automatic-releases@latest"
-      #  with:
-      #    repo_token: "${{ secrets.GITHUB_TOKEN }}"
-      #    automatic_release_tag: "${{ steps.version.outputs.version }}"
-      #    prerelease: false
-      #    title: "DotMan ${{ steps.version.outputs.version }}"
-      #    files: ./target/DotMan.jar
