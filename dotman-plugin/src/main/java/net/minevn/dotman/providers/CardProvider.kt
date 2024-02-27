@@ -1,18 +1,17 @@
 package net.minevn.dotman.providers
 
 import net.minevn.dotman.DotMan
+import net.minevn.dotman.DotMan.Companion.transactional
 import net.minevn.dotman.TOP_KEY_DONATE_TOTAL
 import net.minevn.dotman.TOP_KEY_POINT_FROM_CARD
-import net.minevn.dotman.card.Card
-import net.minevn.dotman.card.CardPrice
-import net.minevn.dotman.card.CardResult
-import net.minevn.dotman.card.CardType
+import net.minevn.dotman.card.*
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.providers.types.GameBankCP
 import net.minevn.dotman.providers.types.TheSieuTocCP
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
+import net.minevn.dotman.utils.Utils.Companion.severe
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.libs.bukkit.chat.ChatListener
 import net.minevn.libs.bukkit.sendMessages
@@ -92,7 +91,7 @@ abstract class CardProvider {
         onChargeSuccess(player, result.card)
     }
 
-    protected open fun onChargeSuccess(player: Player, card: Card) {
+    protected open fun onChargeSuccess(player: Player, card: Card) = transactional {
         var amount = card.price.getPointAmount()
         val config = main.config
         val extraRate = config.extraRate
@@ -194,5 +193,38 @@ abstract class CardProvider {
     }
 
     protected open fun updateStatus() {
+    }
+
+    protected open fun CardWaiting.isProcessed() = false
+
+    protected fun checkWaitingCards() {
+        val players = Bukkit.getOnlinePlayers().associateBy { it.uniqueId.toString() }
+        val uuids = players.keys.toTypedArray()
+        val server = main.config.server
+        val cardLogger = LogDAO.getInstance()
+        val lang = main.language
+
+        cardLogger.getWaitingCards(uuids, server)
+            ?.filter { it.isProcessed() }
+            ?.forEach {
+                val player = players[it.uuid]
+                if (player?.isOnline != true) return@forEach
+
+                cardLogger.stopWaiting(it.id, it.isSuccess)
+
+                if (it.isSuccess) {
+                    try {
+                        onChargeSuccess(player, it.toCard())
+                    } catch (e: Exception) {
+                        player.sendMessages(lang.cardChargedError)
+                        e.severe("Error onChargeSuccess: Player ${player.name}, ${it.toCard()}")
+                    }
+                } else {
+                    val message = it.message ?: lang.errorUnknown
+                    player.sendMessages(lang.cardChargedFailed.map { str ->
+                        str.replace("%ERROR%", message)
+                    })
+                }
+            }
     }
 }
