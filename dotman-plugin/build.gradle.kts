@@ -58,6 +58,14 @@ tasks {
         }
     }
 
+    processResources {
+        filesMatching(listOf("**/plugin.yml")) {
+            expand(mapOf("version" to project.version.toString()))
+        }
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        filteringCharset = Charsets.UTF_8.name()
+    }
+
     shadowJar {
         archiveFileName.set("$jarName.jar")
     }

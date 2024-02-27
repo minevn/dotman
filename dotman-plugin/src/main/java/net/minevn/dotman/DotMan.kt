@@ -31,6 +31,7 @@ class DotMan : MineVNPlugin(), Listener {
 
     lateinit var expansion: Expansion private set
     lateinit var playerPoints: PlayerPoints private set
+    lateinit var updateChecker: UpdateChecker private set
     var prefix = "&6&lDotMan >&r".color(); private set
 
     // configurations
@@ -54,6 +55,7 @@ class DotMan : MineVNPlugin(), Listener {
         AdminCmd.init()
         TopNapCmd.init()
         expansion = Expansion().apply { register() }
+        updateChecker = UpdateChecker().apply { init() }
     }
 
     private fun migrate() {
