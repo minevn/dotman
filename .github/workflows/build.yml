@@ -19,7 +19,7 @@ jobs:
           repo: minevn-library
           branch: master
         id: minevnlib
-      - name: Build DotMan & download ML
+      - name: Build DotMan & download MineVNLib
         run: |
           chmod +x ./gradlew
           ./gradlew assemble
