@@ -1,8 +1,5 @@
 name: Build
-on:
-  push:
-    branches:
-      - master
+on: push
 
 jobs:
   build:
@@ -15,14 +12,24 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: "gradle"
-      - name: Build DotMan
+      
+      - name: Get MineVNLib latest commit sha
+        uses: nmbgeek/github-action-get-latest-commit@main
+        with:
+          owner: minhh2792
+          repo: minevn-library
+          branch: master
+        id: minevnlib
+
+      - name: Build DotMan & download ML
         run: |
           chmod +x ./gradlew
           ./gradlew assemble
           mkdir -p target
           cp ./dotman-plugin/build/libs/DotMan.jar ./target/DotMan.jar
+          wget "https://github.com/minhh2792/minevn-library/releases/download/${{ steps.minevnlib.outputs.shorthash }}/MineVNLib.jar -O ./target/MineVNLib.jar"
       - name: Upload build artifact
         uses: actions/upload-artifact@v4.3.1
         with:
           name: "DotMan"
-          path: ./target/DotMan.jar
+          path: ./target/
