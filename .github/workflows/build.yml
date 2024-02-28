@@ -27,7 +27,7 @@ jobs:
           ./gradlew assemble
           mkdir -p target
           cp ./dotman-plugin/build/libs/DotMan.jar ./target/DotMan.jar
-          wget "https://github.com/minhh2792/minevn-library/releases/download/${{ steps.minevnlib.outputs.shorthash }}/MineVNLib.jar -O ./target/MineVNLib.jar"
+          wget -O ./target/MineVNLib.jar "https://github.com/minhh2792/minevn-library/releases/download/${{ steps.minevnlib.outputs.shorthash }}/MineVNLib.jar"
       - name: Upload build artifact
         uses: actions/upload-artifact@v4.3.1
         with:
