@@ -1,5 +1,8 @@
 name: Build
-on: push
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -11,8 +14,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-          cache: "gradle"
-      
+          cache: "gradle"     
       - name: Get MineVNLib latest commit sha
         uses: nmbgeek/github-action-get-latest-commit@main
         with:
@@ -20,7 +22,6 @@ jobs:
           repo: minevn-library
           branch: master
         id: minevnlib
-
       - name: Build DotMan & download ML
         run: |
           chmod +x ./gradlew
