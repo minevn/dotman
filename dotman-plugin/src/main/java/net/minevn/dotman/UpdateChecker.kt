@@ -2,10 +2,7 @@ package net.minevn.dotman
 
 import net.minevn.libs.gson.JsonParser
 import org.bukkit.entity.Player
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
+import net.minevn.libs.get
 
 class UpdateChecker {
     private val plugin = DotMan.instance
@@ -33,13 +30,7 @@ class UpdateChecker {
     }
 
     private fun checkUpdate(): Boolean {
-        val connection = URL(url).openConnection() as HttpURLConnection
-        connection.requestMethod = "GET"
-        connection.setRequestProperty("Accept", "application/vnd.github.v3+json")
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0")
-        val inputStream = connection.inputStream
-        val reader = BufferedReader(InputStreamReader(inputStream))
-        val data = reader.readText()
+        val data = get(url)
         val json = JsonParser().parse(data).asJsonObject
         val latestVersion = json.get("tag_name").asString
         releaseVersion = json.get("html_url").asString
