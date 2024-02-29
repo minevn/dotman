@@ -5,7 +5,7 @@ Plugin tích hợp donate qua thẻ cào tốt nhất cho server Minecraft, nhi�
 
 **Dịch vụ đang hỗ trợ:** [Gamebank](https://sv.gamebank.vn/user/nap-the), [TheSieuToc](https://thesieutoc.net/)
 
-Tính năng hiện có
+Tính năng hiện có 
 ===========
 
 - Nạp thẻ tự động
