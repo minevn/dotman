@@ -1,6 +1,7 @@
 package net.minevn.dotman
 
-import net.minevn.libs.gson.JsonParser
+import net.minevn.dotman.utils.Utils.Companion.info
+import net.minevn.libs.bukkit.parseJson
 import org.bukkit.entity.Player
 import net.minevn.libs.get
 
@@ -14,30 +15,36 @@ class UpdateChecker {
 
     fun init() {
         latest = checkUpdate()
+        val language = plugin.language
         if (latest) {
-            plugin.logger.info(plugin.language.updateLatest)
+            info(plugin.language.updateLatest)
         } else {
-            plugin.logger.info(plugin.language.updateAvailable
+            language.updateAvailable
                 .replace("%NEW_VERSION%", "")
                 .replace("%CURRENT_VERSION%", currentVersion)
-            )
-            plugin.logger.info(plugin.language.updateAvailableLink.replace("%URL%", releaseVersion))
+                .let { info(it) }
+            info(plugin.language.updateAvailableLink.replace("%URL%", releaseVersion))
         }
     }
 
     // Check for updates when a player logs in
     fun loginCheckForUpdates(player: Player) {
         if (plugin.config.checkUpdate && !latest && player.hasPermission("dotman.update")) {
-            player.sendMessage("There is a new version of DotMan available.")
-            player.sendMessage("You can download it at $releaseVersion")
+            val language = plugin.language
+            language.updateAvailable
+                .replace("%NEW_VERSION%", latestVersion)
+                .replace("%CURRENT_VERSION%", currentVersion)
+                .let { player.sendMessage(it) }
+            player.sendMessage(language.updateAvailableLink.replace("%URL%", releaseVersion))
         }
     }
 
     private fun checkUpdate(): Boolean {
-        val data = get(url)
-        val json = JsonParser().parse(data).asJsonObject
-        latestVersion = json.get("tag_name").asString
-        releaseVersion = json.get("html_url").asString
-        return latestVersion != currentVersion
+        val response = get(url)
+        response.parseJson().asJsonObject.let { json ->
+            latestVersion = json.get("tag_name").asString
+            releaseVersion = json.get("html_url").asString
+            return latestVersion != currentVersion
+        }
     }
 }
