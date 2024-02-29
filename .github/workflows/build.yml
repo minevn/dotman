@@ -1,16 +1,13 @@
 name: Build
 on:
-  push:
+  workflow_dispatch:
   pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - labeled
+  push:
+    branches:
+      - "master"
 
 jobs:
   build:
-    if: (github.event_name == 'pull_request' && github.event.action == 'labeled') || github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
