@@ -53,8 +53,8 @@ class DotMan : MineVNPlugin(), Listener {
         MainCmd.init()
         AdminCmd.init()
         TopNapCmd.init()
+        UpdateChecker.init()
         expansion = Expansion().apply { register() }
-        updateChecker = UpdateChecker().apply { init() }
     }
 
     private fun migrate() {
@@ -104,7 +104,6 @@ class DotMan : MineVNPlugin(), Listener {
 
     companion object {
         lateinit var instance: DotMan private set
-        lateinit var updateChecker: UpdateChecker private set
 
         fun transactional(action: Transaction.() -> Unit) {
             if (Bukkit.isPrimaryThread()) {
