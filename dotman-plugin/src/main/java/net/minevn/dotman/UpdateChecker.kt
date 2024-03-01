@@ -1,6 +1,7 @@
 package net.minevn.dotman
 
 import net.minevn.dotman.utils.Utils.Companion.info
+import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.libs.bukkit.parseJson
 import org.bukkit.entity.Player
 import net.minevn.libs.get
@@ -40,11 +41,15 @@ class UpdateChecker {
     }
 
     private fun checkUpdate(): Boolean {
-        val response = get(url)
-        response.parseJson().asJsonObject.let { json ->
-            latestVersion = json.get("tag_name").asString
-            releaseVersion = json.get("html_url").asString
-            return latestVersion != currentVersion
+        try {
+            get(url).parseJson().asJsonObject.let { json ->
+                latestVersion = json.get("tag_name").asString
+                releaseVersion = json.get("html_url").asString
+                return latestVersion != currentVersion
+            }
+        } catch (e: Exception) {
+            e.warning("Could not check for updates")
+            return true
         }
     }
 }
