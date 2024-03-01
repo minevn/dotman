@@ -16,13 +16,6 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: "gradle"     
-      - name: Get MineVNLib latest commit sha
-        uses: nmbgeek/github-action-get-latest-commit@main
-        with:
-          owner: minhh2792
-          repo: minevn-library
-          branch: master
-        id: minevnlib-repo
       - name: Get MineVNLib version
         uses: pozetroninc/github-action-get-latest-release@master
         with:
@@ -35,7 +28,7 @@ jobs:
           ./gradlew assemble
           mkdir -p target
           cp ./dotman-plugin/build/libs/DotMan.jar ./target/DotMan.jar
-          wget -O ./target/MineVNLib.jar "https://github.com/minhh2792/minevn-library/releases/download/${{ steps.minevnlib-plugin.outputs.release }}-${{ steps.minevnlib-repo.outputs.shorthash }}/MineVNLib.jar"
+          wget -O ./target/MineVNLib.jar "https://github.com/minhh2792/minevn-library/releases/download/${{ steps.minevnlib-plugin.outputs.release }}/MineVNLib.jar"
       - name: Upload build artifact
         uses: actions/upload-artifact@v4.3.1
         with:
