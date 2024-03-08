@@ -19,7 +19,7 @@ jobs:
       - name: Get MineVNLib version
         uses: pozetroninc/github-action-get-latest-release@master
         with:
-          owner: minhh2792
+          owner: minevn
           repo: minevn-library
         id: minevnlib-plugin
       - name: Build DotMan & download MineVNLib
