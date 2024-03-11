@@ -29,7 +29,6 @@ class UpdateChecker {
             }
         }
 
-        // Check for updates when a player logs in
         fun loginCheckForUpdates(player: Player) {
             if (plugin.config.checkUpdate && !latest && player.hasPermission("dotman.update")) {
                 language.updateAvailable
