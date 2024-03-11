@@ -3,8 +3,8 @@ package net.minevn.dotman
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.libs.bukkit.parseJson
-import org.bukkit.entity.Player
 import net.minevn.libs.get
+import org.bukkit.command.CommandSender
 
 class UpdateChecker {
     companion object {
@@ -29,21 +29,21 @@ class UpdateChecker {
             }
         }
 
-        fun loginCheckForUpdates(player: Player) {
-            if (plugin.config.checkUpdate && !latest && player.hasPermission("dotman.update")) {
+        fun loginCheckForUpdates(receiver: CommandSender) {
+            if (plugin.config.checkUpdate && !latest && receiver.hasPermission("dotman.update")) {
                 language.updateAvailable
                     .replace("%NEW_VERSION%", latestVersion)
                     .replace("%CURRENT_VERSION%", currentVersion)
-                    .let { player.sendMessage(it) }
-                player.sendMessage(language.updateAvailableLink.replace("%URL%", releaseVersion))
+                    .let { receiver.sendMessage(it) }
+                receiver.sendMessage(language.updateAvailableLink.replace("%URL%", releaseVersion))
             }
         }
 
         private fun checkUpdate(): Boolean {
             try {
-                get(url).parseJson().asJsonObject.let { json ->
-                    latestVersion = json.get("tag_name").asString
-                    releaseVersion = json.get("html_url").asString
+                get(url).parseJson().asJsonObject.let {
+                    latestVersion = it["tag_name"].asString
+                    releaseVersion = it["html_url"].asString
                     return latestVersion != currentVersion
                 }
             } catch (e: Exception) {
