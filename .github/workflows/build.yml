@@ -1,0 +1,36 @@
+name: Build
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+
+jobs:
+  build:
+    if: (github.event_name == 'pull_request' && github.event.action == 'labeled') || github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gradle/wrapper-validation-action@v1
+      - uses: actions/setup-java@v4.0.0
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: "gradle"     
+      - name: Get MineVNLib version
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          owner: minevn
+          repo: minevn-library
+        id: minevnlib-plugin
+      - name: Build DotMan & download MineVNLib
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assemble
+          mkdir -p target
+          cp ./dotman-plugin/build/libs/DotMan.jar ./target/DotMan.jar
+          wget -O ./target/MineVNLib.jar "https://github.com/minevn/minevn-library/releases/download/${{ steps.minevnlib-plugin.outputs.release }}/MineVNLib.jar"
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: "DotMan"
+          path: ./target/
