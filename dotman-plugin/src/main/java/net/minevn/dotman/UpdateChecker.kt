@@ -1,5 +1,6 @@
 package net.minevn.dotman
 
+import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.libs.bukkit.parseJson
 import net.minevn.libs.get
@@ -17,8 +18,10 @@ class UpdateChecker {
         private var latest = false
 
         fun init() {
-            latest = checkUpdate()
-            sendUpdateMessage(plugin.server.consoleSender, true)
+            runNotSync {
+                latest = checkUpdate()
+                sendUpdateMessage(plugin.server.consoleSender, true)
+            }
         }
 
         fun sendUpdateMessage(receiver: CommandSender, notifyLatestVersion: Boolean = false) {
