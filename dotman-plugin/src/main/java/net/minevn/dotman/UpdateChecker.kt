@@ -44,7 +44,7 @@ class UpdateChecker {
                 get(URL).parseJson().asJsonObject.let {
                     latestVersion = it["tag_name"].asString
                     releaseVersion = it["html_url"].asString
-                    return latestVersion != currentVersion
+                    return latestVersion == currentVersion
                 }
             } catch (e: Exception) {
                 e.warning("Không thể kiểm tra cập nhật")
