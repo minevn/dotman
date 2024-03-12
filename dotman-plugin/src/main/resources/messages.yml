@@ -37,3 +37,7 @@ error-unknown-card-type: '&cLoại thẻ không hợp lệ hoặc đang bảo tr
 error-unknown-card-price: '&cMệnh giá thẻ không hợp lệ.'
 
 log-output: '&a%ORDER%. &b%PLAYER% &d%CARD_TYPE%(%CARD_PRICE% VNĐ) &anhận &e%POINTS_RECEIVED% %POINT_UNIT% &angày &e%DATE%'
+
+update-available: '%PREFIX% &aĐã có phiên bản mới: &e%NEW_VERSION% &a(từ &e%CURRENT_VERSION%&a).'
+update-available-link: '&aTải về tại: &e%URL%'
+update-latest: '%PREFIX% &aBạn đang sử dụng phiên bản mới nhất.'

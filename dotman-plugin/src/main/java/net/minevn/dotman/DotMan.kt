@@ -23,6 +23,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import java.util.logging.Level
@@ -53,6 +54,7 @@ class DotMan : MineVNPlugin(), Listener {
         MainCmd.init()
         AdminCmd.init()
         TopNapCmd.init()
+        UpdateChecker.init()
         expansion = Expansion().apply { register() }
     }
 
@@ -99,6 +101,9 @@ class DotMan : MineVNPlugin(), Listener {
 
     @EventHandler
     fun onQuit(e: PlayerQuitEvent) = updateUUID(e.player)
+
+    @EventHandler
+    fun onJoin(e: PlayerJoinEvent) = UpdateChecker.sendUpdateMessage(e.player)
     // endregion
 
     companion object {

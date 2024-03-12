@@ -7,6 +7,7 @@ import net.minevn.dotman.utils.dateAndTimeFormat
 
 class MainConfig : FileConfig("config") {
 
+    val checkUpdate = config.getBoolean("check-update", true)
     val announceCharge = config.getBoolean("announce-charge", true)
     val prefix = config.getString("prefix", "&6&lDotMan > &r")!!.color()
     val pointUnit = config.getString("point-unit", "point")!!.color()

@@ -1,6 +1,6 @@
 name: DotMan
 main: net.minevn.dotman.DotMan
-version: 1.0.0
+version: '${version}'
 author: MineVN
 depend: [ MineVNLib, PlayerPoints, PlaceholderAPI ]
 commands:

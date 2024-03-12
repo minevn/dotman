@@ -57,3 +57,6 @@ database:
 
 # Bật/tắt tính năng thông báo người chơi khác khi nạp thẻ thành công
 announce-charge: true
+
+# Bật/tắt tính năng kiểm tra cập nhật phiên bản mới
+check-update: true
