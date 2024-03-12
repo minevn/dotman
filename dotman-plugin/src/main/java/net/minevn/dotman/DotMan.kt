@@ -103,7 +103,7 @@ class DotMan : MineVNPlugin(), Listener {
     fun onQuit(e: PlayerQuitEvent) = updateUUID(e.player)
 
     @EventHandler
-    fun onJoin(e: PlayerJoinEvent) = UpdateChecker.loginCheckForUpdates(e.player)
+    fun onJoin(e: PlayerJoinEvent) = UpdateChecker.sendUpdateMessage(e.player)
     // endregion
 
     companion object {

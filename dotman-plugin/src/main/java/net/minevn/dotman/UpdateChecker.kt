@@ -17,10 +17,10 @@ class UpdateChecker {
 
         fun init() {
             latest = checkUpdate()
-            loginCheckForUpdates(plugin.server.consoleSender)
+            sendUpdateMessage(plugin.server.consoleSender)
         }
 
-        fun loginCheckForUpdates(receiver: CommandSender) {
+        fun sendUpdateMessage(receiver: CommandSender) {
             if (!plugin.config.checkUpdate || !receiver.hasPermission("dotman.update")) return
             if (!latest) {
                 language.updateAvailable
