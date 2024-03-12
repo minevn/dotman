@@ -6,6 +6,7 @@ import net.minevn.libs.get
 import org.bukkit.command.CommandSender
 
 class UpdateChecker {
+
     companion object {
         private const val URL = "https://api.github.com/repos/MineVN/DotMan/releases/latest"
         private val plugin = DotMan.instance
@@ -17,10 +18,10 @@ class UpdateChecker {
 
         fun init() {
             latest = checkUpdate()
-            sendUpdateMessage(plugin.server.consoleSender)
+            sendUpdateMessage(plugin.server.consoleSender, true)
         }
 
-        fun sendUpdateMessage(receiver: CommandSender) {
+        fun sendUpdateMessage(receiver: CommandSender, notifyLatestVersion: Boolean = false) {
             if (!plugin.config.checkUpdate || !receiver.hasPermission("dotman.update")) return
             if (!latest) {
                 language.updateAvailable
@@ -28,8 +29,9 @@ class UpdateChecker {
                     .replace("%CURRENT_VERSION%", currentVersion)
                     .let { receiver.sendMessage(it) }
                 receiver.sendMessage(language.updateAvailableLink.replace("%URL%", releaseVersion))
+                return
             }
-            else {
+            if (notifyLatestVersion) {
                 receiver.sendMessage(language.updateLatest)
             }
         }
