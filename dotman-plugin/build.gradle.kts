@@ -59,8 +59,10 @@ tasks {
     }
 
     processResources {
+        outputs.upToDateWhen { false }
         filesMatching(listOf("**/plugin.yml")) {
             expand(mapOf("version" to project.version.toString()))
+            println("$name: set version to ${project.version}")
         }
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
         filteringCharset = Charsets.UTF_8.name()

@@ -80,7 +80,13 @@ class DotMan : MineVNPlugin(), Listener {
         CardTypeUI()
         CardPriceUI()
         ConfiguredUI.reloadConfigs(this)
-        val providerConfig = FileConfig("providers/${config.provider}").apply { reload() }
+        val providerConfig = try {
+             FileConfig("providers/${config.provider}").apply { reload() }
+        } catch (e: Exception) {
+            logger.severe("Không tìm thấy hệ thống gạch thẻ \"${config.provider}\", hãy kiểm tra lại config.")
+            server.pluginManager.disablePlugin(this)
+            return
+        }
         CardProvider.init(config.provider, providerConfig.config)
     }
 
