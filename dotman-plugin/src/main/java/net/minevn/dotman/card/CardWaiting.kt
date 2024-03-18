@@ -10,5 +10,5 @@ class CardWaiting(
     var isSuccess: Boolean = false
     var message: String? = null
 
-    fun toCard() = Card(seri, "", CardPrice[price]!!, CardType[type]!!)
+    fun toCard() = Card(seri, "", CardPrice[price]!!, CardType[type]!!).apply { logId = id }
 }
