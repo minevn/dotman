@@ -60,12 +60,14 @@ class DotMan : MineVNPlugin(), Listener {
 
     private fun migrate() {
         val configDao = ConfigDAO.getInstance()
-        val schemaVersion = configDao.get("migration_version") ?: "0"
+        val currentVersion = (configDao.get("migration_version") ?: "0").toInt()
         val path = "db/migrations/${dbPool!!.getTypeName()}"
-        val updated = dbPool!!.getConnection().use {
-            BukkitDBMigrator(this, it, path, schemaVersion.toInt()).migrate()
+        val latestVersion = dbPool!!.getConnection().use {
+            BukkitDBMigrator(this, it, path, currentVersion).migrate()
         }
-        configDao.set("migration_version", updated.toString())
+        if (latestVersion > currentVersion) {
+            configDao.set("migration_version", latestVersion.toString())
+        }
     }
 
     fun reload() {
