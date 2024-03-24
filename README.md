@@ -14,6 +14,11 @@ Tính năng hiện có
 - Top nạp thẻ
 - Phần thưởng theo mốc nạp
 - Lệnh nạp nhanh với auto-complete, hỗ trợ cho phiên bản 1.8
+- Top nạp theo tuần/tháng (✨ premium)
+- Mốc nạp theo tuần/tháng (✨ premium)
+- Giao diện Bedrock (✨ premium)
+- Lịch sử giao dịch point (✨ premium)
+- Hỗ trợ nhiều API gạch thẻ hơn, và bổ sung API gạch thẻ theo yêu cầu (✨ premium)
 
 Hướng dẫn sử dụng
 ===========
