@@ -69,4 +69,16 @@ DotMan/
 - Cài đặt chung của plugin được đặt tại `config.yml`, các message đặt tại `messages.yml`
 - Cài đặt mốc nạp tích luỹ tại `mocnap.yml`
 
+Hình ảnh
+===========
+![](https://i.imgur.com/Wds3sRi.png)
+
+![](https://i.imgur.com/LUYYbdR.png)
+
+![](https://i.imgur.com/giSRIkg.png)
+
+![](https://i.imgur.com/zr3Mhdy.gif)
+
+![](https://i.imgur.com/4Xng6eR.gif)
+
 Plugin đang trong giai đoạn beta (thử nghiệm), mong các bạn giúp mình trải nghiệm và đưa góp ý, nhận xét. Nếu bạn thích plugin, hãy [donate ủng hộ](https://minevn.studio/faqs/#how-can-i-pay-for-the-products) bọn mình và đánh giá 5 sao [tại forum](https://minecraftvn.net/resources/donation-manager-update-21-1-plugin-nap-the-tot-nhat-cho-minecraft.3657/) nhé
