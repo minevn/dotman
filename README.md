@@ -81,4 +81,4 @@ Hình ảnh
 
 ![](https://i.imgur.com/4Xng6eR.gif)
 
-Plugin đang trong giai đoạn beta (thử nghiệm), mong các bạn giúp mình trải nghiệm và đưa góp ý, nhận xét. Nếu bạn thích plugin, hãy [donate ủng hộ](https://minevn.studio/faqs/#how-can-i-pay-for-the-products) bọn mình và đánh giá 5 sao [tại forum](https://minecraftvn.net/resources/donation-manager-update-21-1-plugin-nap-the-tot-nhat-cho-minecraft.3657/) nhé
+Plugin được thiết kế và phát triển kĩ lưỡng nhằm đảm bảo tính ổn định và chất lượng. Nếu plugin có ích cho server của bạn, hãy [mua bản premium](https://minecraftvn.net/resources/donation-manager-update-21-1-plugin-nap-the-tot-nhat-cho-minecraft.3657/) để trải nghiệm các tính năng mở rộng và đánh giá 5 sao [tại forum](https://minecraftvn.net/resources/donation-manager-update-21-1-plugin-nap-the-tot-nhat-cho-minecraft.3657/) nhé
