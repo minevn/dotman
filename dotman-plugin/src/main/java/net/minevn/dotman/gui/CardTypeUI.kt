@@ -81,7 +81,10 @@ class CardTypeUI(viewer: Player?) : ConfiguredUI(viewer, "menu/napthe/loaithe.ym
         val activeIcon = config.getGuiIcon("cards.active")
         val disabledIcon = config.getGuiIcon("cards.disabled")
         val blankIcon = config.getGuiIcon("cards.blank")
-        val cardTypes = CardType.entries.sortedBy { !it.isActive() }.toTypedArray()
+        val cardTypes = CardType.entries
+            .sortedBy { !it.isActive() }
+            .filter { DotMan.instance.config.cardTypes[it] == true }
+            .toTypedArray()
         for (i in cardSlots.indices) {
             val slotId = cardSlots[i]
             val button: GuiItemStack
