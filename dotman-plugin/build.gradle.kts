@@ -20,7 +20,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
 
     // libs
-    compileOnly("net.minevn:minevnlib-plugin:1.0.1")
+    compileOnly("net.minevn:minevnlib-plugin:1.0.4")
     compileOnly("minevn.depend:playerpoints:3.2.6")
     compileOnly("me.clip:placeholderapi:2.11.3")
 
