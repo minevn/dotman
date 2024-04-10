@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-java@v4.0.0
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 8
           cache: "gradle"     
       - name: Get MineVNLib version
         uses: pozetroninc/github-action-get-latest-release@master

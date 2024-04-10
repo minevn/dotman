@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `java-library`
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "1.9.23"
 }
 
 allprojects {
@@ -23,16 +23,16 @@ allprojects {
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(17))
+            languageVersion.set(JavaLanguageVersion.of(8))
         }
     }
 
     val compileKotlin: KotlinCompile by tasks
     compileKotlin.kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
     val compileTestKotlin: KotlinCompile by tasks
     compileTestKotlin.kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
 }
