@@ -8,6 +8,7 @@ import net.minevn.dotman.config.Language
 import net.minevn.dotman.config.MainConfig
 import net.minevn.dotman.config.Milestones
 import net.minevn.dotman.database.ConfigDAO
+import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.database.PlayerInfoDAO
 import net.minevn.dotman.gui.CardPriceUI
 import net.minevn.dotman.gui.CardTypeUI
@@ -113,6 +114,27 @@ class DotMan : MineVNPlugin(), Listener {
     @EventHandler
     fun onJoin(e: PlayerJoinEvent) = UpdateChecker.sendUpdateMessage(e.player)
     // endregion
+
+    /**
+     * Cập nhật bảng xếp hạng, mốc nạp
+     *
+     * @param player Player
+     * @param amount Số tiền nạp
+     * @param pointAmount Số point nhận được
+     */
+    fun updateLeaderBoard(player: Player, amount: Int, pointAmount: Int) {
+        val dataDAO = PlayerDataDAO.getInstance()
+
+        // Tích điểm
+        val uuid = player.uniqueId.toString()
+        dataDAO.insertAllType(uuid, TOP_KEY_DONATE_TOTAL, amount)
+        dataDAO.insertAllType(uuid, TOP_KEY_POINT_FROM_CARD, pointAmount)
+
+        // Mốc nạp
+        minestones.getAll().filter { it.type == "all" }.forEach {
+            it.check(player, dataDAO.getData(uuid, "${TOP_KEY_DONATE_TOTAL}_ALL"), amount)
+        }
+    }
 
     companion object {
         lateinit var instance: DotMan private set
