@@ -145,5 +145,44 @@ class AdminCmd {
                 }
             }
         }
+
+        private fun napThuCong() = command {
+            val usage = "<tên người chơi> <số tiền> [-p <số point nhận>] [nội dung nạp]"
+
+            description("Nạp tiền thủ công cho người chơi")
+
+            action {
+                val args = args.toMutableList()
+
+                var point = 1
+                var playerName: String? = null
+                var amount: Int? = null
+                var content: String? = null
+
+                var index = 0
+                // TODO: thiết kế lại cấu trúc command
+                while (args.isNotEmpty()) {
+                    when (val current = args.removeFirst()) {
+                        "-p" -> point = args.removeFirst().toIntOrNull() ?: run {
+                            sender.send("§cSố point nhận phải là số")
+                            return@action
+                        }
+                        else -> when(index++) {
+                            0 -> playerName = current
+                            1 -> amount = current.toIntOrNull() ?: run {
+                                sender.send("§cSố tiền phải là số")
+                                return@action
+                            }
+                            2 -> content = current
+                        }
+                    }
+                }
+
+                if (playerName == null || amount == null) {
+                    sender.send("§cCách dùng: $commandTree $usage")
+                    return@action
+                }
+            }
+        }
     }
 }
