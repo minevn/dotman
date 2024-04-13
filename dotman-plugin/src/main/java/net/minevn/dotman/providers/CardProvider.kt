@@ -120,7 +120,7 @@ abstract class CardProvider {
             LogDAO.getInstance().updatePointReceived(card.logId!!, amount)
         }
 
-        main.updateLeaderBoard(player, card.price.value, amount)
+        main.updateLeaderBoard(player.uniqueId, card.price.value, amount)
     }
 
     /**

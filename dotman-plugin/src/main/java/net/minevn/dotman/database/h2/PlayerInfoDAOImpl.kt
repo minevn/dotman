@@ -17,4 +17,9 @@ class PlayerInfoDAOImpl : PlayerInfoDAO() {
             INSERT ("uuid", "name", "last_updated")
             VALUES (source."uuid", source."name", source."last_updated");
     """.trimIndent()
+
+    override fun getUUIDScript() = """
+        SELECT "uuid" FROM "dotman_player_info" WHERE "name" = ?
+    """.trimIndent()
+
 }

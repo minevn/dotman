@@ -27,6 +27,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import java.util.*
 import java.util.logging.Level
 
 class DotMan : MineVNPlugin(), Listener {
@@ -118,21 +119,23 @@ class DotMan : MineVNPlugin(), Listener {
     /**
      * Cập nhật bảng xếp hạng, mốc nạp
      *
-     * @param player Player
+     * @param uuid UUID của người chơi
      * @param amount Số tiền nạp
      * @param pointAmount Số point nhận được
      */
-    fun updateLeaderBoard(player: Player, amount: Int, pointAmount: Int) {
+    fun updateLeaderBoard(uuid: UUID, amount: Int, pointAmount: Int) {
         val dataDAO = PlayerDataDAO.getInstance()
 
         // Tích điểm
-        val uuid = player.uniqueId.toString()
-        dataDAO.insertAllType(uuid, TOP_KEY_DONATE_TOTAL, amount)
-        dataDAO.insertAllType(uuid, TOP_KEY_POINT_FROM_CARD, pointAmount)
+        val uuidStr = uuid.toString()
+        dataDAO.insertAllType(uuidStr, TOP_KEY_DONATE_TOTAL, amount)
+        dataDAO.insertAllType(uuidStr, TOP_KEY_POINT_FROM_CARD, pointAmount)
 
         // Mốc nạp
-        minestones.getAll().filter { it.type == "all" }.forEach {
-            it.check(player, dataDAO.getData(uuid, "${TOP_KEY_DONATE_TOTAL}_ALL"), amount)
+        Bukkit.getPlayer(uuid)?.takeIf { it.isOnline }?.let { player ->
+            minestones.getAll().filter { it.type == "all" }.forEach {
+                it.check(player, dataDAO.getData(uuidStr, "${TOP_KEY_DONATE_TOTAL}_ALL"), amount)
+            }
         }
     }
 
