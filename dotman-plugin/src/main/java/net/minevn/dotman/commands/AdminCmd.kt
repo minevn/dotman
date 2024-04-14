@@ -24,7 +24,7 @@ class AdminCmd {
             addSubCommand(thongbao(), "thongbao")
             addSubCommand(setBankLocation(), "chuyenkhoan")
             addSubCommand(history(), "lichsu", "history")
-            addSubCommand(napThuCong(), "napthucong", "napthu", "manual")
+            addSubCommand(napThuCong(), "napthucong", "manual")
 
             action {
                 sender.sendMessage("§b§lCác lệnh của plugin DotMan")
