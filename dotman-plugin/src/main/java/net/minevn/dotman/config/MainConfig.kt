@@ -25,4 +25,7 @@ class MainConfig : FileConfig("config") {
         val section = config.getConfigurationSection("donate-amounts")!!
         CardPrice.entries.associateWith { section.getInt(it.value.toString()) }
     }
+
+    val manualBase = config.getDouble("manual.point-base")
+    val manualExtra = config.getDouble("manual.point-extra")
 }

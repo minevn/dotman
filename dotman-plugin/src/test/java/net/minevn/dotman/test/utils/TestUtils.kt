@@ -5,7 +5,6 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import net.minevn.dotman.DotMan
-import net.minevn.dotman.database.connections.DatabaseConnection
 import java.io.File
 import java.io.FileInputStream
 
@@ -26,8 +25,6 @@ fun <T> setStatic(type: Class<T>, fieldName: String, value: T) {
 fun <T> setInstance(type: Class<T>, instance: T) = setStatic(type, "instance", instance)
 
 fun setDotManInstance(instance: DotMan) = setInstance(DotMan::class.java, instance)
-
-fun setDatabaseConnectionInstance(instance: DatabaseConnection) = setInstance(DatabaseConnection::class.java, instance)
 
 fun mockDotMan() = setDotManInstance(mockk {
     every { server } returns mockk {

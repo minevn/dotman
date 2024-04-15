@@ -31,8 +31,8 @@ class LogDAOImpl : LogDAO() {
     override fun getHistoryScriptAllPlayerAllTime() = """
             select
                 row_number() over (order by time desc) as rownum,
-                id, name, type, seri, price, pointsnhan, time
-            from dotman_napthe_log
+                id, i.name as name, type, seri, price, pointsnhan, time
+            from dotman_napthe_log l left join dotman_player_info i on i.uuid = l.uuid
             where success = 1
             order by time desc limit ?, ?;
         """.trimIndent()
@@ -40,8 +40,8 @@ class LogDAOImpl : LogDAO() {
     override fun getHistoryScriptAllPlayerByMonth() = """
             select
                 row_number() over (order by time desc) as rownum,
-                id, name, type, seri, price, pointsnhan, time
-            from dotman_napthe_log
+                id, i.name as name, type, seri, price, pointsnhan, time
+            from dotman_napthe_log l left join dotman_player_info i on i.uuid = l.uuid
             where success = 1
             and time >= ? and time <= ?
             order by time desc limit ?, ?;
@@ -50,8 +50,8 @@ class LogDAOImpl : LogDAO() {
     override fun getHistoryScriptByPlayerAllTime() = """
             select
                 row_number() over (order by time desc) as rownum,
-                id, name, type, seri, price, pointsnhan, time
-            from dotman_napthe_log
+                id, i.name as name, type, seri, price, pointsnhan, time
+            from dotman_napthe_log l left join dotman_player_info i on i.uuid = l.uuid
             where success = 1 and name = ?
             order by time desc limit ?, ?;
         """.trimIndent()
@@ -59,8 +59,8 @@ class LogDAOImpl : LogDAO() {
     override fun getHistoryScriptByPlayerByMonth() = """
             select
                 row_number() over (order by time desc) as rownum,
-                id, name, type, seri, price, pointsnhan, time
-            from dotman_napthe_log
+                id, i.name as name, type, seri, price, pointsnhan, time
+            from dotman_napthe_log l left join dotman_player_info i on i.uuid = l.uuid
             where success = 1 and name = ?
             and time >= ? and time <= ?
             order by time desc limit ?, ?;

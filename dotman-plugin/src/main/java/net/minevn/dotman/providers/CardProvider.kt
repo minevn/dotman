@@ -2,11 +2,8 @@ package net.minevn.dotman.providers
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.DotMan.Companion.transactional
-import net.minevn.dotman.TOP_KEY_DONATE_TOTAL
-import net.minevn.dotman.TOP_KEY_POINT_FROM_CARD
 import net.minevn.dotman.card.*
 import net.minevn.dotman.database.LogDAO
-import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.providers.types.GameBankCP
 import net.minevn.dotman.providers.types.TheSieuTocCP
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
@@ -123,17 +120,7 @@ abstract class CardProvider {
             LogDAO.getInstance().updatePointReceived(card.logId!!, amount)
         }
 
-        val dataDAO = PlayerDataDAO.getInstance()
-
-        // Tích điểm
-        val uuid = player.uniqueId.toString()
-        dataDAO.insertAllType(uuid, TOP_KEY_DONATE_TOTAL, card.price.value)
-        dataDAO.insertAllType(uuid, TOP_KEY_POINT_FROM_CARD, amount)
-
-        // Mốc nạp
-        main.minestones.getAll().filter { it.type == "all" }.forEach {
-            it.check(player, dataDAO.getData(uuid, "${TOP_KEY_DONATE_TOTAL}_ALL"), card.price.value)
-        }
+        main.updateLeaderBoard(player.uniqueId, card.price.value, amount)
     }
 
     /**
