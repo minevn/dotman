@@ -11,6 +11,7 @@ import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.dotman.utils.Utils.Companion.severe
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.libs.bukkit.chat.ChatListener
+import net.minevn.libs.bukkit.runSync
 import net.minevn.libs.bukkit.sendMessages
 import net.minevn.libs.post
 import org.bukkit.Bukkit
@@ -122,7 +123,9 @@ abstract class CardProvider {
         }
 
         main.updateLeaderBoard(player.uniqueId, card.price.value, amount)
-        commands.forEach { Bukkit.dispatchCommand(Bukkit.getConsoleSender(), it) }
+        runSync {
+            commands.forEach { Bukkit.dispatchCommand(Bukkit.getConsoleSender(), it) }
+        }
     }
 
     /**
