@@ -14,6 +14,7 @@ enum class CardPrice(val value: Int) {
     CP_1000K(1000000);
 
     fun getPointAmount() = DotMan.instance.config.amounts[this]!!
+    fun getCommands() = DotMan.instance.config.commands[this]!!
 
     companion object {
         operator fun get(value: Int): CardPrice? = entries.find { type -> type.value == value }
