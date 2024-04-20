@@ -90,6 +90,7 @@ abstract class CardProvider {
 
     protected open fun onChargeSuccess(player: Player, card: Card) = transactional {
         var amount = card.price.getPointAmount()
+        val commands = card.price.getCommands().map { it.replace("%PLAYER%", player.name) }
         val config = main.config
         val extraRate = config.extraRate
         var extraPercent = 0
@@ -121,6 +122,7 @@ abstract class CardProvider {
         }
 
         main.updateLeaderBoard(player.uniqueId, card.price.value, amount)
+        commands.forEach { Bukkit.dispatchCommand(Bukkit.getConsoleSender(), it) }
     }
 
     /**

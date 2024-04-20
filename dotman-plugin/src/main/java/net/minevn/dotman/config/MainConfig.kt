@@ -6,7 +6,6 @@ import net.minevn.dotman.utils.Utils.Companion.color
 import net.minevn.dotman.utils.dateAndTimeFormat
 
 class MainConfig : FileConfig("config") {
-
     val checkUpdate = config.getBoolean("check-update", true)
     val announceCharge = config.getBoolean("announce-charge", true)
     val prefix = config.getString("prefix", "&6&lDotMan > &r")!!.color()
@@ -21,9 +20,12 @@ class MainConfig : FileConfig("config") {
         CardType.entries.associateWith { getBoolean(it.name.lowercase()) }
     }
 
-    val amounts = run {
-        val section = config.getConfigurationSection("donate-amounts")!!
-        CardPrice.entries.associateWith { section.getInt(it.value.toString()) }
+    val amounts = config.getConfigurationSection("donate-amounts")!!.run {
+        CardPrice.entries.associateWith { getInt(it.value.toString()) }
+    }
+
+    val commands = config.getConfigurationSection("donate-commands")!!.run {
+        CardPrice.entries.associateWith { getStringList(it.value.toString()).toList() }
     }
 
     val manualBase = config.getDouble("manual.point-base")
