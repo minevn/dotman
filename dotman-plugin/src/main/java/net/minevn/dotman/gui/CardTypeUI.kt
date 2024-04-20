@@ -4,14 +4,11 @@ import net.minevn.dotman.DotMan
 import net.minevn.dotman.card.CardType
 import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
-import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.guiapi.ConfiguredUI
 import net.minevn.guiapi.GuiIcon.Companion.getGuiIcon
 import net.minevn.guiapi.GuiItemStack
 import net.minevn.libs.bukkit.MineVNLib.Companion.getGuiFillSlots
-import net.minevn.libs.bukkit.asLocation
 import net.minevn.libs.bukkit.color
-import net.minevn.libs.bukkit.runSync
 import net.minevn.libs.bukkit.split
 import org.bukkit.entity.Player
 
@@ -40,14 +37,6 @@ class CardTypeUI(viewer: Player?) : ConfiguredUI(viewer, "menu/napthe/loaithe.ym
             config.getGuiIcon("background").toGuiItemStack()
         )
 
-        // close button
-        setItem(
-            config.getInt("close.slot"),
-            config.getGuiIcon("close").toGuiItemStack {
-                viewer.closeInventory()
-            }
-        )
-
         // anouncement button
         setItem(
             config.getInt("info.slot"),
@@ -57,23 +46,6 @@ class CardTypeUI(viewer: Player?) : ConfiguredUI(viewer, "menu/napthe/loaithe.ym
                     lore = message.split(32)
                 }
                 .toGuiItemStack()
-        )
-
-        // banking recommendation button
-        setItem(
-            config.getInt("banking-recommend.slot"),
-            config.getGuiIcon("banking-recommend").toGuiItemStack {
-                runNotSync {
-                    val location = configDao.get("banking-location")?.asLocation() ?: run {
-                        viewer.send(lang.uiNoBankingLocation)
-                        return@runNotSync
-                    }
-                    runSync {
-                        viewer.closeInventory()
-                        viewer.teleport(location)
-                    }
-                }
-            }
         )
 
         // cards list
