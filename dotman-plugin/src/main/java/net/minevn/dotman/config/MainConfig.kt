@@ -16,6 +16,7 @@ class MainConfig : FileConfig("config") {
     val enableStatusNotification = config.getBoolean("enable-status-notification") // TODO
     val dbEngine = config.getString("database.engine", "h2")!!
     val provider = config.getString("provider", "")!!
+    val importProvider = config.getString("import-provider", "thesieutoc")!!
     val server = config.getString("server", "")!!
     val cardTypes = config.getConfigurationSection("card-types").run {
         CardType.entries.associateWith { getBoolean(it.name.lowercase()) }

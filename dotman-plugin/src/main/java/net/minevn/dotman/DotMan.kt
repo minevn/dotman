@@ -11,6 +11,7 @@ import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.database.PlayerInfoDAO
 import net.minevn.dotman.gui.CardPriceUI
 import net.minevn.dotman.gui.CardTypeUI
+import net.minevn.dotman.importer.ImporterProvider
 import net.minevn.dotman.providers.CardProvider
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.guiapi.ConfiguredUI
@@ -77,19 +78,27 @@ class DotMan : MineVNPlugin(), Listener {
         migrate()
         language = Language()
         minestones = Milestones()
-
         // init Gui configs
         CardTypeUI()
         CardPriceUI()
         ConfiguredUI.reloadConfigs(this)
+
         val providerConfig = try {
-             FileConfig("providers/${config.provider}").apply { reload() }
+            FileConfig("providers/${config.provider}").apply { reload() }
         } catch (e: Exception) {
             logger.severe("Không tìm thấy hệ thống gạch thẻ \"${config.provider}\", hãy kiểm tra lại config.")
             server.pluginManager.disablePlugin(this)
             return
         }
         CardProvider.init(config.provider, providerConfig.config)
+
+        val importerConfig = try {
+            FileConfig("importers/${config.importProvider}").apply { reload() }
+        } catch (e: Exception) {
+            logger.severe("Không tìm thấy loại plugin \"${config.importProvider}\", hãy kiểm tra lại config.")
+            return
+        }
+        ImporterProvider.init(config.importProvider, importerConfig.config)
     }
 
     override fun onDisable() {

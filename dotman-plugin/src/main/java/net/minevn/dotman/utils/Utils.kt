@@ -9,6 +9,8 @@ import net.minevn.dotman.DotMan
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.scheduler.BukkitTask
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.logging.Level
 
 class Utils {
@@ -82,6 +84,20 @@ class Utils {
                 }
                 create()
             }
+        }
+
+        // 13:24 14/04/2024 to unix
+        fun String.toUnixTime(): Long {
+            val parts = this.split(" ")
+            val time = parts[0].split(":")
+            val date = parts[1].split("/")
+            return LocalDateTime.of(
+                date[2].toInt(),
+                date[1].toInt(),
+                date[0].toInt(),
+                time[0].toInt(),
+                time[1].toInt()
+            ).toEpochSecond(ZoneOffset.UTC)
         }
     }
 }

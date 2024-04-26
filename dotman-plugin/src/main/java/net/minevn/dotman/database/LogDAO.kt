@@ -7,7 +7,7 @@ import net.minevn.dotman.utils.Utils
 import net.minevn.libs.db.DataAccess
 import net.minevn.libs.minMaxEpochTimestamp
 import net.minevn.libs.timeToString
-import org.bukkit.entity.Player
+import org.bukkit.OfflinePlayer
 
 abstract class LogDAO : DataAccess() {
     companion object {
@@ -31,6 +31,7 @@ abstract class LogDAO : DataAccess() {
     abstract fun getSumScriptByPlayerAllTime(): String
     abstract fun getSumScriptByPlayerByMonth(): String
     abstract fun updatePointReceivedScript(): String
+    abstract fun updateTimeScript(): String
     // endregion
 
     // region queriers
@@ -39,7 +40,7 @@ abstract class LogDAO : DataAccess() {
      * @param player Player
      * @param card Thẻ cần nạp
      */
-    fun insertLog(player: Player, card: Card) = run {
+    fun insertLog(player: OfflinePlayer, card: Card) = run {
         Utils.info("${player.name} Nạp thẻ: $card")
 
         insertLogScript().statementWithKey {
@@ -191,6 +192,17 @@ abstract class LogDAO : DataAccess() {
     fun updatePointReceived(id: Int, points: Int) {
         updatePointReceivedScript().statement {
             setInt(1, points)
+            setInt(2, id)
+            executeUpdate()
+        }
+    }
+
+    /**
+     * Cập nhật thời gian nạp thẻ
+     */
+    fun updateTime(id: Int, time: Long) {
+        updateTimeScript().statement {
+            setLong(1, time)
             setInt(2, id)
             executeUpdate()
         }

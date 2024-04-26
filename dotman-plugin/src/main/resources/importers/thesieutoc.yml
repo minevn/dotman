@@ -1,0 +1,9 @@
+# Storage: FLATFILE, MySQL
+storage: FLATFILE
+file: log_success.txt
+mysql:
+  host: localhost
+  port: 3306
+  database: thesieutoc
+  username: root
+  password: root

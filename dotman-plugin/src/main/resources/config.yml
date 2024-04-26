@@ -9,6 +9,9 @@ point-unit: 'xu'
 # API gạch thẻ sử dụng
 provider: thesieutoc
 
+# Import dữ liệu từ plugin khác
+import-provider: thesieutoc
+
 # Lượng points được cộng ứng với giá trị nạp
 donate-amounts:
   10000: 10

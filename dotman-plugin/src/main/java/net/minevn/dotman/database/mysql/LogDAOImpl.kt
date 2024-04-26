@@ -101,4 +101,10 @@ class LogDAOImpl : LogDAO() {
             SET `pointsnhan` = ?
             WHERE `id` = ?;
         """.trimIndent()
+
+    override fun updateTimeScript() = """
+            UPDATE `dotman_napthe_log`
+            SET `time` = ?
+            WHERE `id` = ?;
+    """.trimIndent()
 }
