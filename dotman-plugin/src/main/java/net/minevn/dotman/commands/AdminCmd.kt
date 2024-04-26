@@ -4,8 +4,8 @@ import net.minevn.dotman.DotMan
 import net.minevn.dotman.DotMan.Companion.transactional
 import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.database.LogDAO
-import net.minevn.dotman.importer.ImporterProvider
 import net.minevn.dotman.database.PlayerInfoDAO
+import net.minevn.dotman.importer.ImporterProvider
 import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
@@ -25,6 +25,8 @@ class AdminCmd {
             addSubCommand(thongbao(), "thongbao")
             addSubCommand(setBankLocation(), "chuyenkhoan")
             addSubCommand(history(), "lichsu", "history")
+            addSubCommand(napThuCong(), "napthucong", "manual")
+            addSubCommand(import(), "import")
 
             action {
                 sender.sendMessage("§b§lCác lệnh của plugin DotMan")
@@ -147,6 +149,123 @@ class AdminCmd {
                         sender.send("§cSai định dạng tháng. Ví dụ định dạng đúng: 01/2024")
                     }
                 }
+            }
+        }
+
+        private fun napThuCong() = command {
+            val usage = "<tên người chơi> <số tiền> [-p <số point nhận>] [-d <nội dung nạp>] [-f force offline]"
+
+            description("Nạp tiền thủ công cho người chơi")
+
+            tabComplete {
+                when(args.size) {
+                    0 -> emptyList()
+                    1 -> Bukkit.getOnlinePlayers().map { it.name }.filter { it.startsWith(args.last()) }
+                    2 -> if (args.last().isEmpty()) listOf("<số tiền nạp>") else emptyList()
+                    else -> when(args.takeLast(2).first()) {
+                        "-p" -> if (args.last().isEmpty()) listOf("<số point nhận>") else emptyList()
+                        "-d" -> if (args.last().isEmpty()) listOf("<nội dung nạp>") else emptyList()
+                        else -> if (args.last().isEmpty()) listOf("-p", "-d", "-f") else emptyList()
+                    }
+                }
+            }
+
+            action {
+                val args = args.toMutableList()
+                val main = DotMan.instance
+                val cfg = main.config
+
+                var playerName: String? = null
+                var amount: Int? = null
+                var point: Double? = null
+                var content = "THỦ CÔNG"
+                var forceOffline = false
+
+                var index = 0
+                while (args.isNotEmpty()) {
+                    when (val current = args.removeFirst()) {
+                        "-p" -> point = args.removeFirst().toDoubleOrNull() ?: run {
+                            sender.send("§cSố point nhận phải là số")
+                            return@action
+                        }
+                        "-d" -> {
+                            val sb = StringBuilder()
+                            while (args.isNotEmpty()) {
+                                if (args.first().matches("-[a-z]".toRegex())) break
+                                sb.append(args.removeFirst()).append(" ")
+                                content = sb.toString().trim().takeIf { it.length <= 20 } ?: run {
+                                    sender.send("§cNội dung không được quá 20 ký tự")
+                                    return@action
+
+                                }
+                            }
+                        }
+                        "-f" -> forceOffline = true
+                        else -> when(index++) {
+                            0 -> playerName = current
+                            1 -> amount = current.toIntOrNull() ?: run {
+                                sender.send("§cSố tiền phải là số")
+                                return@action
+                            }
+                            else -> {
+                                sender.send("§cCách dùng: /$commandTree $usage")
+                                return@action
+                            }
+                        }
+                    }
+                }
+
+                if (playerName == null || amount == null) {
+                    sender.send("§cCách dùng: /$commandTree $usage")
+                    return@action
+                }
+
+                if (point == null) {
+                    val isExtra = cfg.extraUntil > System.currentTimeMillis()
+                    val extraRate = if (isExtra) cfg.extraRate else 0.0
+                    val pointPer1K = cfg.manualBase + cfg.manualExtra + (cfg.manualBase * extraRate)
+                    point = (amount / 1000) * pointPer1K
+                }
+
+                runNotSync { transactional {
+                    try {
+                        val infoDao = PlayerInfoDAO.getInstance()
+                        val uuidStr = infoDao.getUUID(playerName) ?: run {
+                            sender.send("§cNgười chơi $playerName không tồn tại. Có thể họ chưa vào server bao giờ?")
+                            return@transactional
+                        }
+
+                        val uuid = UUID.fromString(uuidStr)
+                        if (Bukkit.getPlayer(uuid)?.isOnline != true && !forceOffline) {
+                            sender.send("§cNgười chơi $playerName hiện không online, vì vậy phần thưởng mốc nạp sẽ " +
+                                    "không được thực hiện nếu họ đạt mốc.")
+                            sender.send("§cHãy thêm tùy chọn §a-f §cvào lệnh nếu bạn vẫn muốn thực hiện nạp thủ công.")
+                            return@transactional
+                        }
+
+                        main.playerPoints.api.give(UUID.fromString(uuidStr), amount)
+                        main.updateLeaderBoard(uuid, amount, point.toInt())
+                        val logDao = LogDAO.getInstance()
+                        logDao.insertLog(uuidStr, content, "--", "MANUAL", amount).let {
+                            logDao.stopWaiting(it, true)
+                            logDao.updatePointReceived(it, point.toInt())
+                        }
+                        sender.send("§aĐã nạp §d$amount VNĐ §acho người chơi §b$playerName " +
+                                "§avà nhận §b${point.toInt()} §apoint")
+
+                    } catch (e: Exception) {
+                        sender.send("§cCó lỗi xảy ra: ${e.message} (chi tiết hãy xem Console và báo lỗi cho MineVN Studio)")
+                        throw e
+                    }
+                }}
+            }
+        }
+
+        private fun import() = command {
+            description("Import dữ liệu từ plugin khác")
+
+            action {
+                ImporterProvider.instance.import(sender)
             }
         }
     }
