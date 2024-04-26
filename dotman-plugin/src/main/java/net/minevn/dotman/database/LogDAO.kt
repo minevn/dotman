@@ -31,6 +31,7 @@ abstract class LogDAO : DataAccess() {
     abstract fun getSumScriptByPlayerAllTime(): String
     abstract fun getSumScriptByPlayerByMonth(): String
     abstract fun updatePointReceivedScript(): String
+    abstract fun updateTimeScript(): String
     // endregion
 
     // region queriers
@@ -192,6 +193,17 @@ abstract class LogDAO : DataAccess() {
     fun updatePointReceived(id: Int, points: Int) {
         updatePointReceivedScript().statement {
             setInt(1, points)
+            setInt(2, id)
+            executeUpdate()
+        }
+    }
+
+    /**
+     * Cập nhật thời gian nạp thẻ
+     */
+    fun updateTime(id: Int, time: Long) {
+        updateTimeScript().statement {
+            setLong(1, time)
             setInt(2, id)
             executeUpdate()
         }
