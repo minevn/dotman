@@ -25,8 +25,8 @@ class LogDAOImpl : LogDAO() {
     override fun getHistoryScriptAllPlayerAllTime() = """
             SELECT
                 ROW_NUMBER() OVER (ORDER BY "time" DESC) AS "rownum",
-                "id", "name", "type", "seri", "price", "pointsnhan", "time"
-            FROM "dotman_napthe_log"
+                "id", i."name" as uuid, "type", "seri", "price", "pointsnhan", "time"
+            FROM "dotman_napthe_log" l left join "dotman_player_info" i on i."uuid" = l."uuid"
             WHERE "success" = 1
             ORDER BY "time" DESC
             OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;
@@ -35,8 +35,8 @@ class LogDAOImpl : LogDAO() {
     override fun getHistoryScriptAllPlayerByMonth() = """
             SELECT
                 ROW_NUMBER() OVER (ORDER BY "time" DESC) AS "rownum",
-                "id", "name", "type", "seri", "price", "pointsnhan", "time"
-            FROM "dotman_napthe_log"
+                "id", i."name" as uuid, "type", "seri", "price", "pointsnhan", "time"
+            FROM "dotman_napthe_log" l left join "dotman_player_info" i on i."uuid" = l."uuid"
             WHERE "success" = 1
             and "time" >= ? and "time" <= ?
             ORDER BY "time" DESC
@@ -46,8 +46,8 @@ class LogDAOImpl : LogDAO() {
     override fun getHistoryScriptByPlayerAllTime() = """
             SELECT
                 ROW_NUMBER() OVER (ORDER BY "time" DESC) AS "rownum",
-                "id", "name", "type", "seri", "price", "pointsnhan", "time"
-            FROM "dotman_napthe_log"
+                "id", i."name" as uuid, "type", "seri", "price", "pointsnhan", "time"
+            FROM "dotman_napthe_log" l left join "dotman_player_info" i on i."uuid" = l."uuid"
             WHERE "success" = 1 AND "name" = ?
             ORDER BY "time" DESC
             OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;
@@ -56,8 +56,8 @@ class LogDAOImpl : LogDAO() {
     override fun getHistoryScriptByPlayerByMonth() = """
             SELECT
                 ROW_NUMBER() OVER (ORDER BY "time" DESC) AS "rownum",
-                "id", "name", "type", "seri", "price", "pointsnhan", "time"
-            FROM "dotman_napthe_log"
+                "id", i."name" as uuid, "type", "seri", "price", "pointsnhan", "time"
+            FROM "dotman_napthe_log" l left join "dotman_player_info" i on i."uuid" = l."uuid"
             WHERE "success" = 1 AND "name" = ?
             and "time" >= ? and "time" <= ?
             ORDER BY "time" DESC

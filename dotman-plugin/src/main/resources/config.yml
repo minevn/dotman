@@ -22,6 +22,40 @@ donate-amounts:
   500000: 500
   1000000: 1000
 
+# Lệnh thực thi tương ứng với giá trị nạp
+donate-commands:
+  10000:
+    - 'tell %PLAYER% Bạn vừa nạp 10k'
+  20000:
+    - 'tell %PLAYER% Bạn vừa nạp 20k'
+  50000:
+    - 'tell %PLAYER% Bạn vừa nạp 50k'
+  100000:
+    - 'tell %PLAYER% Bạn vừa nạp 100k'
+  200000:
+    - 'tell %PLAYER% Bạn vừa nạp 200k'
+  500000:
+    - 'tell %PLAYER% Bạn vừa nạp 500k'
+  1000000:
+    - 'tell %PLAYER% Bạn vừa nạp 1 củ'
+
+# Công thức tính cho lệnh nạp thủ công
+manual:
+  # Số point tiêu chuẩn trên mỗi 1000 VNĐ
+  # Đây là số point dùng để tính toán khuyến mãi
+  # Mặc định: 1000 VNĐ = 1 point
+  point-base: 1
+
+  # Số point được nhận thêm trên mõi 1000 VNĐ khi nạp qua ngân hàng
+  # Mặc định: 1000 VNĐ = 0.5 point
+  point-extra: 0.5
+  # Công thức tính khi nạp qua ngân hàng:
+  # - Số point nhận được = Số point tiêu chuẩn + Số point được nhận thêm + (Số point tiêu chuẩn ⅹ Khuyến mãi)
+  # Trong đó khuyến mãi là giá trị khuyến mãi được định nghĩa trong config.yml
+  # Ví dụ: Nếu bạn đặt point tiêu chuẩn và nhận thêm là mặc định (1 và 0.5) và bạn đang bật khuyến mãi 50% (GTKM 0.5) thì:
+  # - Số point nhận được = 1 + 0.5 + (1 ⅹ 0.5) = 2 point
+
+
 # Giá trị khuyến mãi
 # 0: Không có khuyến mãi
 # 0.5: Khuyến mãi 50%, ví dụ: nạp 100k được 150k

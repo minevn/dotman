@@ -8,6 +8,7 @@ import net.minevn.dotman.config.Language
 import net.minevn.dotman.config.MainConfig
 import net.minevn.dotman.config.Milestones
 import net.minevn.dotman.database.ConfigDAO
+import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.database.PlayerInfoDAO
 import net.minevn.dotman.gui.CardPriceUI
 import net.minevn.dotman.gui.CardTypeUI
@@ -27,6 +28,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import java.util.*
 import java.util.logging.Level
 
 class DotMan : MineVNPlugin(), Listener {
@@ -122,6 +124,29 @@ class DotMan : MineVNPlugin(), Listener {
     @EventHandler
     fun onJoin(e: PlayerJoinEvent) = UpdateChecker.sendUpdateMessage(e.player)
     // endregion
+
+    /**
+     * Cập nhật bảng xếp hạng, mốc nạp
+     *
+     * @param uuid UUID của người chơi
+     * @param amount Số tiền nạp
+     * @param pointAmount Số point nhận được
+     */
+    fun updateLeaderBoard(uuid: UUID, amount: Int, pointAmount: Int) {
+        val dataDAO = PlayerDataDAO.getInstance()
+
+        // Tích điểm
+        val uuidStr = uuid.toString()
+        dataDAO.insertAllType(uuidStr, TOP_KEY_DONATE_TOTAL, amount)
+        dataDAO.insertAllType(uuidStr, TOP_KEY_POINT_FROM_CARD, pointAmount)
+
+        // Mốc nạp
+        Bukkit.getPlayer(uuid)?.takeIf { it.isOnline }?.let { player ->
+            minestones.getAll().filter { it.type == "all" }.forEach {
+                it.check(player, dataDAO.getData(uuidStr, "${TOP_KEY_DONATE_TOTAL}_ALL"), amount)
+            }
+        }
+    }
 
     companion object {
         lateinit var instance: DotMan private set

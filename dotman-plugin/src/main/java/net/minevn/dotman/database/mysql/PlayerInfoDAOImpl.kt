@@ -8,4 +8,6 @@ class PlayerInfoDAOImpl : PlayerInfoDAO() {
         values (@uuid:=?, @name:=?, @time:=?)
         on duplicate key update name = @name, last_updated = @time;
     """.trimIndent()
+
+    override fun getUUIDScript() = "SELECT `uuid` FROM `dotman_player_info` WHERE `name` = ?"
 }

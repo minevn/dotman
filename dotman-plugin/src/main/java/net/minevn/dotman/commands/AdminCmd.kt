@@ -1,9 +1,11 @@
 package net.minevn.dotman.commands
 
 import net.minevn.dotman.DotMan
+import net.minevn.dotman.DotMan.Companion.transactional
 import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.importer.ImporterProvider
+import net.minevn.dotman.database.PlayerInfoDAO
 import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
@@ -13,6 +15,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
+import java.util.*
 import kotlin.math.ceil
 
 class AdminCmd {
@@ -22,7 +25,6 @@ class AdminCmd {
             addSubCommand(thongbao(), "thongbao")
             addSubCommand(setBankLocation(), "chuyenkhoan")
             addSubCommand(history(), "lichsu", "history")
-            addSubCommand(import(), "import")
 
             action {
                 sender.sendMessage("§b§lCác lệnh của plugin DotMan")
@@ -145,14 +147,6 @@ class AdminCmd {
                         sender.send("§cSai định dạng tháng. Ví dụ định dạng đúng: 01/2024")
                     }
                 }
-            }
-        }
-
-        private fun import() = command {
-            description("Import dữ liệu từ plugin khác")
-
-            action {
-                ImporterProvider.instance.import(sender)
             }
         }
     }

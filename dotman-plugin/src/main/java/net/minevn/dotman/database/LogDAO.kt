@@ -7,7 +7,7 @@ import net.minevn.dotman.utils.Utils
 import net.minevn.libs.db.DataAccess
 import net.minevn.libs.minMaxEpochTimestamp
 import net.minevn.libs.timeToString
-import org.bukkit.OfflinePlayer
+import org.bukkit.entity.Player
 
 abstract class LogDAO : DataAccess() {
     companion object {
@@ -31,7 +31,6 @@ abstract class LogDAO : DataAccess() {
     abstract fun getSumScriptByPlayerAllTime(): String
     abstract fun getSumScriptByPlayerByMonth(): String
     abstract fun updatePointReceivedScript(): String
-    abstract fun updateTimeScript(): String
     // endregion
 
     // region queriers
@@ -40,24 +39,25 @@ abstract class LogDAO : DataAccess() {
      * @param player Player
      * @param card Thẻ cần nạp
      */
-    fun insertLog(player: OfflinePlayer, card: Card) = run {
-        Utils.info("${player.name} Nạp thẻ: $card")
+    fun insertLog(player: Player, card: Card) = insertLog(player.uniqueId.toString(), card.seri, card.pin,
+        card.type.name, card.price.value)
 
+    fun insertLog(uuid: String, seri: String, pin: String, type: String, amount: Int) = run {
         insertLogScript().statementWithKey {
-            setString(1, player.name)
-            setString(2, player.uniqueId.toString())
-            setString(3, card.seri)
-            setString(4, card.pin)
-            setString(5, card.type.name)
-            setInt(6, card.price.value)
+            setString(1, "")
+            setString(2, uuid)
+            setString(3, seri)
+            setString(4, pin)
+            setString(5, type)
+            setInt(6, amount)
             setLong(7, System.currentTimeMillis())
             setString(8, getMain().config.server)
 
             executeUpdate()
             generatedKeys.use {
                 if (it.next()) {
-                    it.getInt(1).apply { Utils.info("Ghi log thành công cho ${player.name}, ID: $this") }
-                } else throw IllegalStateException("Ghi log thất bại cho ${player.name}")
+                    it.getInt(1).apply { Utils.info("Ghi log thành công: UUID: $uuid, ID: $this") }
+                } else throw IllegalStateException("Ghi log thất bại cho UUID $uuid")
             }
         }
     }
@@ -192,17 +192,6 @@ abstract class LogDAO : DataAccess() {
     fun updatePointReceived(id: Int, points: Int) {
         updatePointReceivedScript().statement {
             setInt(1, points)
-            setInt(2, id)
-            executeUpdate()
-        }
-    }
-
-    /**
-     * Cập nhật thời gian nạp thẻ
-     */
-    fun updateTime(id: Int, time: Long) {
-        updateTimeScript().statement {
-            setLong(1, time)
             setInt(2, id)
             executeUpdate()
         }
