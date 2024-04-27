@@ -20,7 +20,7 @@ import org.bukkit.entity.Player
 
 abstract class CardProvider {
     val task = Bukkit.getScheduler()
-        .runTaskTimerAsynchronously(DotMan.instance, ::updateStatus, 0L, 20 * 60)!!
+        .runTaskTimerAsynchronously(DotMan.instance, ::updateStatus, 0L, 20 * 60)
 
     companion object {
         lateinit var instance: CardProvider private set
@@ -32,15 +32,15 @@ abstract class CardProvider {
 
             instance = when (provider) {
                 "thesieutoc" -> {
-                    val apiKey = config.getString("api-key")
-                    val apiSecret = config.getString("api-secret")
+                    val apiKey = config.getString("api-key")!!
+                    val apiSecret = config.getString("api-secret")!!
                     TheSieuTocCP(apiKey, apiSecret)
                 }
 
                 "gamebank" -> {
                     val merchantID = config.getInt("merchant_id")
-                    val apiUser = config.getString("api_user")
-                    val apiPassword = config.getString("api_password")
+                    val apiUser = config.getString("api_user")!!
+                    val apiPassword = config.getString("api_password")!!
                     GameBankCP(merchantID, apiUser, apiPassword)
                 }
 

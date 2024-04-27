@@ -17,7 +17,7 @@ class Milestones : FileConfig("mocnap") {
     @Suppress("UNCHECKED_CAST")
     private fun loadComponents() {
         var premiumWarning = false
-        components = config.getList("mocnap").map {
+        components = (config.getList("mocnap") ?: emptyList()).map {
             try {
                 it as Map<*, *>
                 val component = Component(it["type"] as String, it["amount"] as Int, it["commands"] as List<String>)

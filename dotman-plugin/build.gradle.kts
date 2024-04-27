@@ -17,7 +17,7 @@ repositories {
 
 dependencies {
     // spigot
-    compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
 
     // libs
     compileOnly("net.minevn:minevnlib-plugin:1.0.4")
