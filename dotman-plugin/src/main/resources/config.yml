@@ -43,7 +43,7 @@ manual:
   # Mặc định: 1000 VNĐ = 1 point
   point-base: 1
 
-  # Số point được nhận thêm trên mõi 1000 VNĐ khi nạp qua ngân hàng
+  # Số point được nhận thêm trên mõi 1000 VNĐ khi nạp qua lệnh nạp thủ công
   # Mặc định: 1000 VNĐ = 0.5 point
   point-extra: 0.5
   # Công thức tính khi nạp qua lệnh nạp thủ công:
