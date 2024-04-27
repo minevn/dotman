@@ -75,7 +75,7 @@ class DotMan : MineVNPlugin(), Listener {
     fun reload() {
         config = MainConfig()
         prefix = config.prefix
-        initDatabase(config.config.getConfigurationSection("database"))
+        initDatabase(config.config.getConfigurationSection("database")!!)
         migrate()
         language = Language()
         minestones = Milestones()

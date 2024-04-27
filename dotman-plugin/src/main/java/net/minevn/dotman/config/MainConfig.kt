@@ -16,7 +16,7 @@ class MainConfig : FileConfig("config") {
     val dbEngine = config.getString("database.engine", "h2")!!
     val provider = config.getString("provider", "")!!
     val server = config.getString("server", "")!!
-    val cardTypes = config.getConfigurationSection("card-types").run {
+    val cardTypes = config.getConfigurationSection("card-types")!!.run {
         CardType.entries.associateWith { getBoolean(it.name.lowercase()) }
     }
 
