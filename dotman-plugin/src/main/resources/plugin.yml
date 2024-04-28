@@ -1,5 +1,5 @@
 name: DotMan
-api-version: 1.20
+api-version: 1.13
 main: net.minevn.dotman.DotMan
 version: '${version}'
 author: MineVN
