@@ -35,4 +35,10 @@ class PlayerDataDAOImpl : PlayerDataDAO() {
         FROM "dotman_player_data"
         WHERE "uuid" = ? AND "key" = ?;
     """.trimIndent()
+
+    override fun getSumDataScript() = """
+        SELECT SUM("value") as "value"
+        FROM "dotman_player_data"
+        WHERE "key" = ?;
+    """.trimIndent()
 }

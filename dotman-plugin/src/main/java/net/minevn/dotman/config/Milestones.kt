@@ -1,10 +1,18 @@
 package net.minevn.dotman.config
 
+import net.minevn.dotman.DotMan
+import net.minevn.dotman.TOP_KEY_DONATE_TOTAL
+import net.minevn.dotman.database.PlayerDataDAO
+import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.libs.bukkit.runSync
 import org.bukkit.Bukkit
+import org.bukkit.boss.BarColor
+import org.bukkit.boss.BarStyle
+import org.bukkit.boss.BossBar
 import org.bukkit.entity.Player
+import org.bukkit.scheduler.BukkitTask
 
 class Milestones : FileConfig("mocnap") {
 
@@ -42,7 +50,7 @@ class Milestones : FileConfig("mocnap") {
             }
         }.filterNotNull()
 
-        info("Đã nạp ${components.size} mốc nạp")
+        info("Đã nạp ${components.size} mốc nạp.")
     }
 
     override fun reload() {
@@ -52,7 +60,39 @@ class Milestones : FileConfig("mocnap") {
 
     fun getAll() = components.toList()
 
-    class Component(val type: String, val amount: Int, val commands: List<String>) {
+    class Component(val type: String, val amount: Int, val commands: List<String>, val bossBar: String? = null,
+                    val from: Int = 0, barColor : BarColor = BarColor.GREEN,
+                    barStyle: BarStyle = BarStyle.SEGMENTED_10) {
+
+        var bar: BossBar? = null
+        var barTask: BukkitTask? = null; private set
+
+        init {
+            if (bossBar != null) {
+                bar = Bukkit.createBossBar("§r", barColor, barStyle).apply {
+                    isVisible = false
+                    barTask = Bukkit.getScheduler().runTaskTimerAsynchronously(DotMan.instance, Runnable {
+                        val current = PlayerDataDAO.getInstance().getSumData("${TOP_KEY_DONATE_TOTAL}_$type")
+                        if (current in from until amount) {
+                            if (!isVisible) {
+                                isVisible = true
+                                runSync { Bukkit.getOnlinePlayers().forEach {addPlayer(it)} }
+                            }
+                            val title = bossBar
+                                .replace("%CURRENT%", current.format())
+                                .replace("%TARGET%", amount.format())
+                            progress = current.toDouble() / amount
+                            setTitle(title)
+                        } else {
+                            if (isVisible) {
+                                removeAll()
+                                isVisible = false
+                            }
+                        }
+                    }, 0, 20 * 5)
+                }
+            }
+        }
 
         private val typeName = when (type) {
             "all" -> "toàn thời gian"
@@ -65,6 +105,7 @@ class Milestones : FileConfig("mocnap") {
          * Kiểm tra xem người chơi đã đạt mốc nạp này chưa,
          * nếu đạt thì thực hiện các lệnh trong config
          *
+         * @param player người chơi
          * @param current số tiền sau khi nạp
          * @param amount số tiền nạp
          */
@@ -74,8 +115,28 @@ class Milestones : FileConfig("mocnap") {
                 runSync {
                     commands.forEach {
                         val command = it.replace("%player%", player.name)
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.format(player.name))
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command)
                     }
+                }
+            }
+        }
+
+        /**
+         * Kiểm tra xem toàn server đã đạt mốc nạp này chưa,
+         * nếu đạt thì thực hiện các lệnh trong config
+         *
+         * @param current số tiền sau khi nạp
+         * @param amount số tiền nạp
+         */
+        fun sumCheck(current: Int, amount: Int) {
+            if (current >= this.amount && current - amount < this.amount) {
+                runSync {
+                    commands.forEach {
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), it)
+                    }
+                    bar?.removeAll()
+                    bar?.isVisible = false
+                    bar = null
                 }
             }
         }
