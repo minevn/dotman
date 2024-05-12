@@ -7,6 +7,8 @@ import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.HoverEvent
 import net.minevn.dotman.DotMan
 import org.bukkit.Bukkit
+import org.bukkit.boss.BarColor
+import org.bukkit.boss.BarStyle
 import org.bukkit.command.CommandSender
 import org.bukkit.scheduler.BukkitTask
 import java.util.logging.Level
@@ -82,6 +84,20 @@ class Utils {
                 }
                 create()
             }
+        }
+
+        fun getBarColor(str : String?) : BarColor {
+            BarColor.entries.forEach {
+                if (it.name == str) return it
+            }
+            return BarColor.GREEN
+        }
+
+        fun getBarStyle(str : String?) : BarStyle {
+            BarStyle.entries.forEach {
+                if (it.name == str) return it
+            }
+            return BarStyle.SOLID
         }
     }
 }
