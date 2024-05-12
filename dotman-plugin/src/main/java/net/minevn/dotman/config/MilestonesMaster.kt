@@ -5,6 +5,7 @@ import net.minevn.dotman.utils.Utils.Companion.getBarColor
 import net.minevn.dotman.utils.Utils.Companion.getBarStyle
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.warning
+import net.minevn.libs.bukkit.color
 
 class MilestonesMaster : FileConfig("mocnaptong") {
     private var components: List<Component> = emptyList()
@@ -19,7 +20,7 @@ class MilestonesMaster : FileConfig("mocnaptong") {
         components = (config.getList("mocnaptong") ?: emptyList()).map {
             try {
                 it as Map<*, *>
-                val bossBar = it.getOrDefault("bossbar", null) as String?
+                val bossBar = (it.getOrDefault("bossbar", null) as String?)?.color()
                 val from = it.getOrDefault("from", 0) as Int
                 val barColor = getBarColor(it.getOrDefault("bossbar-color", null) as String?)
                 val barStyle = getBarStyle(it.getOrDefault("bossbar-style", null) as String?)

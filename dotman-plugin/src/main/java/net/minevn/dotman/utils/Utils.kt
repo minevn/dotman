@@ -86,18 +86,10 @@ class Utils {
             }
         }
 
-        fun getBarColor(str : String?) : BarColor {
-            BarColor.entries.forEach {
-                if (it.name == str) return it
-            }
-            return BarColor.GREEN
-        }
+        fun getBarColor(str : String?) = BarColor.entries.firstOrNull { it.name.equals(str, true) }
+            ?: BarColor.GREEN
 
-        fun getBarStyle(str : String?) : BarStyle {
-            BarStyle.entries.forEach {
-                if (it.name == str) return it
-            }
-            return BarStyle.SOLID
-        }
+        fun getBarStyle(str : String?) = BarStyle.entries.firstOrNull { it.name.equals(str, true) }
+            ?: BarStyle.SOLID
     }
 }
