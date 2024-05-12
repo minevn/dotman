@@ -3,6 +3,7 @@ package net.minevn.dotman.config
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.TOP_KEY_DONATE_TOTAL
 import net.minevn.dotman.database.PlayerDataDAO
+import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.libs.bukkit.runSync
@@ -78,8 +79,8 @@ class Milestones : FileConfig("mocnap") {
                                 runSync { Bukkit.getOnlinePlayers().forEach {addPlayer(it)} }
                             }
                             val title = bossBar
-                                .replace("%CURRENT%", current.toString())
-                                .replace("%TARGET%", amount.toString())
+                                .replace("%CURRENT%", current.format())
+                                .replace("%TARGET%", amount.format())
                             progress = current.toDouble() / amount
                             setTitle(title)
                         } else {

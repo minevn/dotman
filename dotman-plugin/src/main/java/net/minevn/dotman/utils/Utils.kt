@@ -11,6 +11,7 @@ import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
 import org.bukkit.command.CommandSender
 import org.bukkit.scheduler.BukkitTask
+import java.text.DecimalFormat
 import java.util.logging.Level
 
 class Utils {
@@ -91,5 +92,14 @@ class Utils {
 
         fun getBarStyle(str : String?) = BarStyle.entries.firstOrNull { it.name.equals(str, true) }
             ?: BarStyle.SOLID
+
+
+        fun Int.format(): String {
+            val format = DecimalFormat("#,###")
+            val decimalFormatSymbols = format.decimalFormatSymbols
+            decimalFormatSymbols.groupingSeparator = '.'
+            format.decimalFormatSymbols = decimalFormatSymbols
+            return format.format(this)
+        }
     }
 }
