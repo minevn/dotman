@@ -6,7 +6,7 @@ import net.minevn.libs.bukkit.runSync
 import org.bukkit.Bukkit
 import java.util.concurrent.ConcurrentHashMap
 
-const val TOP_EXPIRE = 5 * 60 * 1000L // 5 phút
+const val TOP_EXPIRE = 1 * 60 * 1000L // 1 phút
 const val TOP_COUNT = 100
 
 const val TOP_KEY_DONATE_TOTAL = "DONATE_TOTAL"

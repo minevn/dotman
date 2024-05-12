@@ -1,0 +1,26 @@
+# Mốc nạp tổng và các lệnh thực thi khi đạt mốc
+# Có thể dùng cho: Server booster, tiến độ nạp, ...
+mocnaptong:
+- type: all # Toàn thời gian
+  # Lưu ý: Đối với mốc nạp toàn thời gian, tiền độ donate sẽ tính theo donate của server từ trước đến nay.
+  #bossbar: 'Donate server: %current%/%target% VNĐ' # Bossbar hiển thị tiến độ (bỏ comment để hiển thị)
+  #from: 0 # mức hiển bossbar
+  bossbar-style: GREEN
+  bossbar-color: SEGMENTED_10
+  amount: 10000000 # Giá trị tích lũy
+  commands: # Các lệnh chạy cho player khi đạt mốc
+    - 'say Donate của server đã đạt 10 triệu!'
+
+- type: week # Mốc nạp tuần (tính năng premium)
+  bossbar-style: GREEN
+  bossbar-color: SEGMENTED_10
+  amount: 1000000
+  commands:
+    - 'say Tuần này donate của server đã đạt 1 triệu!'
+
+- type: month # Mốc nạp tháng (tính năng premium)
+  bossbar-style: GREEN
+  bossbar-color: SEGMENTED_10
+  amount: 5000000
+  commands:
+    - 'say Tháng này donate của server đã đạt 5 triệu!'

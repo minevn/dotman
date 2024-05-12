@@ -3,10 +3,7 @@ package net.minevn.dotman
 import net.minevn.dotman.commands.AdminCmd
 import net.minevn.dotman.commands.MainCmd
 import net.minevn.dotman.commands.TopNapCmd
-import net.minevn.dotman.config.FileConfig
-import net.minevn.dotman.config.Language
-import net.minevn.dotman.config.MainConfig
-import net.minevn.dotman.config.Milestones
+import net.minevn.dotman.config.*
 import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.database.PlayerInfoDAO
@@ -39,7 +36,8 @@ class DotMan : MineVNPlugin(), Listener {
     // configurations
     lateinit var config: MainConfig private set
     lateinit var language: Language private set
-    lateinit var minestones: Milestones private set
+    lateinit var milestones: Milestones private set
+    lateinit var milestonesMaster: MilestonesMaster private set
 
     override fun onEnable() {
         instance = this
@@ -78,7 +76,16 @@ class DotMan : MineVNPlugin(), Listener {
         initDatabase(config.config.getConfigurationSection("database")!!)
         migrate()
         language = Language()
-        minestones = Milestones()
+        milestones = Milestones()
+        if (::milestonesMaster.isInitialized) {
+            milestonesMaster.getAll().forEach {
+                it.bar?.removeAll()
+                it.bar?.isVisible = false
+                it.barTask?.cancel()
+                it.bar = null
+            }
+        }
+        milestonesMaster = MilestonesMaster()
 
         // init Gui configs
         CardTypeUI()
@@ -132,10 +139,24 @@ class DotMan : MineVNPlugin(), Listener {
         dataDAO.insertAllType(uuidStr, TOP_KEY_POINT_FROM_CARD, pointAmount)
 
         // Mốc nạp
+        val currentPlayer = dataDAO.getData(uuidStr, "${TOP_KEY_DONATE_TOTAL}_ALL")
+        val currentServer = dataDAO.getSumData("${TOP_KEY_DONATE_TOTAL}_ALL")
         Bukkit.getPlayer(uuid)?.takeIf { it.isOnline }?.let { player ->
-            minestones.getAll().filter { it.type == "all" }.forEach {
-                it.check(player, dataDAO.getData(uuidStr, "${TOP_KEY_DONATE_TOTAL}_ALL"), amount)
+            milestones.getAll().filter { it.type == "all" }.forEach {
+                it.check(player, currentPlayer, amount)
             }
+            milestonesMaster.getAll().filter { it.type == "all" }.forEach {
+                it.sumCheck(currentServer, amount)
+            }
+        }
+    }
+
+    @EventHandler
+    fun onPlayerJoin(e: PlayerJoinEvent) {
+        val player = e.player
+        val milestones = milestonesMaster.getAll()
+        milestones.forEach {
+            it.bar?.addPlayer(player)
         }
     }
 
