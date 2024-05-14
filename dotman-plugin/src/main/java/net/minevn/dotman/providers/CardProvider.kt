@@ -116,7 +116,10 @@ abstract class CardProvider {
             }
         }
         if (extraPercent > 0) {
-            player.send(main.language.cardChargedWithExtra.replace("%RATE%", extraPercent.toString()))
+            main.language.cardChargedWithExtra
+                .replace("%RATE%", extraPercent.toString())
+                .replace("%PERCENT%", extraPercent.toString())
+                .let { player.send(it) }
         }
         if (card.logId != null) {
             LogDAO.getInstance().updatePointReceived(card.logId!!, amount)

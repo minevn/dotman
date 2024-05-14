@@ -4,6 +4,7 @@ import net.minevn.dotman.DotMan
 import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardWaiting
 import net.minevn.dotman.utils.Utils
+import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.libs.db.DataAccess
 import net.minevn.libs.minMaxEpochTimestamp
 import net.minevn.libs.timeToString
@@ -158,7 +159,7 @@ abstract class LogDAO : DataAccess() {
                     .replace("%ORDER%", rowNum.toString())
                     .replace("%PLAYER%", name)
                     .replace("%CARD_TYPE%", type)
-                    .replace("%CARD_PRICE%", price.toString())
+                    .replace("%CARD_PRICE%", price.format())
                     .replace("%POINTS_RECEIVED%", pointsReceived.toString())
                     .replace("%POINT_UNIT%", getMain().config.pointUnit)
                     .replace("%DATE%", time)

@@ -5,6 +5,7 @@ import net.minevn.dotman.DotMan.Companion.transactional
 import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.database.PlayerInfoDAO
+import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
@@ -126,8 +127,8 @@ class AdminCmd {
                         val title = "§aLịch sử nạp thẻ của §b%PLAYER_NAME%"
                             .replace("%PLAYER_NAME%", playerName ?: "toàn server")
                         val total = if (month != null) {
-                            "§eTổng nạp tháng $month: §d§l$sum VNĐ"
-                        } else "§eTổng nạp từ trước đến nay: §d§l$sum VNĐ"
+                            "§eTổng nạp tháng $month: §d§l${sum.format()} VNĐ"
+                        } else "§eTổng nạp từ trước đến nay: §d§l${sum.format()} VNĐ"
                         val logs = logDao.getHistory(playerName, month, page)
 
                         val paginationBuilder = StringBuilder("/dotman history").run {
@@ -248,7 +249,7 @@ class AdminCmd {
                             logDao.stopWaiting(it, true)
                             logDao.updatePointReceived(it, point.toInt())
                         }
-                        sender.send("§aĐã nạp §d$amount VNĐ §acho người chơi §b$playerName " +
+                        sender.send("§aĐã nạp §d${amount.format()} VNĐ §acho người chơi §b$playerName " +
                                 "§avà nhận §b${point.toInt()} §apoint")
 
                     } catch (e: Exception) {

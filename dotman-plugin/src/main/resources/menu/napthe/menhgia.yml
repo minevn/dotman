@@ -30,9 +30,10 @@ prices:
   icon:
     type: PAPER
     data: 0
-  name: "&c&l%PRICE%"
+  name: "&a&lMệnh giá %PRICE% VNĐ"
   lore:
     - "&7Nhấn để tiến hành nạp thẻ %CARD_TYPE% mệnh giá %PRICE% VNĐ"
+    - "&cLưu ý: Nhập sai mệnh giá sẽ khiến thẻ bị mất!"
   fill:
     - 'xxxxxxxxx'
     - '         '
