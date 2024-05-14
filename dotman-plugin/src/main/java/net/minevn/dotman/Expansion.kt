@@ -25,7 +25,7 @@ class Expansion : PlaceholderExpansion() {
             val target = top[rank] ?: return if (isPlayer) "Chưa xếp hạng" else "0"
             return if (isPlayer) target.first else target.second.toString()
         }
-        if (params.startsWith("data_") && args.size >= 2) run data@{
+        if (params.startsWith("point_") && args.size >= 2) run data@{
             val key = args.drop(1).joinToString("_").uppercase()
             val data = PlayerData[player.uniqueId.toString()]
             return data.data["${key}_ALL"]?.toString() ?: "0"
