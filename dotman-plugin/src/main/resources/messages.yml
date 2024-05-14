@@ -4,7 +4,7 @@ input-seri: '&aHãy nhập &esố seri &athẻ vào khung chat.'
 input-pin: '&aHãy nhập &bmã thẻ &avào khung chat.'
 
 card-charging:
-  - '&eThẻ &a%CARD_TYPE% &emệnh giá &a%CARD_PRICE%'
+  - '&eThẻ &a%CARD_TYPE% &emệnh giá &a%CARD_PRICE% VNĐ'
   - '&eSố seri: &a%SERI%'
   - '&eMã thẻ: &a%CODE%'
   - '%PREFIX% &eĐang tiến hành nạp thẻ...'

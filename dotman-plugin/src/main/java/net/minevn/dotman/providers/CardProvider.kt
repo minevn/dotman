@@ -6,6 +6,7 @@ import net.minevn.dotman.card.*
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.providers.types.GameBankCP
 import net.minevn.dotman.providers.types.TheSieuTocCP
+import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.dotman.utils.Utils.Companion.severe
@@ -60,7 +61,7 @@ abstract class CardProvider {
         val lang = main.language
         player.sendMessages(lang.cardCharging.map {
             it  .replace("%CARD_TYPE%", card.type.name)
-                .replace("%CARD_PRICE%", card.price.value.toString())
+                .replace("%CARD_PRICE%", card.price.value.format())
                 .replace("%SERI%", card.seri)
                 .replace("%CODE%", card.pin)
         })
