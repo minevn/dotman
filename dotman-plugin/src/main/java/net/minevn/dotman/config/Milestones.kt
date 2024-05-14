@@ -28,13 +28,13 @@ class Milestones : FileConfig("mocnap") {
         components = (config.getList("mocnap") ?: emptyList()).map {
             try {
                 it as Map<*, *>
-                val component = Component(it["type"] as String, it["amount"] as Int, it["commands"] as List<String>)
+                val type = it["type"]
 
-                if (component.type !in listOf("all", "week", "month")) {
-                    warning("Loại mốc nạp \"${component.type}\" không hợp lệ. Chỉ chấp nhận all, week, month")
+                if (type !in listOf("all", "week", "month")) {
+                    warning("Loại mốc nạp \"$type\" không hợp lệ. Chỉ chấp nhận all, week, month")
                     return@map null
                 }
-                if (component.type != "all") {
+                if (type != "all") {
                     if (!premiumWarning) {
                         premiumWarning = true
                         warning("Tính năng mốc nạp theo tuần, tháng chỉ có ở phiên bản DotMan premium. " +
@@ -43,7 +43,7 @@ class Milestones : FileConfig("mocnap") {
                     return@map null
                 }
 
-                component
+                Component(it["type"] as String, it["amount"] as Int, it["commands"] as List<String>)
             } catch (e: Exception) {
                 e.warning("Có một mốc nạp không hợp lệ, hãy liên hệ developer để được hỗ trợ")
                 null
