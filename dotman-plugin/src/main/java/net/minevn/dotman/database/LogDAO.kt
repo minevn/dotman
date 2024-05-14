@@ -136,7 +136,10 @@ abstract class LogDAO : DataAccess() {
         script.statement {
             var columnIndex = 1
             val offset = (page - 1) * linePerPage
-            if (playerName != null) setString(columnIndex++, playerName)
+            if (playerName != null) {
+                val uuid = PlayerInfoDAO.getInstance().getUUID(playerName) ?: ""
+                setString(columnIndex++, uuid)
+            }
             if (yearMonth != null) {
                 val (min, max) = minMaxEpochTimestamp(yearMonth)
                 setLong(columnIndex++, min)
@@ -172,7 +175,10 @@ abstract class LogDAO : DataAccess() {
         }
         script.statement {
             var columnIndex = 1
-            if (playerName != null) setString(columnIndex++, playerName)
+            if (playerName != null) {
+                val uuid = PlayerInfoDAO.getInstance().getUUID(playerName) ?: ""
+                setString(columnIndex++, uuid)
+            }
             if (yearMonth != null) {
                 val (min, max) = minMaxEpochTimestamp(yearMonth)
                 setLong(columnIndex++, min)

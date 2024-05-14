@@ -20,18 +20,17 @@ class MilestonesMaster : FileConfig("mocnaptong") {
         components = (config.getList("mocnaptong") ?: emptyList()).map {
             try {
                 it as Map<*, *>
+                val type = it["type"]
                 val bossBar = (it.getOrDefault("bossbar", null) as String?)?.color()
                 val from = it.getOrDefault("from", 0) as Int
                 val barColor = getBarColor(it.getOrDefault("bossbar-color", null) as String?)
                 val barStyle = getBarStyle(it.getOrDefault("bossbar-style", null) as String?)
-                val component = Component(it["type"] as String, it["amount"] as Int, it["commands"] as List<String>,
-                    bossBar, from, barColor, barStyle)
 
-                if (component.type !in listOf("all", "week", "month")) {
-                    warning("Loại mốc nạp \"${component.type}\" không hợp lệ. Chỉ chấp nhận all, week, month")
+                if (type !in listOf("all", "week", "month")) {
+                    warning("Loại mốc nạp \"$type\" không hợp lệ. Chỉ chấp nhận all, week, month")
                     return@map null
                 }
-                if (component.type != "all") {
+                if (type != "all") {
                     if (!premiumWarning) {
                         premiumWarning = true
                         warning("Tính năng mốc nạp theo tuần, tháng chỉ có ở phiên bản DotMan premium. " +
@@ -40,7 +39,8 @@ class MilestonesMaster : FileConfig("mocnaptong") {
                     return@map null
                 }
 
-                component
+                Component(it["type"] as String, it["amount"] as Int, it["commands"] as List<String>,
+                    bossBar, from, barColor, barStyle)
             } catch (e: Exception) {
                 e.warning("Có một mốc nạp không hợp lệ, hãy liên hệ developer để được hỗ trợ")
                 null
@@ -56,4 +56,13 @@ class MilestonesMaster : FileConfig("mocnaptong") {
     }
 
     fun getAll() = components.toList()
+
+    fun removeBossBars() {
+        getAll().forEach {
+            it.barTask?.cancel()
+            it.bar?.removeAll()
+            it.bar?.isVisible = false
+            it.bar = null
+        }
+    }
 }
