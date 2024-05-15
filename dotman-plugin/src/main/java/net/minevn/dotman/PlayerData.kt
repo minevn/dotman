@@ -6,13 +6,13 @@ import net.minevn.libs.bukkit.runSync
 import org.bukkit.Bukkit
 import java.util.concurrent.ConcurrentHashMap
 
-const val PLAYER_DATA_EXPIRE = 1 * 60 * 1000L // 1 phút
+const val PLAYER_DATA_UPDATE_INTERVAL = 1 * 60 * 1000L // 1 phút
 
 class PlayerData(
     val data: Map<String, Int>,
     private val initialTime: Long = System.currentTimeMillis()
 ) {
-    fun isExpired() = System.currentTimeMillis() - initialTime > PLAYER_DATA_EXPIRE
+    fun isExpired() = System.currentTimeMillis() - initialTime > PLAYER_DATA_UPDATE_INTERVAL
 
     companion object {
         private val dataCache = ConcurrentHashMap<String, PlayerData>()
