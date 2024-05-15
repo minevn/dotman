@@ -17,7 +17,6 @@ class PlayerData(
     companion object {
         private val dataCache = ConcurrentHashMap<String, PlayerData>()
 
-        // cập nhật dữ liệu top
         private fun getFromDB(uuid: String) = PlayerData(
             mapOf(
                 TOP_KEY_DONATE_TOTAL to PlayerDataDAO.getInstance().getData(uuid, TOP_KEY_DONATE_TOTAL),
@@ -25,16 +24,6 @@ class PlayerData(
             )
         )
 
-        /**
-         * Lấy thông tin PlayerData dựa trên uuid của người chơi đã cho. Nếu PlayerData đã được lưu trong bộ nhớ đệm
-         * và vẫn còn hiệu lực, nó sẽ được trả về ngay lập tức. Ngược lại, nếu hàm được gọi từ luồng chính
-         * (primary thread), một nhiệm vụ bất đồng bộ sẽ được khởi chạy để lấy PlayerData từ cơ sở dữ liệu và
-         * PlayerData hiện tại (nếu có) từ bộ nhớ đệm sẽ được trả về. Nếu hàm không được gọi từ luồng chính,
-         * PlayerData sẽ được lấy trực tiếp từ cơ sở dữ liệu, cập nhật trong bộ nhớ đệm và trả về.
-         *
-         * @param uuid Khóa định danh duy nhất cho LeaderBoard.
-         * @return PlayerData liên kết với khóa đã cho.
-         */
         operator fun get(uuid: String) = dataCache[uuid].run {
             if (this?.isExpired() != false) {
                 if (Bukkit.isPrimaryThread()) {
