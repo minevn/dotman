@@ -18,10 +18,9 @@ class PlayerData(
         private val dataCache = ConcurrentHashMap<String, PlayerData>()
 
         private fun getFromDB(uuid: String) = PlayerData(
-            mapOf(
-                TOP_KEY_DONATE_TOTAL to PlayerDataDAO.getInstance().getData(uuid, TOP_KEY_DONATE_TOTAL),
-                TOP_KEY_POINT_FROM_CARD to PlayerDataDAO.getInstance().getData(uuid, TOP_KEY_POINT_FROM_CARD)
-            )
+            PlayerDataDAO.getInstance().getAllData(uuid).associate {
+                it.first to it.second
+            }
         )
 
         operator fun get(uuid: String) = dataCache[uuid].run {
