@@ -49,6 +49,7 @@ Placeholder có thể sử dụng để hiển thị top nạp
 | -----| ---------- | ------- |
 |%DOTMAN_TOP_DONATE_TOTAL_XXX_PLAYER% | Trả về tên người chơi đứng top | XXX là thứ hạng |
 |%DOTMAN_TOP_DONATE_TOTAL_XXX_VALUE% | Trả về giá trị của người chơi đó | XXX là thứ hạng |
+| %DOTMAN_DATA_DONATE_TOTAL% | Trả về số point người chơi đã nạp | |
 
 > Ví dụ: `%DOTMAN_TOP_DONATE_TOTAL_1_PLAYER%` sẽ trả về tên của người đứng top 1 nạp thẻ, `%DOTMAN_TOP_DONATE_TOTAL_1_VALUE%` sẽ trả về số tiền nạp của người đứng top 1
 

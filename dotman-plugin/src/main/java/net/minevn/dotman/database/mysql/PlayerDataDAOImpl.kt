@@ -34,4 +34,10 @@ class PlayerDataDAOImpl : PlayerDataDAO() {
         FROM `dotman_player_data`
         WHERE `key` = ?;
     """.trimIndent()
+
+    override fun getAllDataScript() = """
+        SELECT `key`, `value`
+        FROM `dotman_player_data`
+        WHERE `uuid` = ?;
+    """.trimIndent()
 }

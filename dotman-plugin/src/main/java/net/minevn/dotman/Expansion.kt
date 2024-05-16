@@ -11,7 +11,7 @@ class Expansion : PlaceholderExpansion() {
     override fun getVersion() = "1.0"
 
     @Suppress("NAME_SHADOWING")
-    override fun onPlaceholderRequest(player: Player, params: String): String? {
+    override fun onPlaceholderRequest(player: Player?, params: String): String? {
         val params = params.lowercase()
         val args = params.lowercase().split("_").dropLastWhile { it.isEmpty() }
 
@@ -24,6 +24,11 @@ class Expansion : PlaceholderExpansion() {
             val top = LeaderBoard["${key}_ALL"]
             val target = top[rank] ?: return if (isPlayer) "Chưa xếp hạng" else "0"
             return if (isPlayer) target.first else target.second.toString()
+        }
+        if (params.startsWith("data_") && args.size >= 2 && player != null) run data@{
+            val key = args.drop(1).joinToString("_").uppercase()
+            val playerData = PlayerData[player]
+            return playerData.data["${key}_ALL"]?.toString() ?: "0"
         }
 
         return null

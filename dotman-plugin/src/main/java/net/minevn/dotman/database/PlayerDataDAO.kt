@@ -13,6 +13,7 @@ abstract class PlayerDataDAO : DataAccess() {
     abstract fun getTopScript(): String
     abstract fun getDataScript(): String
     abstract fun getSumDataScript(): String
+    abstract fun getAllDataScript(): String
 
     fun insertData(uuid: String, key: String, value: Int) {
         insertDataScript().statement {
@@ -55,6 +56,16 @@ abstract class PlayerDataDAO : DataAccess() {
             fetchRecords {
                 getString("name")!! to getInt("value")
             }
+        }
+    }
+
+    fun getAllData(uuid: String) = run {
+        getAllDataScript().statement {
+            setString(1, uuid)
+
+            fetchRecords {
+                getString("key")!! to getInt("value")
+            }.toMap()
         }
     }
 }
