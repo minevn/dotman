@@ -27,8 +27,8 @@ class Expansion : PlaceholderExpansion() {
         }
         if (params.startsWith("data_") && args.size >= 2) run data@{
             val key = args.drop(1).joinToString("_").uppercase()
-            val data = PlayerData[player.uniqueId.toString()]
-            return data.data["${key}_ALL"]?.toString() ?: "0"
+            val playerData = PlayerData[player]
+            return playerData.data["${key}_ALL"]?.toString() ?: "0"
         }
 
         return null

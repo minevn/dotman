@@ -65,7 +65,7 @@ abstract class PlayerDataDAO : DataAccess() {
 
             fetchRecords {
                 getString("key")!! to getInt("value")
-            }
+            }.toMap()
         }
     }
 }
