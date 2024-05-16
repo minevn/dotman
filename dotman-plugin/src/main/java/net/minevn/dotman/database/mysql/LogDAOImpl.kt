@@ -52,7 +52,7 @@ class LogDAOImpl : LogDAO() {
                 row_number() over (order by time desc) as rownum,
                 id, i.name as name, type, seri, price, pointsnhan, time
             from dotman_napthe_log l left join dotman_player_info i on i.uuid = l.uuid
-            where success = 1 and name = ?
+            where success = 1 and l.uuid = ?
             order by time desc limit ?, ?;
         """.trimIndent()
 
@@ -61,7 +61,7 @@ class LogDAOImpl : LogDAO() {
                 row_number() over (order by time desc) as rownum,
                 id, i.name as name, type, seri, price, pointsnhan, time
             from dotman_napthe_log l left join dotman_player_info i on i.uuid = l.uuid
-            where success = 1 and name = ?
+            where success = 1 and l.uuid = ?
             and time >= ? and time <= ?
             order by time desc limit ?, ?;
         """.trimIndent()
@@ -85,14 +85,14 @@ class LogDAOImpl : LogDAO() {
         SELECT
             SUM(`price`), COUNT(`id`)
         FROM `dotman_napthe_log`
-        WHERE `success` = 1 AND `name` = ?
+        WHERE `success` = 1 AND `uuid` = ?
     """.trimIndent()
 
     override fun getSumScriptByPlayerByMonth() = """
         SELECT
             SUM(`price`), COUNT(`id`)
         FROM `dotman_napthe_log`
-        WHERE `success` = 1 AND `name` = ?
+        WHERE `success` = 1 AND `uuid` = ?
         and `time` >= ? and `time` <= ?
     """.trimIndent()
 

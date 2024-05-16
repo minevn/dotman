@@ -78,12 +78,7 @@ class DotMan : MineVNPlugin(), Listener {
         language = Language()
         milestones = Milestones()
         if (::milestonesMaster.isInitialized) {
-            milestonesMaster.getAll().forEach {
-                it.bar?.removeAll()
-                it.bar?.isVisible = false
-                it.barTask?.cancel()
-                it.bar = null
-            }
+            milestonesMaster.removeBossBars()
         }
         milestonesMaster = MilestonesMaster()
 
@@ -104,6 +99,7 @@ class DotMan : MineVNPlugin(), Listener {
     override fun onDisable() {
         expansion.unregister()
         dbPool?.disconnect()
+        milestonesMaster.removeBossBars()
     }
 
     // region events

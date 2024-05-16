@@ -4,6 +4,7 @@ import net.minevn.dotman.DotMan
 import net.minevn.dotman.card.Card
 import net.minevn.dotman.card.CardWaiting
 import net.minevn.dotman.utils.Utils
+import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.libs.db.DataAccess
 import net.minevn.libs.minMaxEpochTimestamp
 import net.minevn.libs.timeToString
@@ -136,7 +137,10 @@ abstract class LogDAO : DataAccess() {
         script.statement {
             var columnIndex = 1
             val offset = (page - 1) * linePerPage
-            if (playerName != null) setString(columnIndex++, playerName)
+            if (playerName != null) {
+                val uuid = PlayerInfoDAO.getInstance().getUUID(playerName) ?: ""
+                setString(columnIndex++, uuid)
+            }
             if (yearMonth != null) {
                 val (min, max) = minMaxEpochTimestamp(yearMonth)
                 setLong(columnIndex++, min)
@@ -155,7 +159,7 @@ abstract class LogDAO : DataAccess() {
                     .replace("%ORDER%", rowNum.toString())
                     .replace("%PLAYER%", name)
                     .replace("%CARD_TYPE%", type)
-                    .replace("%CARD_PRICE%", price.toString())
+                    .replace("%CARD_PRICE%", price.format())
                     .replace("%POINTS_RECEIVED%", pointsReceived.toString())
                     .replace("%POINT_UNIT%", getMain().config.pointUnit)
                     .replace("%DATE%", time)
@@ -172,7 +176,10 @@ abstract class LogDAO : DataAccess() {
         }
         script.statement {
             var columnIndex = 1
-            if (playerName != null) setString(columnIndex++, playerName)
+            if (playerName != null) {
+                val uuid = PlayerInfoDAO.getInstance().getUUID(playerName) ?: ""
+                setString(columnIndex++, uuid)
+            }
             if (yearMonth != null) {
                 val (min, max) = minMaxEpochTimestamp(yearMonth)
                 setLong(columnIndex++, min)

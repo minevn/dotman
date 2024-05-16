@@ -4,6 +4,7 @@ import net.minevn.dotman.DotMan
 import net.minevn.dotman.card.CardPrice
 import net.minevn.dotman.card.CardType
 import net.minevn.dotman.providers.CardProvider
+import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.guiapi.ConfiguredUI
 import net.minevn.guiapi.GuiIcon.Companion.getGuiIcon
@@ -47,11 +48,11 @@ class CardPriceUI(viewer: Player?, private val cardType: CardType) :
             val button = priceIcon.clone().apply {
                 name = name
                     .replace("%CARD_TYPE%", cardType.name)
-                    .replace("%PRICE%", price.value.toString())
+                    .replace("%PRICE%", price.value.format())
                 lore = lore.map {
                     it
                         .replace("%CARD_TYPE%", cardType.name)
-                        .replace("%PRICE%", price.value.toString())
+                        .replace("%PRICE%", price.value.format())
                 }
             }.toGuiItemStack {
                 CardProvider.instance.askCardInfo(viewer, cardType, price)
