@@ -31,25 +31,25 @@ Hướng dẫn sử dụng
 
 **Danh sách lệnh:**
 
-| Lệnh | Chức năng | Permission |
-| -----| ---------- | ------- |
-| /napthe | Mở menu nạp thẻ | Người chơi |
-| /napthe <loại thẻ> <mệnh giá> <số seri> <mã thẻ> | Nạp thẻ nhanh | Người chơi |
-| /topnap | Xem top nạp thẻ | dotman.topnap |
-| /dotman reload | Reload lại config | dotman.admin |
-| /dotman thongbao | Thay đổi thông báo trong menu nạp thẻ | dotman.admin |
-| /dotman chuyenkhoan | Đặt vị trí xem hướng dẫn chuyển khoản | dotman.admin |
-| /dotman lichsu | Xem lịch sử nạp thẻ | dotman.admin |
+| Lệnh                                             | Chức năng                             | Permission    |
+|--------------------------------------------------|---------------------------------------|---------------|
+| /napthe                                          | Mở menu nạp thẻ                       | Người chơi    |
+| /napthe <loại thẻ> <mệnh giá> <số seri> <mã thẻ> | Nạp thẻ nhanh                         | Người chơi    |
+| /topnap                                          | Xem top nạp thẻ                       | dotman.topnap |
+| /dotman reload                                   | Reload lại config                     | dotman.admin  |
+| /dotman thongbao                                 | Thay đổi thông báo trong menu nạp thẻ | dotman.admin  |
+| /dotman chuyenkhoan                              | Đặt vị trí xem hướng dẫn chuyển khoản | dotman.admin  |
+| /dotman lichsu                                   | Xem lịch sử nạp thẻ                   | dotman.admin  |
 
 **Placeholder:**
 
 Placeholder có thể sử dụng để hiển thị top nạp
 
-| Placeholder | Chức năng | Ghi chú |
-| -----| ---------- | ------- |
-|%DOTMAN_TOP_DONATE_TOTAL_XXX_PLAYER% | Trả về tên người chơi đứng top | XXX là thứ hạng |
-|%DOTMAN_TOP_DONATE_TOTAL_XXX_VALUE% | Trả về giá trị của người chơi đó | XXX là thứ hạng |
-| %DOTMAN_DATA_DONATE_TOTAL% | Trả về số point người chơi đã nạp | |
+| Placeholder                          | Chức năng                         | Ghi chú         |
+|--------------------------------------|-----------------------------------|-----------------|
+| %DOTMAN_TOP_DONATE_TOTAL_XXX_PLAYER% | Trả về tên người chơi đứng top    | XXX là thứ hạng |
+| %DOTMAN_TOP_DONATE_TOTAL_XXX_VALUE%  | Trả về giá trị của người chơi đó  | XXX là thứ hạng |
+| %DOTMAN_DATA_DONATE_TOTAL%           | Trả về số point người chơi đã nạp |                 |
 
 > Ví dụ: `%DOTMAN_TOP_DONATE_TOTAL_1_PLAYER%` sẽ trả về tên của người đứng top 1 nạp thẻ, `%DOTMAN_TOP_DONATE_TOTAL_1_VALUE%` sẽ trả về số tiền nạp của người đứng top 1
 
