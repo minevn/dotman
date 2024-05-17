@@ -4,7 +4,6 @@ import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.utils.Utils.Companion.runAsync
 import net.minevn.libs.bukkit.runSync
 import org.bukkit.Bukkit
-import java.util.concurrent.ConcurrentHashMap
 
 const val TOP_EXPIRE = 1 * 60 * 1000L // 1 phút
 const val TOP_COUNT = 100
@@ -25,7 +24,7 @@ class LeaderBoard(
     fun size() = list.size
 
     companion object {
-        private val topCache = ConcurrentHashMap<String, LeaderBoard>()
+        private val topCache = mutableMapOf<String, LeaderBoard>()
 
         private fun getFromDB(key: String) = LeaderBoard(PlayerDataDAO.getInstance().getTop(key, TOP_COUNT))
 
@@ -35,7 +34,7 @@ class LeaderBoard(
                     runAsync { getFromDB(key).also { runSync { topCache[key] = it } } }
                     this ?: LeaderBoard(emptyList(), 0L)
                 } else {
-                    getFromDB(key).also { topCache[key] = it }
+                    getFromDB(key).also { runSync { topCache[key] = it } }
                 }
             } else this
         }
