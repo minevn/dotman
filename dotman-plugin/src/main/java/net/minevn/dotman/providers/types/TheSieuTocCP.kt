@@ -26,7 +26,7 @@ class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : 
         "seri" to card.seri,
         "type" to card.type.getTypeId()!!,
         "menhgia" to card.price.getPriceId(),
-        "content" to "dotman_${card.logId}"
+        "content" to ('A'..'Z').let { charpool -> (1..8).map { charpool.random() }.joinToString("") }
     )
 
     override fun parseResponse(card: Card, response: String) = CardResult(card).apply {
@@ -34,6 +34,11 @@ class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : 
         response.parseJson().asJsonObject.let {
             isSuccess = it["status"].getOrNull()?.asString == "00"
             message = it["msg"].getOrNull()?.asString
+
+            // Cập nhật mã giao dịch
+            it["transaction_id"]?.getOrNull()?.asString?.let { transactionId ->
+                LogDAO.getInstance().setTransactionId(card.logId!!, transactionId, false)
+            }
         }
     }
 
@@ -57,13 +62,11 @@ class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : 
 
     private fun CardPrice.getPriceId() = (CardPrice.entries.indexOf(this) + 1).toString()
 
-    private fun CardWaiting.getTransactId() = "dotman_$id"
-
     override fun CardWaiting.isProcessed(): Boolean {
         val params = mapOf(
             "APIkey" to apiKey,
             "APIsecret" to apiSecret,
-            "transaction_id" to getTransactId()
+            "transaction_id" to transactionId
         )
 
         return get(getCardCheckUrl(), parameters = params)
