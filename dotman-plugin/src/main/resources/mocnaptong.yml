@@ -3,7 +3,7 @@
 mocnaptong:
 - type: all # Toàn thời gian
   # Lưu ý: Đối với mốc nạp toàn thời gian, tiền độ donate sẽ tính theo donate của server từ trước đến nay.
-  #bossbar: 'Donate server: %current%/%target% VNĐ' # Bossbar hiển thị tiến độ (bỏ comment để hiển thị)
+  #bossbar: 'Donate server: %CURRENT%/%TARGET% VNĐ' # Bossbar hiển thị tiến độ (bỏ comment để hiển thị)
   #from: 0 # mức hiển bossbar
   bossbar-color: GREEN
   bossbar-style: SEGMENTED_10

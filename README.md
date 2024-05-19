@@ -45,11 +45,11 @@ Hướng dẫn sử dụng
 
 Placeholder có thể sử dụng để hiển thị top nạp
 
-| Placeholder                          | Chức năng                         | Ghi chú                                                                                                 |
-|--------------------------------------|-----------------------------------|---------------------------------------------------------------------------------------------------------|
-| %DOTMAN_TOP_DONATE_TOTAL_XXX_PLAYER% | Trả về tên người chơi đứng top    | XXX là thứ hạng<br>Thay đổi `TOP` thành `TOPWEEK` hoặc `TOPMONTH` để trả về dữ liệu top tuần hoặc tháng |
-| %DOTMAN_TOP_DONATE_TOTAL_XXX_VALUE%  | Trả về giá trị của người chơi đó  | XXX là thứ hạng<br>Thay đổi `TOP` thành `TOPWEEK` hoặc `TOPMONTH` để trả về dữ liệu top tuần hoặc tháng |
-| %DOTMAN_DATA_DONATE_TOTAL%           | Trả về số point người chơi đã nạp | Thay đổi `DATA` thành `DATAWEEK` hoặc `DATAMONTH` để trả về dữ liệu top tuần hoặc tháng                 |
+| Placeholder                          | Chức năng                         | Ghi chú                                                                                                           |
+|--------------------------------------|-----------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| %DOTMAN_TOP_DONATE_TOTAL_XXX_PLAYER% | Trả về tên người chơi đứng top    | XXX là thứ hạng<br>✨Premium: Thay đổi `TOP` thành `TOPWEEK` hoặc `TOPMONTH` để trả về dữ liệu top tuần hoặc tháng |
+| %DOTMAN_TOP_DONATE_TOTAL_XXX_VALUE%  | Trả về giá trị của người chơi đó  | XXX là thứ hạng<br>✨Premium: Thay đổi `TOP` thành `TOPWEEK` hoặc `TOPMONTH` để trả về dữ liệu top tuần hoặc tháng |
+| %DOTMAN_DATA_DONATE_TOTAL%           | Trả về số point người chơi đã nạp | Thay đổi `DATA` thành `DATAWEEK` hoặc `DATAMONTH` để trả về dữ liệu top tuần hoặc tháng                           |
 
 > Ví dụ: `%DOTMAN_TOP_DONATE_TOTAL_1_PLAYER%` sẽ trả về tên của người đứng top 1 nạp thẻ, `%DOTMAN_TOP_DONATE_TOTAL_1_VALUE%` sẽ trả về số tiền nạp của người đứng top 1
 
