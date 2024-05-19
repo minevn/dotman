@@ -5,7 +5,8 @@ class CardWaiting(
     val uuid: String,
     val seri: String,
     val type: String,
-    val price: Int
+    val price: Int,
+    val transactionId: String
 ) {
     var isSuccess: Boolean = false
     var message: String? = null
