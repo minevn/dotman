@@ -26,6 +26,9 @@ class Language : FileConfig("messages") {
     val inputCanceled = get("input-canceled")
     val inputSeri = get("input-seri")
     val inputPin = get("input-pin")
+    val inputAnvilSeri = get("input-anvil-seri")
+    val inputAnvilPin = get("input-anvil-pin")
+    val inputAnvilClick = get("input-anvil-click")
 
     val logOutPut = get("log-output")
 }

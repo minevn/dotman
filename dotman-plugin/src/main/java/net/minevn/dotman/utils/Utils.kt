@@ -6,6 +6,8 @@ import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.HoverEvent
 import net.minevn.dotman.DotMan
+import net.minevn.guiapi.XMaterial
+import net.minevn.libs.anvilgui.AnvilGUI
 import org.bukkit.Bukkit
 import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
@@ -100,6 +102,16 @@ class Utils {
             decimalFormatSymbols.groupingSeparator = '.'
             format.decimalFormatSymbols = decimalFormatSymbols
             return format.format(this)
+        }
+
+        fun closeAnvilAction(runnable: Runnable) = listOf(AnvilGUI.ResponseAction.close(),
+            AnvilGUI.ResponseAction.run(runnable))
+
+        fun createItem(material: XMaterial, name: String, vararg lore: String) = material.parseItem()!!.apply {
+            itemMeta = itemMeta?.apply {
+                setDisplayName(name.color())
+                this.lore = lore.toList().color()
+            }
         }
     }
 }

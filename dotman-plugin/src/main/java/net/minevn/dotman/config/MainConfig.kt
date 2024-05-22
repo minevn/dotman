@@ -30,4 +30,5 @@ class MainConfig : FileConfig("config") {
 
     val manualBase = config.getDouble("manual.point-base")
     val manualExtra = config.getDouble("manual.point-extra")
+    val useAnvilGui = config.getBoolean("use-anvilgui", true)
 }

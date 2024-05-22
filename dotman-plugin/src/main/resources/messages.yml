@@ -2,6 +2,9 @@ input-cancel: '&aNhập &c&lHUY &ađể hủy nạp thẻ.'
 input-canceled: '&aBạn đã hủy nạp thẻ.'
 input-seri: '&aHãy nhập &esố seri &athẻ vào khung chat.'
 input-pin: '&aHãy nhập &bmã thẻ &avào khung chat.'
+input-anvil-seri: 'Nhập số seri'
+input-anvil-pin: 'Nhập mã thẻ'
+input-anvil-click: 'Click để nhập'
 
 card-charging:
   - '&eThẻ &a%CARD_TYPE% &emệnh giá &a%CARD_PRICE% VNĐ'

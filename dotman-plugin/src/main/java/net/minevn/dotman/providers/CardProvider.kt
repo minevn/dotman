@@ -6,11 +6,15 @@ import net.minevn.dotman.card.*
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.providers.types.GameBankCP
 import net.minevn.dotman.providers.types.TheSieuTocCP
+import net.minevn.dotman.utils.Utils.Companion.closeAnvilAction
+import net.minevn.dotman.utils.Utils.Companion.createItem
 import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.dotman.utils.Utils.Companion.severe
 import net.minevn.dotman.utils.Utils.Companion.warning
+import net.minevn.guiapi.XMaterial
+import net.minevn.libs.anvilgui.AnvilGUI
 import net.minevn.libs.bukkit.chat.ChatListener
 import net.minevn.libs.bukkit.runSync
 import net.minevn.libs.bukkit.sendMessages
@@ -158,6 +162,39 @@ abstract class CardProvider {
 
     fun askCardInfo(player: Player, type: CardType, price: CardPrice) {
         val lang = main.language
+
+        if (main.config.useAnvilGui) {
+            fun openAnvil(seri: String? = null) {
+                AnvilGUI.Builder().apply {
+                    var completed = false
+                    plugin(main)
+                    text(if (seri == null) lang.inputAnvilSeri else lang.inputAnvilPin)
+                    itemLeft(createItem(XMaterial.DIAMOND, lang.inputAnvilClick))
+
+                    onClick { _, state -> closeAnvilAction {
+                        completed = true
+                        if (seri == null) {
+                            openAnvil(state.text)
+                        } else {
+                            val card = Card(seri, state.text, price, type)
+                            runNotSync {
+                                processCard(player, card)
+                            }
+                        }
+                    }}
+
+                    onClose {
+                        if (!completed) {
+                            player.send(lang.inputCanceled)
+                        }
+                    }
+                }
+            }
+
+            openAnvil()
+            return
+        }
+
         player.send(lang.inputSeri)
         player.send(lang.inputCancel)
 
