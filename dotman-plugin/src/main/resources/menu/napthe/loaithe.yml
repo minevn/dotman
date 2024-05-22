@@ -7,8 +7,7 @@ rows: 3
 # Nền sẽ được fill trước tiên, các button khác sẽ được đặt lên nền
 background:
   icon:
-    type: STAINED_GLASS_PANE
-    data: 15 # black
+    type: BLACK_STAINED_GLASS_PANE
   # với button fill, số hàng phải bằng số hàng của giao diện (rows), số cột phải là 9
   # các vị trí đánh dấu bằng 'x' sẽ được fill
   fill:
@@ -66,8 +65,7 @@ cards:
       - "&7Nếu cần nạp hãy liên hệ Admin"
   blank:
     icon:
-      type: STAINED_GLASS_PANE
-      data: 14 # red
+      type: RED_STAINED_GLASS_PANE
   # các loại thẻ sẽ được fill lên các vị trí đánh dấu bằng 'x'
   fill:
     - '         '

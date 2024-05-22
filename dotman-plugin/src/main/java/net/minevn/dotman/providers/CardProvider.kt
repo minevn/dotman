@@ -13,12 +13,12 @@ import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.dotman.utils.Utils.Companion.severe
 import net.minevn.dotman.utils.Utils.Companion.warning
-import net.minevn.guiapi.XMaterial
 import net.minevn.libs.anvilgui.AnvilGUI
 import net.minevn.libs.bukkit.chat.ChatListener
 import net.minevn.libs.bukkit.runSync
 import net.minevn.libs.bukkit.sendMessages
 import net.minevn.libs.post
+import net.minevn.libs.xseries.XMaterial
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
@@ -162,6 +162,7 @@ abstract class CardProvider {
 
     fun askCardInfo(player: Player, type: CardType, price: CardPrice) {
         val lang = main.language
+        player.closeInventory()
 
         if (main.config.useAnvilGui) {
             fun openAnvil(seri: String? = null) {
@@ -188,6 +189,8 @@ abstract class CardProvider {
                             player.send(lang.inputCanceled)
                         }
                     }
+
+                    open(player)
                 }
             }
 
