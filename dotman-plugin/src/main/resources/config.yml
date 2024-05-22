@@ -96,3 +96,6 @@ announce-charge: true
 
 # Bật/tắt tính năng kiểm tra cập nhật phiên bản mới
 check-update: true
+
+# Bật/tắt tính năng nhập số seri, mã thẻ qua anvil gui
+use-anvilgui: true

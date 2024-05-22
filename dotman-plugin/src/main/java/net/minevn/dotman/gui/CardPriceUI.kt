@@ -56,7 +56,6 @@ class CardPriceUI(viewer: Player?, private val cardType: CardType) :
                 }
             }.toGuiItemStack {
                 CardProvider.instance.askCardInfo(viewer, cardType, price)
-                viewer.closeInventory()
             }
 
             setItem(priceSlots[i], button)
