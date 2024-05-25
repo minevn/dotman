@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     `java-library`
@@ -20,18 +20,6 @@ allprojects {
         compileOnly(kotlin("stdlib"))
     }
 
-    java {
-        toolchain {
-            languageVersion.set(JavaLanguageVersion.of(8))
-        }
-    }
-
-    val compileKotlin: KotlinCompile by tasks
-    compileKotlin.kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    val compileTestKotlin: KotlinCompile by tasks
-    compileTestKotlin.kotlinOptions {
-        jvmTarget = "1.8"
-    }
+    java.toolchain.languageVersion.set(JavaLanguageVersion.of(8))
+    kotlin.compilerOptions.jvmTarget = JvmTarget.JVM_1_8
 }
