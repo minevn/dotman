@@ -1,0 +1,11 @@
+# Bạn có thể thêm nhiều discord webhook url cùng lúc.
+
+discord-hooks:
+  - enabled: false
+    url: https://discord.com/api/webhooks/1234456/webhook-token
+    bank-content: |
+        **%PLAYER%** vừa nạp **%BANK_AMOUNT% VNĐ** qua ngân hàng
+        Nhận được: %AMOUNT% %POINT_UNIT%
+    card-content: |
+        **%PLAYER%** đã nạp thẻ mệnh giá **%CARD_PRICE% VNĐ**
+        Nhận được: %AMOUNT% %POINT_UNIT%
