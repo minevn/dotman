@@ -3,10 +3,9 @@ package net.minevn.dotman.providers.types
 import net.minevn.dotman.card.*
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.providers.CardProvider
-import net.minevn.libs.bukkit.getOrNull
-import net.minevn.libs.bukkit.parseJson
 import net.minevn.libs.bukkit.sendMessages
 import net.minevn.libs.get
+import net.minevn.libs.parseJson
 import org.bukkit.entity.Player
 
 class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : CardProvider() {
@@ -32,11 +31,11 @@ class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : 
     override fun parseResponse(card: Card, response: String) = CardResult(card).apply {
         println(response)
         response.parseJson().asJsonObject.let {
-            isSuccess = it["status"].getOrNull()?.asString == "00"
-            message = it["msg"].getOrNull()?.asString
+            isSuccess = it["status"].asString == "00"
+            message = it["msg"].asString
 
             // Cập nhật mã giao dịch
-            it["transaction_id"]?.getOrNull()?.asString?.let { transactionId ->
+            it["transaction_id"]?.asString?.let { transactionId ->
                 LogDAO.getInstance().setTransactionId(card.logId!!, transactionId, false)
             }
         }
@@ -73,8 +72,8 @@ class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : 
             .parseJson()
             .asJsonObject
             .let {
-                val status = it["status"].getOrNull()?.asString
-                message = it["msg"].getOrNull()?.asString
+                val status = it["status"].asString
+                message = it["msg"].asString
                 isSuccess = status == "00"
                 status != "-9"
             }

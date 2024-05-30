@@ -2,7 +2,7 @@
 
 discord-hooks:
   - enabled: false
-    url: https://discord.com/api/webhooks/1234456/webhook-token
+    url: https://discord.com/api/webhooks/123456/webhook-token
     bank-content: |
         **%PLAYER%** vừa nạp **%BANK_AMOUNT% VNĐ** qua ngân hàng
         Nhận được: %AMOUNT% %POINT_UNIT%

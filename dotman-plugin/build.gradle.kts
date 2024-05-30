@@ -13,6 +13,7 @@ repositories {
         setUrl("http://pack.minevn.net/repo/")
         isAllowInsecureProtocol = true
     }
+    mavenLocal()
 }
 
 dependencies {
@@ -20,7 +21,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
 
     // libs
-    compileOnly("net.minevn:minevnlib-plugin:1.1.0")
+    compileOnly("net.minevn:minevnlib-plugin:1.1.1")
     compileOnly("minevn.depend:playerpoints:3.2.6")
     compileOnly("me.clip:placeholderapi:2.11.3")
 
