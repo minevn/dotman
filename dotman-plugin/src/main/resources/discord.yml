@@ -1,4 +1,5 @@
 # Bạn có thể thêm nhiều discord webhook url cùng lúc.
+# Điều chỉnh enabled thành true để bật
 
 discord-hooks:
   - enabled: false
