@@ -3,6 +3,7 @@ package net.minevn.dotman.providers.types
 import net.minevn.dotman.card.*
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.providers.CardProvider
+import net.minevn.libs.asStringOrNull
 import net.minevn.libs.bukkit.sendMessages
 import net.minevn.libs.get
 import net.minevn.libs.parseJson
@@ -31,11 +32,11 @@ class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : 
     override fun parseResponse(card: Card, response: String) = CardResult(card).apply {
         println(response)
         response.parseJson().asJsonObject.let {
-            isSuccess = it["status"].asString == "00"
-            message = it["msg"].asString
+            isSuccess = it["status"].asStringOrNull() == "00"
+            message = it["msg"].asStringOrNull()
 
             // Cập nhật mã giao dịch
-            it["transaction_id"]?.asString?.let { transactionId ->
+            it["transaction_id"].asStringOrNull()?.let { transactionId ->
                 LogDAO.getInstance().setTransactionId(card.logId!!, transactionId, false)
             }
         }
@@ -72,8 +73,8 @@ class TheSieuTocCP(private val apiKey: String, private val apiSecret: String) : 
             .parseJson()
             .asJsonObject
             .let {
-                val status = it["status"].asString
-                message = it["msg"].asString
+                val status = it["status"].asStringOrNull()
+                message = it["msg"].asStringOrNull()
                 isSuccess = status == "00"
                 status != "-9"
             }

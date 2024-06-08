@@ -2,6 +2,7 @@ package net.minevn.dotman
 
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.warning
+import net.minevn.libs.asStringOrNull
 import net.minevn.libs.get
 import net.minevn.libs.parseJson
 import org.bukkit.command.CommandSender
@@ -42,8 +43,8 @@ class UpdateChecker {
         private fun checkUpdate(): Boolean {
             try {
                 get(URL).parseJson().asJsonObject.let {
-                    latestVersion = it["tag_name"].asString
-                    releaseVersion = it["html_url"].asString
+                    latestVersion = it["tag_name"].asStringOrNull()!!
+                    releaseVersion = it["html_url"].asStringOrNull()!!
                     return latestVersion == currentVersion
                 }
             } catch (e: Exception) {
