@@ -1,0 +1,12 @@
+# Bạn có thể thêm nhiều discord webhook url cùng lúc.
+# Điều chỉnh enabled thành true để bật
+
+discord-hooks:
+  - enabled: false
+    url: https://discord.com/api/webhooks/123456/webhook-token
+    content: |
+        ## Nạp thẻ
+        **%PLAYER%** vừa nạp **%AMOUNT% VNĐ**
+        Nhận được: %POINT_AMOUNT% %POINT_UNIT%
+        Số dư sau khi nạp: %BALANCE% %POINT_UNIT%
+        Hình thức nạp: %METHOD%

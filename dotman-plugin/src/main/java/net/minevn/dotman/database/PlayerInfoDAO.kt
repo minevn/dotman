@@ -10,6 +10,7 @@ abstract class PlayerInfoDAO : DataAccess() {
 
     abstract fun updateScript(): String
     abstract fun getUUIDScript(): String
+    abstract fun getNameScript(): String
 
     fun updateData(uuid: String, name: String) {
         updateScript().statement {
@@ -28,4 +29,10 @@ abstract class PlayerInfoDAO : DataAccess() {
         }
     }
 
+    fun getName(uuid: String) = getNameScript().statement {
+        setString(1, uuid)
+        executeQuery().use {
+            if (it.next()) it.getString("name") else null
+        }
+    }
 }

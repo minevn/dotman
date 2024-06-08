@@ -22,4 +22,8 @@ class PlayerInfoDAOImpl : PlayerInfoDAO() {
         SELECT "uuid" FROM "dotman_player_info" WHERE "name" = ?
     """.trimIndent()
 
+    override fun getNameScript() = """
+        SELECT "name" FROM "dotman_player_info" WHERE "uuid" = ?
+    """.trimIndent()
+
 }

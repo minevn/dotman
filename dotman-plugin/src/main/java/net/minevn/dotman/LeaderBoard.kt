@@ -15,8 +15,6 @@ class LeaderBoard(
     private val list: List<Pair<String, Int>>,
     private val inititalTime: Long = System.currentTimeMillis()
 ) {
-
-
     fun isExpired() = System.currentTimeMillis() - inititalTime > TOP_EXPIRE
 
     operator fun get(rank: Int) = list.getOrNull(rank - 1)
