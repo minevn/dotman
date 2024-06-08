@@ -7,10 +7,9 @@ import net.minevn.dotman.card.CardType
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.providers.CardProvider
 import net.minevn.dotman.utils.Utils.Companion.warning
-import net.minevn.libs.bukkit.getOrNull
-import net.minevn.libs.bukkit.parseJson
 import net.minevn.libs.get
 import net.minevn.libs.gson.JsonParser
+import net.minevn.libs.parseJson
 import java.io.IOException
 import java.net.Authenticator
 import java.net.PasswordAuthentication
@@ -44,11 +43,11 @@ open class GameBankCP(
     override fun parseResponse(card: Card, response: String) = CardResult(card).apply {
         response.parseJson().asJsonObject.let {
             isSuccess = it["code"].asString == "0"
-            acceptedAmount = it["info_card"].getOrNull()?.asInt
-            message = it["msg"].getOrNull()?.asString
+            acceptedAmount = it["info_card"]?.asInt
+            message = it["msg"]?.asString
 
             // Cập nhật mã giao dịch
-            it["transaction_id"].getOrNull()?.asString?.let { transactionId ->
+            it["transaction_id"]?.asString?.let { transactionId ->
                 LogDAO.getInstance().setTransactionId(card.logId!!, transactionId, isSuccess)
             }
         }

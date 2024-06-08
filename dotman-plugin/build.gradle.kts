@@ -13,7 +13,6 @@ repositories {
         setUrl("http://pack.minevn.net/repo/")
         isAllowInsecureProtocol = true
     }
-    mavenLocal()
 }
 
 dependencies {

@@ -2,8 +2,8 @@ package net.minevn.dotman
 
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.warning
-import net.minevn.libs.bukkit.parseJson
 import net.minevn.libs.get
+import net.minevn.libs.parseJson
 import org.bukkit.command.CommandSender
 
 class UpdateChecker {
