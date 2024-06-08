@@ -10,6 +10,7 @@ import net.minevn.dotman.database.PlayerInfoDAO
 import net.minevn.dotman.gui.CardPriceUI
 import net.minevn.dotman.gui.CardTypeUI
 import net.minevn.dotman.providers.CardProvider
+import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.guiapi.ConfiguredUI
 import net.minevn.libs.bukkit.MineVNPlugin
@@ -38,6 +39,7 @@ class DotMan : MineVNPlugin(), Listener {
     lateinit var language: Language private set
     lateinit var milestones: Milestones private set
     lateinit var milestonesMaster: MilestonesMaster private set
+    lateinit var discord: Discord private set
 
     override fun onEnable() {
         instance = this
@@ -81,6 +83,7 @@ class DotMan : MineVNPlugin(), Listener {
             milestonesMaster.removeBossBars()
         }
         milestonesMaster = MilestonesMaster()
+        discord = Discord()
 
         // init Gui configs
         CardTypeUI()
@@ -126,7 +129,7 @@ class DotMan : MineVNPlugin(), Listener {
      * @param amount Số tiền nạp
      * @param pointAmount Số point nhận được
      */
-    fun updateLeaderBoard(uuid: UUID, amount: Int, pointAmount: Int) {
+    fun updateLeaderBoard(uuid: UUID, amount: Int, pointAmount: Int, type: TopupType = TopupType.CARD) {
         val dataDAO = PlayerDataDAO.getInstance()
 
         // Tích điểm
@@ -141,8 +144,24 @@ class DotMan : MineVNPlugin(), Listener {
             milestones.getAll().filter { it.type == "all" }.forEach {
                 it.check(player, currentPlayer, amount)
             }
-            milestonesMaster.getAll().filter { it.type == "all" }.forEach {
-                it.sumCheck(currentServer, amount)
+        }
+        milestonesMaster.getAll().filter { it.type == "all" }.forEach {
+            it.sumCheck(currentServer, amount)
+        }
+
+        // Thông báo nạp qua discord
+        runNotSync {
+            val balance = playerPoints.api.look(uuid)
+            val playerName = PlayerInfoDAO.getInstance().getName(uuidStr) ?: return@runNotSync
+            discord.list.forEach {
+                val content = it.contentTmpl
+                    .replace("%PLAYER%", playerName)
+                    .replace("%AMOUNT%", amount.format())
+                    .replace("%POINT_AMOUNT%", pointAmount.toString())
+                    .replace("%POINT_UNIT%", config.pointUnit)
+                    .replace("%BALANCE%", balance.toString())
+                    .replace("%METHOD%", type.typeName)
+                it.send(content)
             }
         }
     }

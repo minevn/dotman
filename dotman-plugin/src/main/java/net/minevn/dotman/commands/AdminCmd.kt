@@ -2,6 +2,7 @@ package net.minevn.dotman.commands
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.DotMan.Companion.transactional
+import net.minevn.dotman.TopupType
 import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.database.PlayerInfoDAO
@@ -242,8 +243,8 @@ class AdminCmd {
                             return@transactional
                         }
 
-                        main.playerPoints.api.give(UUID.fromString(uuidStr), amount)
-                        main.updateLeaderBoard(uuid, amount, point.toInt())
+                        main.playerPoints.api.give(UUID.fromString(uuidStr), point.toInt())
+                        main.updateLeaderBoard(uuid, amount, point.toInt(), TopupType.MANUAL)
                         val logDao = LogDAO.getInstance()
                         logDao.insertLog(uuidStr, content, "--", "MANUAL", amount).let {
                             logDao.stopWaiting(it, true)
