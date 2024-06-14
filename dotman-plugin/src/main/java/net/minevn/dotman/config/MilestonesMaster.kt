@@ -1,8 +1,6 @@
 package net.minevn.dotman.config
 
 import net.minevn.dotman.config.Milestones.Component
-import net.minevn.dotman.utils.Utils.Companion.getBarColor
-import net.minevn.dotman.utils.Utils.Companion.getBarStyle
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.libs.bukkit.color
@@ -23,8 +21,8 @@ class MilestonesMaster : FileConfig("mocnaptong") {
                 val type = it["type"]
                 val bossBar = (it.getOrDefault("bossbar", null) as String?)?.color()
                 val from = it.getOrDefault("from", 0) as Int
-                val barColor = getBarColor(it.getOrDefault("bossbar-color", null) as String?)
-                val barStyle = getBarStyle(it.getOrDefault("bossbar-style", null) as String?)
+                val barColor = it.getOrDefault("bossbar-color", "GREEN") as String
+                val barStyle = it.getOrDefault("bossbar-style", "SEGMENTED_10") as String
 
                 if (type !in listOf("all", "week", "month")) {
                     warning("Loại mốc nạp \"$type\" không hợp lệ. Chỉ chấp nhận all, week, month")

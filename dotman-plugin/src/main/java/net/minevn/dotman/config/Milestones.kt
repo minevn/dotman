@@ -3,14 +3,12 @@ package net.minevn.dotman.config
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.TOP_KEY_DONATE_TOTAL
 import net.minevn.dotman.database.PlayerDataDAO
+import net.minevn.dotman.utils.BukkitBossBar
 import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.libs.bukkit.runSync
 import org.bukkit.Bukkit
-import org.bukkit.boss.BarColor
-import org.bukkit.boss.BarStyle
-import org.bukkit.boss.BossBar
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitTask
 
@@ -61,15 +59,14 @@ class Milestones : FileConfig("mocnap") {
     fun getAll() = components.toList()
 
     class Component(val type: String, val amount: Int, val commands: List<String>, val bossBar: String? = null,
-                    val from: Int = 0, barColor : BarColor = BarColor.GREEN,
-                    barStyle: BarStyle = BarStyle.SEGMENTED_10) {
+                    val from: Int = 0, barColor: String = "GREEN", barStyle: String = "SEGMENTED_10") {
 
-        var bar: BossBar? = null
+        var bar: BukkitBossBar? = null
         var barTask: BukkitTask? = null; private set
 
         init {
             if (bossBar != null) {
-                bar = Bukkit.createBossBar("§r", barColor, barStyle).apply {
+                bar = BukkitBossBar("r", barColor, barStyle).apply {
                     isVisible = false
                     barTask = Bukkit.getScheduler().runTaskTimerAsynchronously(DotMan.instance, Runnable {
                         val current = PlayerDataDAO.getInstance().getSumData("${TOP_KEY_DONATE_TOTAL}_$type")
