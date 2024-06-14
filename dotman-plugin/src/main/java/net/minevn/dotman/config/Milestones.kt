@@ -66,7 +66,7 @@ class Milestones : FileConfig("mocnap") {
 
         init {
             if (bossBar != null) {
-                bar = BukkitBossBar("r", barColor, barStyle).apply {
+                bar = BukkitBossBar("§r", barColor, barStyle).apply {
                     isVisible = false
                     barTask = Bukkit.getScheduler().runTaskTimerAsynchronously(DotMan.instance, Runnable {
                         val current = PlayerDataDAO.getInstance().getSumData("${TOP_KEY_DONATE_TOTAL}_$type")
