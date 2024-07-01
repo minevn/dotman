@@ -49,10 +49,10 @@ manual:
   # Mặc định: 1000 VNĐ = 0.5 point
   point-extra: 0.5
   # Công thức tính khi nạp qua lệnh nạp thủ công:
-  # - Số point nhận được = Số point tiêu chuẩn + Số point được nhận thêm + (Số point tiêu chuẩn ⅹ Khuyến mãi)
+  # - Số point nhận được = Số point tiêu chuẩn + Số point được nhận thêm + (Số point tiêu chuẩn × Khuyến mãi)
   # Trong đó khuyến mãi là giá trị khuyến mãi được định nghĩa trong config.yml
   # Ví dụ: Nếu bạn đặt point tiêu chuẩn và nhận thêm là mặc định (1 và 0.5) và bạn đang bật khuyến mãi 50% (GTKM 0.5) thì:
-  # - Số point nhận được = 1 + 0.5 + (1 ⅹ 0.5) = 2 point
+  # - Số point nhận được = 1 + 0.5 + (1 × 0.5) = 2 point
 
 
 # Giá trị khuyến mãi
