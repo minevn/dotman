@@ -4,6 +4,7 @@ import net.minevn.dotman.config.Milestones.Component
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.libs.bukkit.color
+import org.bukkit.entity.Player
 
 class MilestonesMaster : FileConfig("mocnaptong") {
     private var components: List<Component> = emptyList()
@@ -54,6 +55,12 @@ class MilestonesMaster : FileConfig("mocnaptong") {
     }
 
     fun getAll() = components.toList()
+
+    fun onJoin(player: Player) {
+        components.forEach {
+            it.bar?.addPlayer(player)
+        }
+    }
 
     fun removeBossBars() {
         getAll().forEach {

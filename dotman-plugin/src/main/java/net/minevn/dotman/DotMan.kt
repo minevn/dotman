@@ -119,7 +119,12 @@ class DotMan : MineVNPlugin(), Listener {
     fun onQuit(e: PlayerQuitEvent) = updateUUID(e.player)
 
     @EventHandler
-    fun onJoin(e: PlayerJoinEvent) = UpdateChecker.sendUpdateMessage(e.player)
+    fun onJoin(e: PlayerJoinEvent) {
+        val player = e.player
+
+        milestonesMaster.onJoin(player)
+        UpdateChecker.sendUpdateMessage(player)
+    }
     // endregion
 
     /**
@@ -163,15 +168,6 @@ class DotMan : MineVNPlugin(), Listener {
                     .replace("%METHOD%", type.typeName)
                 it.send(content)
             }
-        }
-    }
-
-    @EventHandler
-    fun onPlayerJoin(e: PlayerJoinEvent) {
-        val player = e.player
-        val milestones = milestonesMaster.getAll()
-        milestones.forEach {
-            it.bar?.addPlayer(player)
         }
     }
 
