@@ -20,16 +20,10 @@ import net.minevn.libs.bukkit.db.BukkitDBMigrator
 import net.minevn.libs.db.Transaction
 import org.black_ixx.playerpoints.PlayerPoints
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerLoginEvent
-import org.bukkit.event.player.PlayerQuitEvent
 import java.util.*
 import java.util.logging.Level
 
-class DotMan : MineVNPlugin(), Listener {
+class DotMan : MineVNPlugin() {
 
     lateinit var expansion: Expansion private set
     lateinit var playerPoints: PlayerPoints private set
@@ -44,7 +38,7 @@ class DotMan : MineVNPlugin(), Listener {
 
     override fun onEnable() {
         instance = this
-        server.pluginManager.registerEvents(this, this)
+        server.pluginManager.registerEvents(DotManListener(), this)
 
         val playerPoints = server.pluginManager.getPlugin("PlayerPoints") as PlayerPoints?
         if (playerPoints == null) {
@@ -110,28 +104,6 @@ class DotMan : MineVNPlugin(), Listener {
         if (::expansion.isInitialized) expansion.unregister()
         if (::milestonesMaster.isInitialized) milestonesMaster.removeBossBars()
     }
-
-    // region events
-    private fun updateUUID(player: Player) {
-        val uuid = player.uniqueId.toString()
-        val name = player.name
-        runNotSync { PlayerInfoDAO.getInstance().updateData(uuid, name) }
-    }
-
-    @EventHandler
-    fun onLogin(e: PlayerLoginEvent) = updateUUID(e.player)
-
-    @EventHandler
-    fun onQuit(e: PlayerQuitEvent) = updateUUID(e.player)
-
-    @EventHandler
-    fun onJoin(e: PlayerJoinEvent) {
-        val player = e.player
-
-        milestonesMaster.onJoin(player)
-        UpdateChecker.sendUpdateMessage(player)
-    }
-    // endregion
 
     /**
      * Cập nhật bảng xếp hạng, mốc nạp
