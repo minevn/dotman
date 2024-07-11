@@ -12,6 +12,7 @@ import net.minevn.dotman.gui.CardTypeUI
 import net.minevn.dotman.providers.CardProvider
 import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
+import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.guiapi.ConfiguredUI
 import net.minevn.libs.bukkit.MineVNPlugin
 import net.minevn.libs.bukkit.color
@@ -57,7 +58,12 @@ class DotMan : MineVNPlugin(), Listener {
         AdminCmd.init()
         TopNapCmd.init()
         UpdateChecker.init()
-        expansion = Expansion().apply { register() }
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            expansion = Expansion()
+        } else {
+            warning("PlaceholderAPI chưa được cài đặt, một số tính năng sẽ không hoạt động.")
+        }
     }
 
     private fun migrate() {
@@ -100,9 +106,9 @@ class DotMan : MineVNPlugin(), Listener {
     }
 
     override fun onDisable() {
-        expansion.unregister()
         dbPool?.disconnect()
-        milestonesMaster.removeBossBars()
+        if (::expansion.isInitialized) expansion.unregister()
+        if (::milestonesMaster.isInitialized) milestonesMaster.removeBossBars()
     }
 
     // region events

@@ -4,6 +4,10 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.entity.Player
 
 class Expansion : PlaceholderExpansion() {
+    init {
+        register()
+    }
+
     override fun getIdentifier() = "DotMan"
 
     override fun getAuthor() = "MineVN"

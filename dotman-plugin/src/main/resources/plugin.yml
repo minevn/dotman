@@ -3,7 +3,8 @@ api-version: 1.13
 main: net.minevn.dotman.DotMan
 version: '${version}'
 author: MineVN
-depend: [ MineVNLib, PlayerPoints, PlaceholderAPI ]
+depend: [ MineVNLib, PlayerPoints ]
+softdepend: [ PlaceholderAPI ]
 commands:
   dotman:
     permission: dotman.admin
