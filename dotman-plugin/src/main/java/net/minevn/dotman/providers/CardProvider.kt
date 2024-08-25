@@ -63,6 +63,16 @@ abstract class CardProvider {
 
     fun processCard(player: Player, card: Card) {
         val lang = main.language
+
+        if (card.seri.length > 20) {
+            player.send(lang.errorSeriTooLong)
+            return
+        }
+        if (card.pin.length > 20) {
+            player.send(lang.errorPinTooLong)
+            return
+        }
+
         player.sendMessages(lang.cardCharging.map {
             it  .replace("%CARD_TYPE%", card.type.name)
                 .replace("%CARD_PRICE%", card.price.value.format())

@@ -9,6 +9,9 @@ class Language : FileConfig("messages") {
     val errorUnknownCardType = get("error-unknown-card-type")
     val errorUnknownCardPrice = get("error-unknown-card-price")
 
+    val errorSeriTooLong = get("error-seri-too-long")
+    val errorPinTooLong = get("error-pin-too-long")
+
     val cardStatus = get("card-status") // TODO
 
     val cardCharging = getList("card-charging")
