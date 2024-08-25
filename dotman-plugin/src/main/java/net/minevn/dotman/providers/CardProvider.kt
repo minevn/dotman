@@ -62,6 +62,15 @@ abstract class CardProvider {
     protected var statusCards = CardType.entries.associateWith { true }
 
     fun processCard(player: Player, card: Card) {
+        if (card.seri.length > 20) {
+            player.send("§cSố seri quá dài, tối đa 20 kí tự")
+            return
+        }
+        if (card.pin.length > 20) {
+            player.send("§cMã thẻ quá dài, tối đa 20 kí tự")
+            return
+        }
+
         val lang = main.language
         player.sendMessages(lang.cardCharging.map {
             it  .replace("%CARD_TYPE%", card.type.name)
