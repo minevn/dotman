@@ -27,7 +27,7 @@ class AdminCmd {
             addSubCommand(setBankLocation(), "chuyenkhoan")
             addSubCommand(history(), "lichsu", "history")
             addSubCommand(napThuCong(), "napthucong", "manual")
-            addSubCommand(traCuuMaGD(), "tracuugd", "transactionid")
+            addSubCommand(traCuuMaGD(), "tracuugd", "magiaodich")
 
             action {
                 sender.sendMessage("§b§lCác lệnh của plugin DotMan")
@@ -264,7 +264,7 @@ class AdminCmd {
 
         private fun traCuuMaGD() = command {
             val usage = "<mã giao dịch>"
-            description("Tra cứu thông tin nạp thẻ qua mã giao dịch")
+            description("Tra cứu thông tin qua mã giao dịch trên cổng gạch thẻ")
 
             action {
                 runNotSync {
