@@ -42,6 +42,7 @@ error-seri-too-long: '&cSố seri quá dài, tối đa 20 kí tự.'
 error-pin-too-long: '&cMã thẻ quá dài, tối đa 20 kí tự.'
 
 log-output: '&a%ORDER%. &b%PLAYER% &d%CARD_TYPE%(%CARD_PRICE% VNĐ) &anhận &e%POINTS_RECEIVED% %POINT_UNIT% &angày &e%DATE%'
+transaction-id-details-output: '&a%TRANSACTION_ID%: &b%PLAYER% &d%CARD_TYPE%(%CARD_PRICE% VNĐ) &anhận &e%POINTS_RECEIVED% %POINT_UNIT% &angày &e%DATE%'
 
 update-available: '%PREFIX% &aĐã có phiên bản mới: &e%NEW_VERSION% &a(phiên bản hiện tại &e%CURRENT_VERSION%&a).'
 update-available-link: '&aTải về tại: &e%URL%'

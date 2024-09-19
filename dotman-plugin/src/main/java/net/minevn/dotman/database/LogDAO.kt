@@ -31,6 +31,7 @@ abstract class LogDAO : DataAccess() {
     abstract fun getSumScriptAllPlayerByMonth(): String
     abstract fun getSumScriptByPlayerAllTime(): String
     abstract fun getSumScriptByPlayerByMonth(): String
+    abstract fun getTransactionDetailsById(): String
     abstract fun updatePointReceivedScript(): String
     // endregion
 
@@ -190,6 +191,27 @@ abstract class LogDAO : DataAccess() {
             fetch {
                 next()
                 Pair(getInt(1), getInt(2))
+            }
+        }
+    }
+
+    fun getTransactionDetailsById(id: String) = run {
+        getTransactionDetailsById().statement {
+            setString(1, id)
+            fetchRecords {
+                val name = getString("name")
+                val type = getString("type")
+                val price = getInt("price")
+                val time = getLong("time").timeToString()
+                val pointsnhan = getInt("pointsnhan")
+                getMain().language.transactionIdDetailsOutPut
+                    .replace("%TRANSACTION_ID%", id)
+                    .replace("%PLAYER%", name)
+                    .replace("%CARD_TYPE%", type)
+                    .replace("%CARD_PRICE%", price.format())
+                    .replace("%POINTS_RECEIVED%", pointsnhan.toString())
+                    .replace("%POINT_UNIT%", getMain().config.pointUnit)
+                    .replace("%DATE%", time)
             }
         }
     }
