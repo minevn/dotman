@@ -8,7 +8,7 @@ repositories {
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
     maven("https://repo.dmulloy2.net/repository/public/")
     maven("https://jitpack.io")
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    maven("https://repo.extendedclip.com/releases")
     maven {
         setUrl("http://pack.minevn.net/repo/")
         isAllowInsecureProtocol = true
@@ -22,7 +22,7 @@ dependencies {
     // libs
     compileOnly("net.minevn:minevnlib-plugin:1.1.3")
     compileOnly("minevn.depend:playerpoints:3.2.6")
-    compileOnly("me.clip:placeholderapi:2.11.3")
+    compileOnly("me.clip:placeholderapi:2.11.6")
 
     // JUnit
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
