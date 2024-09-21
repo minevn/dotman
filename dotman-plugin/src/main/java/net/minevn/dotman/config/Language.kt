@@ -34,5 +34,5 @@ class Language : FileConfig("messages") {
     val inputAnvilClick = get("input-anvil-click")
 
     val logOutPut = get("log-output")
-    val transactionIdDetailsOutPut = get("transaction-id-details-output")
+    val transactionIdDetailsOutPut = getList("transaction-id-details-output")
 }

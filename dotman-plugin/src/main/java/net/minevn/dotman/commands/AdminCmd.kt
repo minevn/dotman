@@ -275,12 +275,11 @@ class AdminCmd {
 
                     val transactionId = args.first()
                     val logDao = LogDAO.getInstance()
-                    val data = logDao.getTransactionDetailsById(transactionId)
-                    if (data.isEmpty()) {
+                    val transactionDetails = logDao.getTransactionDetailsById(transactionId, sender)
+                    if (transactionDetails.isEmpty()) {
                         sender.send("§cKhông tìm thấy mã giao dịch $transactionId")
                         return@runNotSync
                     }
-                    data.forEach(sender::sendMessage)
                 }
             }
         }

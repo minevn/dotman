@@ -8,6 +8,7 @@ import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.libs.db.DataAccess
 import net.minevn.libs.minMaxEpochTimestamp
 import net.minevn.libs.timeToString
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 abstract class LogDAO : DataAccess() {
@@ -195,7 +196,7 @@ abstract class LogDAO : DataAccess() {
         }
     }
 
-    fun getTransactionDetailsById(id: String) = run {
+    fun getTransactionDetailsById(id: String, sender: CommandSender) = run {
         getTransactionDetailsById().statement {
             setString(1, id)
             fetchRecords {
@@ -204,14 +205,16 @@ abstract class LogDAO : DataAccess() {
                 val price = getInt("price")
                 val time = getLong("time").timeToString()
                 val pointsnhan = getInt("pointsnhan")
-                getMain().language.transactionIdDetailsOutPut
-                    .replace("%TRANSACTION_ID%", id)
-                    .replace("%PLAYER%", name)
-                    .replace("%CARD_TYPE%", type)
-                    .replace("%CARD_PRICE%", price.format())
-                    .replace("%POINTS_RECEIVED%", pointsnhan.toString())
-                    .replace("%POINT_UNIT%", getMain().config.pointUnit)
-                    .replace("%DATE%", time)
+                getMain().language.transactionIdDetailsOutPut.forEach() {
+                    it  .replace("%TRANSACTION_ID%", id)
+                        .replace("%PLAYER%", name)
+                        .replace("%CARD_TYPE%", type)
+                        .replace("%CARD_PRICE%", price.format())
+                        .replace("%POINTS_RECEIVED%", pointsnhan.toString())
+                        .replace("%POINT_UNIT%", getMain().config.pointUnit)
+                        .replace("%DATE%", time)
+                        .apply { sender.sendMessage(this) }
+                }
             }
         }
     }
