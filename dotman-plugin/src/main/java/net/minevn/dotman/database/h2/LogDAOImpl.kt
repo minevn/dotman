@@ -94,7 +94,7 @@ class LogDAOImpl : LogDAO() {
         and "time" >= ? and "time" <= ?
     """.trimIndent()
 
-    override fun getTransactionDetailsById() =
+    override fun getTransactionDetailsByIdScript() =
         """SELECT * FROM "dotman_napthe_log" WHERE "transaction_id" = ?;"""
 
     override fun updatePointReceivedScript() = """

@@ -32,7 +32,7 @@ abstract class LogDAO : DataAccess() {
     abstract fun getSumScriptAllPlayerByMonth(): String
     abstract fun getSumScriptByPlayerAllTime(): String
     abstract fun getSumScriptByPlayerByMonth(): String
-    abstract fun getTransactionDetailsById(): String
+    abstract fun getTransactionDetailsByIdScript(): String
     abstract fun updatePointReceivedScript(): String
     // endregion
 
@@ -197,7 +197,7 @@ abstract class LogDAO : DataAccess() {
     }
 
     fun getTransactionDetailsById(id: String, sender: CommandSender) = run {
-        getTransactionDetailsById().statement {
+        getTransactionDetailsByIdScript().statement {
             setString(1, id)
             fetchRecords {
                 val name = getString("name")
