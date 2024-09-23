@@ -275,8 +275,8 @@ class AdminCmd {
 
                     val transactionId = args.first()
                     val logDao = LogDAO.getInstance()
-                    val transactionDetails = logDao.getTransactionDetailsById(transactionId)
-                    if (transactionDetails.isEmpty()) {
+                    val transactionDetails = logDao.getTransactionDetailsById(transactionId).firstOrNull()
+                    if (transactionDetails == null) {
                         sender.send("§cMã giao dịch $transactionId không tồn tại hoặc giao dịch đã thất bại.")
                         return@runNotSync
                     }

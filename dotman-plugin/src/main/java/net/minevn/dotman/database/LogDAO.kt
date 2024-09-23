@@ -195,8 +195,8 @@ abstract class LogDAO : DataAccess() {
         }
     }
 
-    fun getTransactionDetailsById(id: String): List<String> = run {
-        val messages = mutableListOf<String>()
+    fun getTransactionDetailsById(id: String): List<List<String>> = run {
+        val messages = mutableListOf<List<String>>()
         getTransactionDetailsByIdScript().statement {
             setString(1, id)
             fetchRecords {
@@ -205,16 +205,16 @@ abstract class LogDAO : DataAccess() {
                 val price = getInt("price")
                 val time = getLong("time").timeToString()
                 val pointsnhan = getInt("pointsnhan")
-                getMain().language.transactionIdDetailsOutPut.forEach {
-                    val message = it.replace("%TRANSACTION_ID%", id)
+                val output = getMain().language.transactionIdDetailsOutPut.map {
+                    it.replace("%TRANSACTION_ID%", id)
                         .replace("%PLAYER%", name)
                         .replace("%CARD_TYPE%", type)
                         .replace("%CARD_PRICE%", price.format())
                         .replace("%POINTS_RECEIVED%", pointsnhan.toString())
                         .replace("%POINT_UNIT%", getMain().config.pointUnit)
                         .replace("%DATE%", time)
-                    messages.add(message)
                 }
+                messages.add(output)
             }
         }
         messages
