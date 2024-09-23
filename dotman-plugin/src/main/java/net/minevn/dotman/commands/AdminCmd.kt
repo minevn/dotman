@@ -277,7 +277,7 @@ class AdminCmd {
                     val logDao = LogDAO.getInstance()
                     val transactionDetails = logDao.getTransactionDetailsById(transactionId)
                     if (transactionDetails.isEmpty()) {
-                        sender.send("§cKhông tìm thấy mã giao dịch $transactionId")
+                        sender.send("§cMã giao dịch $transactionId không tồn tại hoặc giao dịch đã thất bại.")
                         return@runNotSync
                     }
                     transactionDetails.forEach(sender::sendMessage)
