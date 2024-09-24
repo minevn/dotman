@@ -204,6 +204,7 @@ abstract class LogDAO : DataAccess() {
                 val price = getInt("price")
                 val time = getLong("time").timeToString()
                 val pointsnhan = getInt("pointsnhan")
+                val server = getString("server")
                 getMain().language.transactionIdDetailsOutPut.map {
                     it.replace("%TRANSACTION_ID%", id)
                         .replace("%PLAYER%", name)
@@ -211,6 +212,7 @@ abstract class LogDAO : DataAccess() {
                         .replace("%CARD_PRICE%", price.format())
                         .replace("%POINTS_RECEIVED%", pointsnhan.toString())
                         .replace("%POINT_UNIT%", getMain().config.pointUnit)
+                        .replace("%SERVER%", server)
                         .replace("%DATE%", time)
                 }
             }

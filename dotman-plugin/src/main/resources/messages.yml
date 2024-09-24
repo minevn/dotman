@@ -47,6 +47,7 @@ transaction-id-details-output:
   - '・&aNgười chơi: &e%PLAYER%'
   - '・&aLoại thẻ: &e%CARD_TYPE%(%CARD_PRICE% VNĐ)'
   - '・&aNhận được: &e%POINTS_RECEIVED% %POINT_UNIT%'
+  - '・&aServer nạp: &e%SERVER%'
   - '・&aNgày: &e%DATE%'
 
 update-available: '%PREFIX% &aĐã có phiên bản mới: &e%NEW_VERSION% &a(phiên bản hiện tại &e%CURRENT_VERSION%&a).'
