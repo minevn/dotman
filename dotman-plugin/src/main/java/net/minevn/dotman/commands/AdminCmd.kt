@@ -27,6 +27,7 @@ class AdminCmd {
             addSubCommand(setBankLocation(), "chuyenkhoan")
             addSubCommand(history(), "lichsu", "history")
             addSubCommand(napThuCong(), "napthucong", "manual")
+            addSubCommand(traCuuGiaoDich(), "tracuugd", "magiaodich")
 
             action {
                 sender.sendMessage("§b§lCác lệnh của plugin DotMan")
@@ -258,6 +259,29 @@ class AdminCmd {
                         throw e
                     }
                 }}
+            }
+        }
+
+        private fun traCuuGiaoDich() = command {
+            val usage = "<mã giao dịch>"
+            description("Tra cứu thông tin qua mã giao dịch trên cổng gạch thẻ")
+
+            action {
+                runNotSync {
+                    if (args.isEmpty()) {
+                        sender.send("§cCách dùng: /$commandTree $usage")
+                        return@runNotSync
+                    }
+
+                    val transactionId = args.first()
+                    val logDao = LogDAO.getInstance()
+                    val transactionDetails = logDao.getTransactionDetailsById(transactionId).firstOrNull()
+                    if (transactionDetails == null) {
+                        sender.send("§cMã giao dịch $transactionId không tồn tại hoặc giao dịch đã thất bại.")
+                        return@runNotSync
+                    }
+                    transactionDetails.forEach(sender::sendMessage)
+                }
             }
         }
     }
