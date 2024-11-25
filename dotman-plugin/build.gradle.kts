@@ -23,6 +23,7 @@ dependencies {
     compileOnly("net.minevn:minevnlib-plugin:1.1.3")
     compileOnly("minevn.depend:playerpoints:3.2.6")
     compileOnly("me.clip:placeholderapi:2.11.6")
+    implementation("org.bstats:bstats-bukkit:3.0.2")
 
     // JUnit
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
@@ -69,6 +70,7 @@ tasks {
     }
 
     shadowJar {
+        relocate("org.bstats", "net.minevn.bstats")
         archiveFileName.set("$jarName.jar")
     }
 
