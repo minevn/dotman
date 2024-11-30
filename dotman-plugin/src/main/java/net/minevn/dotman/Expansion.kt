@@ -28,7 +28,7 @@ class Expansion : PlaceholderExpansion() {
             val isPlayer = type == "player"
             val top = LeaderBoard["${key}_ALL"]
             val target = top[rank] ?: return if (isPlayer) "Chưa xếp hạng" else "0"
-            return if (isPlayer) target.first.format() else target.second.format()
+            return if (isPlayer) target.first else target.second.format()
         }
         if (params.startsWith("data_") && args.size >= 2 && player != null) run data@{
             val key = args.drop(1).joinToString("_").uppercase()
