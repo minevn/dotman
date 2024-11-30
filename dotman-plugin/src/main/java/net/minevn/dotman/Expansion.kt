@@ -1,7 +1,6 @@
 package net.minevn.dotman
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
-import net.minevn.dotman.utils.Utils.Companion.format
 import org.bukkit.entity.Player
 
 class Expansion : PlaceholderExpansion() {
@@ -28,12 +27,12 @@ class Expansion : PlaceholderExpansion() {
             val isPlayer = type == "player"
             val top = LeaderBoard["${key}_ALL"]
             val target = top[rank] ?: return if (isPlayer) "Chưa xếp hạng" else "0"
-            return if (isPlayer) target.first else target.second.format()
+            return if (isPlayer) target.first else target.second.toString()
         }
         if (params.startsWith("data_") && args.size >= 2 && player != null) run data@{
             val key = args.drop(1).joinToString("_").uppercase()
             val playerData = PlayerData[player]
-            return playerData.data["${key}_ALL"]?.format() ?: "0"
+            return playerData.data["${key}_ALL"]?.toString() ?: "0"
         }
 
         return null
