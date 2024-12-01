@@ -54,12 +54,6 @@ class DotMan : MineVNPlugin() {
         AdminCmd.init()
         TopNapCmd.init()
         UpdateChecker.init()
-
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            expansion = Expansion()
-        } else {
-            warning("PlaceholderAPI chưa được cài đặt, một số tính năng sẽ không hoạt động.")
-        }
     }
 
     private fun migrate() {
@@ -99,6 +93,15 @@ class DotMan : MineVNPlugin() {
             return
         }
         CardProvider.init(config.provider, providerConfig.config)
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            if (::expansion.isInitialized) {
+                expansion.unregister()
+            }
+            expansion = Expansion()
+        } else {
+            warning("PlaceholderAPI chưa được cài đặt, một số tính năng sẽ không hoạt động.")
+        }
     }
 
     override fun onDisable() {
