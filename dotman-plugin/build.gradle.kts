@@ -9,10 +9,7 @@ repositories {
     maven("https://repo.dmulloy2.net/repository/public/")
     maven("https://jitpack.io")
     maven("https://repo.extendedclip.com/releases")
-    maven {
-        setUrl("http://pack.minevn.net/repo/")
-        isAllowInsecureProtocol = true
-    }
+    maven("https://repo.minevn.net/releases/")
 }
 
 dependencies {
@@ -20,7 +17,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
 
     // libs
-    compileOnly("net.minevn:minevnlib-plugin:1.1.3")
+    compileOnly("net.minevn:minevnlib-plugin:1.1.8")
     compileOnly("minevn.depend:playerpoints:3.2.6")
     compileOnly("me.clip:placeholderapi:2.11.6")
     implementation("org.bstats:bstats-bukkit:3.0.2")
