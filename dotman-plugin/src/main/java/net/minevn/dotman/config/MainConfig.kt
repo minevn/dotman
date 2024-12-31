@@ -12,8 +12,6 @@ class MainConfig : FileConfig("config") {
     val pointUnit = config.getString("point-unit", "point")!!.color()
     val extraUntil = dateAndTimeFormat.parse(config.getString("extra-until", "01/01/1970 00:00")).time
     val extraRate = config.getDouble("extra-rate")
-    val enableStatusNotification = config.getBoolean("enable-status-notification") // TODO
-    val dbEngine = config.getString("database.engine", "h2")!!
     val provider = config.getString("provider", "")!!
     val server = config.getString("server", "")!!
     val cardTypes = config.getConfigurationSection("card-types")!!.run {
