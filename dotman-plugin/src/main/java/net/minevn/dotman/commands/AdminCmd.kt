@@ -105,7 +105,7 @@ class AdminCmd {
 
                 if (args.isEmpty()) {
                     sender.send("Tra cứu lịch sử nạp thẻ của người chơi hoặc toàn server")
-                    sender.send("Cách dùng: /dotman history $usage")
+                    sender.send("Cách dùng: §b/$commandTree $usage")
                     return@action
                 }
 
@@ -116,8 +116,14 @@ class AdminCmd {
                 var page = 1
                 while (args.isNotEmpty()) {
                     when (val current = args.removeFirst()) {
-                        "-p" -> playerName = args.removeFirst()
-                        "-m" -> month = args.removeFirst()
+                        "-p" -> playerName = args.removeFirstArgumentOrNull() ?: run {
+                            sender.send("Bạn phải nhâp tên người chơi sau tùy chọn §b-p")
+                            return@action
+                        }
+                        "-m" -> month = args.removeFirstArgumentOrNull() ?: run {
+                            sender.send("Bạn phải nhập tháng sau tùy chọn §b-m")
+                            return@action
+                        }
                         else -> page = current.toIntOrNull() ?: 1
                     }
                 }
@@ -185,9 +191,15 @@ class AdminCmd {
                 var index = 0
                 while (args.isNotEmpty()) {
                     when (val current = args.removeFirst()) {
-                        "-p" -> point = args.removeFirst().toDoubleOrNull() ?: run {
-                            sender.send("§cSố point nhận phải là số")
-                            return@action
+                        "-p" -> point = args.removeFirstArgumentOrNull().let { pointArg ->
+                            if (pointArg == null) {
+                                sender.send("§cBạn phải nhập số point nhận sau tùy chọn §b-p")
+                                return@action
+                            }
+                            pointArg.toDoubleOrNull() ?: run {
+                                sender.send("§cSố point nhận phải là số")
+                                return@action
+                            }
                         }
                         "-d" -> {
                             val sb = StringBuilder()
@@ -197,7 +209,6 @@ class AdminCmd {
                                 content = sb.toString().trim().takeIf { it.length <= 20 } ?: run {
                                     sender.send("§cNội dung không được quá 20 ký tự")
                                     return@action
-
                                 }
                             }
                         }
@@ -283,6 +294,17 @@ class AdminCmd {
                     transactionDetails.forEach(sender::sendMessage)
                 }
             }
+        }
+
+        /**
+         * Removes and returns the first argument from the list if it exists and is not an option flag.
+         *
+         * @receiver MutableList<String> The list from which the first argument will be removed.
+         * @return The first argument if it exists and is not an option flag, or null otherwise.
+         */
+        private fun MutableList<String>.removeFirstArgumentOrNull(): String? {
+            if (isEmpty() || first().matches("-[a-z]".toRegex())) return null
+            return removeFirst()
         }
     }
 }
