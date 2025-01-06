@@ -117,11 +117,11 @@ class AdminCmd {
                 while (args.isNotEmpty()) {
                     when (val current = args.removeFirst()) {
                         "-p" -> playerName = args.removeFirstArgumentOrNull() ?: run {
-                            sender.send("Bạn phải nhập tên người chơi sau tùy chọn §b-p")
+                            sender.send("§cBạn phải nhập tên người chơi sau tùy chọn §b-p")
                             return@action
                         }
                         "-m" -> month = args.removeFirstArgumentOrNull() ?: run {
-                            sender.send("Bạn phải nhập tháng sau tùy chọn §b-m")
+                            sender.send("§cBạn phải nhập tháng sau tùy chọn §b-m")
                             return@action
                         }
                         else -> page = current.toIntOrNull() ?: 1
