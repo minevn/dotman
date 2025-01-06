@@ -196,8 +196,8 @@ class AdminCmd {
                                 sender.send("§cBạn phải nhập số point nhận sau tùy chọn §b-p")
                                 return@action
                             }
-                            pointArg.toDoubleOrNull() ?: run {
-                                sender.send("§cSố point nhận phải là số")
+                            pointArg.toDoubleOrNull()?.takeIf { it > 0 } ?: run {
+                                sender.send("§cSố point nhận phải là chữ số lớn hơn 0")
                                 return@action
                             }
                         }
