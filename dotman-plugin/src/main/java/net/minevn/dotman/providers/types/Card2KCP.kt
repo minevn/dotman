@@ -83,8 +83,8 @@ class Card2KCP(private val partnerId: String, private val partnerKey: String) : 
             .let {
                 val status = it["status"].asStringOrNull()
                 message = it["message"].asStringOrNull()
-                isSuccess = status == "00"
-                status != "-9"
+                isSuccess = status == "success"
+                status != "wait"
             }
     }
 
