@@ -11,6 +11,7 @@ import net.minevn.libs.xseries.XMaterial
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.scheduler.BukkitTask
+import java.security.MessageDigest
 import java.text.DecimalFormat
 import java.util.logging.Level
 
@@ -103,6 +104,10 @@ class Utils {
                 setDisplayName(name.color())
                 this.lore = lore.toList().color()
             }
+        }
+
+        fun String.md5(): String {
+            return MessageDigest.getInstance("MD5").digest(toByteArray()).joinToString("") { "%02x".format(it) }
         }
     }
 }
