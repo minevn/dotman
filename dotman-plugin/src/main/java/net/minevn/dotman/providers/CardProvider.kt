@@ -51,8 +51,8 @@ abstract class CardProvider {
                 }
                 "card2k" -> {
                     val partnerId = config.getString("partner-id")!!
-                    val partnerKey = config.getString("partner-key")
-                    Card2KCP(partnerId!!, partnerKey!!)
+                    val partnerKey = config.getString("partner-key")!!
+                    Card2KCP(partnerId, partnerKey)
                 }
 
                 else -> {
