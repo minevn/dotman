@@ -9,7 +9,6 @@ import net.minevn.libs.bukkit.sendMessages
 import net.minevn.libs.get
 import net.minevn.libs.parseJson
 import org.bukkit.entity.Player
-import kotlin.random.Random
 
 class Card2KCP(private val partnerId: String, private val partnerKey: String) : CardProvider() {
 
@@ -55,10 +54,10 @@ class Card2KCP(private val partnerId: String, private val partnerKey: String) : 
         CardType.MOBIFONE,
         CardType.VINAPHONE,
         CardType.GATE,
-        CardType.VIETNAMOBILE -> "VNMOBI"
         CardType.ZING,
         CardType.GARENA,
-        CardType.VCOIN -> name.lowercase().replaceFirstChar { it.uppercase() }
+        CardType.VCOIN -> name
+        CardType.VIETNAMOBILE -> "VNMOBI"
 
         else -> null
     }
