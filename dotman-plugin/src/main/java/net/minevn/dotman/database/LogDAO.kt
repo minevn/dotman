@@ -104,6 +104,7 @@ abstract class LogDAO : DataAccess() {
                         getInt("id"),
                         getString("uuid"),
                         getString("seri"),
+                        getString("pin"),
                         getString("type"),
                         getInt("price"),
                         getString("transaction_id")

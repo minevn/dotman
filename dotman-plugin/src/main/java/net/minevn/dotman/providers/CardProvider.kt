@@ -4,6 +4,7 @@ import net.minevn.dotman.DotMan
 import net.minevn.dotman.DotMan.Companion.transactional
 import net.minevn.dotman.card.*
 import net.minevn.dotman.database.LogDAO
+import net.minevn.dotman.providers.types.Card2KCP
 import net.minevn.dotman.providers.types.GameBankCP
 import net.minevn.dotman.providers.types.TheSieuTocCP
 import net.minevn.dotman.utils.Utils.Companion.closeAnvilAction
@@ -47,6 +48,11 @@ abstract class CardProvider {
                     val apiUser = config.getString("api_user")!!
                     val apiPassword = config.getString("api_password")!!
                     GameBankCP(merchantID, apiUser, apiPassword)
+                }
+                "card2k" -> {
+                    val partnerId = config.getString("partner-id")!!
+                    val partnerKey = config.getString("partner-key")!!
+                    Card2KCP(partnerId, partnerKey)
                 }
 
                 else -> {
