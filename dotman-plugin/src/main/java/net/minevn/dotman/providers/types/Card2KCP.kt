@@ -34,11 +34,11 @@ class Card2KCP(private val partnerId: String, private val partnerKey: String) : 
     override fun parseResponse(card: Card, response: String) = CardResult(card).apply {
         println(response)
         response.parseJson().asJsonObject.let {
-            isSuccess = it["status"].asStringOrNull() == "1"
+            isSuccess = it["status"].asStringOrNull() == "1" || it["status"].asStringOrNull() == "99"
             message = it["message"].asStringOrNull()
 
             // Cập nhật mã giao dịch
-            it["transaction_id"].asStringOrNull()?.let { transactionId ->
+            it["request_id"].asStringOrNull()?.let { transactionId ->
                 LogDAO.getInstance().setTransactionId(card.logId!!, transactionId, false)
             }
         }
@@ -68,7 +68,7 @@ class Card2KCP(private val partnerId: String, private val partnerKey: String) : 
         val card = toCard()
         val params = mapOf(
             "partner_id" to partnerId,
-            "request_id" to uuid,
+            "request_id" to transactionId,
             "telco" to card.type.getTypeId()!!,
             "amount" to price.toString(),
             "code" to card.pin,
@@ -80,8 +80,9 @@ class Card2KCP(private val partnerId: String, private val partnerKey: String) : 
             .parseJson()
             .asJsonObject
             .let {
-                val status = it["status"].asStringOrNull()
-                message = it["message"].asStringOrNull()
+                val data = it["data"].asJsonObject
+                val status = data["status"].asStringOrNull()
+                message = data["message"].asStringOrNull()
                 isSuccess = status == "success"
                 status != "wait"
             }
