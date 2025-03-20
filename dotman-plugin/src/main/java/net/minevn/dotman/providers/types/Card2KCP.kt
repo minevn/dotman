@@ -22,7 +22,9 @@ class Card2KCP(private val partnerId: String, private val partnerKey: String) : 
 
     override fun getRequestParameters(playerName: String, card: Card) = mapOf(
         "partner_id" to partnerId,
-        "request_id" to ('A'..'Z').let { charpool -> (1..8).map { charpool.random() }.joinToString("") },
+        "request_id" to ('A'..'Z').let {
+            charpool -> (1..10).map { charpool.random() }.joinToString("") + (0..9).random()
+        },
         "code" to card.pin,
         "serial" to card.seri,
         "telco" to card.type.getTypeId()!!,
