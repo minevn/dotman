@@ -6,9 +6,9 @@ import net.minevn.dotman.card.CardPrice
 import net.minevn.dotman.card.CardType
 import net.minevn.dotman.config.MainConfig
 import net.minevn.dotman.providers.types.Card2KCP
-import net.minevn.dotman.providers.types.TheSieuTocCP
 import net.minevn.dotman.test.utils.setInstance
 import net.minevn.dotman.test.utils.setInternal
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Answers
@@ -29,13 +29,13 @@ class Card2KCPTest {
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        initMockedTST()
+        initMockedCard2K()
     }
 
     @Test
     fun testStatus() {
         println(mockCard2K.getStatusUrl())
-        // todo: print status
+        assertNotNull(mockCard2K.getStatusUrl())
     }
 
     @Test
@@ -45,14 +45,12 @@ class Card2KCPTest {
         mockCard2K.setInternal("main", mockedMain)
 
         val card = Card("zzz", "xxx", CardPrice.CP_10K, CardType.VIETTEL)
-        println(mockCard2K.doRequest("testplayer", card))
-
-        // fail sample: {"msg":"Th\u1ebb \u0111\u00e3 t\u1ed3n t\u1ea1i trong h\u1ec7 th\u1ed1ng!","status":2,"title":"Th\u1ea5t B\u1ea1i"}
-        // waiting sample: {"status":"00","transaction_id":"testplayer from testserver","amount":1,"title":"Tha\u0300nh c\u00f4ng","msg":"Th\u1ebb \u0111\u00e3 \u0111\u01b0\u1ee3c g\u1eedi l\u00ean h\u1ec7 th\u1ed1ng vui l\u00f2ng ch\u1edd x\u1eed l\u00fd"}
+        val result = mockCard2K.doRequest("testplayer", card)
+        assertNotNull(result)
     }
 
-    private fun initMockedTST() {
-        mockCard2K.setInternal("partnerId", System.getenv("CARD2K_PARTNER_ID"))
-        mockCard2K.setInternal("partnerKey", System.getenv("CARD2K_PARTNER_KEY"))
+    private fun initMockedCard2K() {
+        mockCard2K.setInternal("partnerId", System.getenv("CARD2K_PARTNER_ID") ?: "test_partner_id")
+        mockCard2K.setInternal("partnerKey", System.getenv("CARD2K_PARTNER_KEY") ?: "test_partner_key")
     }
 }
