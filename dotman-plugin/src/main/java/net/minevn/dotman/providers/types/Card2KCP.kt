@@ -26,7 +26,7 @@ class Card2KCP(private val partnerId: String, private val partnerKey: String) : 
         "code" to card.pin,
         "serial" to card.seri,
         "telco" to card.type.getTypeId()!!,
-        "amount" to card.price.getPriceId(),
+        "amount" to card.price.value.toString(),
         "sign" to (partnerKey + card.pin + card.seri).md5(),
         "command" to "charging"
     )
