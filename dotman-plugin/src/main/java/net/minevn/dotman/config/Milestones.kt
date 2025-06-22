@@ -1,13 +1,13 @@
 package net.minevn.dotman.config
 
-import net.minevn.dotman.DotMan
 import net.minevn.dotman.TOP_KEY_DONATE_TOTAL
 import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.utils.BukkitBossBar
 import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.info
+import net.minevn.dotman.utils.Utils.Companion.runAsyncTimer
+import net.minevn.dotman.utils.Utils.Companion.runSync
 import net.minevn.dotman.utils.Utils.Companion.warning
-import net.minevn.libs.bukkit.runSync
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitTask
@@ -68,12 +68,12 @@ class Milestones : FileConfig("mocnap") {
             if (bossBar != null) {
                 bar = BukkitBossBar("§r", barColor, barStyle).apply {
                     isVisible = false
-                    barTask = Bukkit.getScheduler().runTaskTimerAsynchronously(DotMan.instance, Runnable {
+                    barTask = runAsyncTimer(0, 20 * 5) {
                         val current = PlayerDataDAO.getInstance().getSumData("${TOP_KEY_DONATE_TOTAL}_$type")
                         if (current in from until amount) {
                             if (!isVisible) {
                                 isVisible = true
-                                runSync { Bukkit.getOnlinePlayers().forEach {addPlayer(it)} }
+                                runSync { Bukkit.getOnlinePlayers().forEach { addPlayer(it) } }
                             }
                             val title = bossBar
                                 .replace("%CURRENT%", current.format())
@@ -86,7 +86,7 @@ class Milestones : FileConfig("mocnap") {
                                 isVisible = false
                             }
                         }
-                    }, 0, 20 * 5)
+                    }
                 }
             }
         }

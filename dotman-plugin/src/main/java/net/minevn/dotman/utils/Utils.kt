@@ -7,6 +7,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.HoverEvent
 import net.minevn.dotman.DotMan
 import net.minevn.libs.anvilgui.AnvilGUI
+import net.minevn.libs.bukkit.FoliaUtils
 import net.minevn.libs.xseries.XMaterial
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
@@ -31,15 +32,27 @@ class Utils {
         fun CommandSender.send(message: String) = sendMessage("${DotMan.instance.config.prefix} $message".color())
 
         fun runAsyncTimer(delay: Long, period: Long, r: Runnable): BukkitTask =
-            Bukkit.getScheduler().runTaskTimerAsynchronously(DotMan.instance, r, delay, period)
+            if (FoliaUtils.isFolia()) {
+                FoliaUtils.runAsyncTimer(DotMan.instance, r, delay, period)
+            } else {
+                Bukkit.getScheduler().runTaskTimerAsynchronously(DotMan.instance, r, delay, period)
+            }
 
         fun runAsync(r: Runnable) {
-            Bukkit.getScheduler().runTaskAsynchronously(DotMan.instance, r)
+            if (FoliaUtils.isFolia()) {
+                FoliaUtils.runAsync(DotMan.instance, r)
+            } else {
+                Bukkit.getScheduler().runTaskAsynchronously(DotMan.instance, r)
+            }
         }
 
         fun runNotSync(r: Runnable) {
             if (Bukkit.isPrimaryThread()) {
-                Bukkit.getScheduler().runTaskAsynchronously(DotMan.instance, r)
+                if (FoliaUtils.isFolia()) {
+                    FoliaUtils.runAsync(DotMan.instance, r)
+                } else {
+                    Bukkit.getScheduler().runTaskAsynchronously(DotMan.instance, r)
+                }
             } else {
                 r.run()
             }
@@ -49,7 +62,11 @@ class Utils {
             if (Bukkit.isPrimaryThread()) {
                 r.run()
             } else {
-                Bukkit.getScheduler().runTask(DotMan.instance, r)
+                if (FoliaUtils.isFolia()) {
+                    FoliaUtils.runGlobal(DotMan.instance, r)
+                } else {
+                    Bukkit.getScheduler().runTask(DotMan.instance, r)
+                }
             }
         }
 
