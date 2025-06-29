@@ -2,7 +2,7 @@ package net.minevn.dotman
 
 import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.utils.Utils
-import net.minevn.libs.bukkit.runSync
+import net.minevn.dotman.utils.Utils.Companion.runSync
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
