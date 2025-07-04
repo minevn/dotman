@@ -17,7 +17,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
 
     // libs
-    compileOnly("net.minevn:minevnlib-plugin:1.1.8")
+    compileOnly("net.minevn:minevnlib-plugin:1.2.0-beta3")
     compileOnly("minevn.depend:playerpoints:3.2.6")
     compileOnly("me.clip:placeholderapi:2.11.6")
     implementation("org.bstats:bstats-bukkit:3.0.2")

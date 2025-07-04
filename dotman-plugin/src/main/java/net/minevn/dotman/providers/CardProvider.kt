@@ -10,13 +10,14 @@ import net.minevn.dotman.providers.types.TheSieuTocCP
 import net.minevn.dotman.utils.Utils.Companion.closeAnvilAction
 import net.minevn.dotman.utils.Utils.Companion.createItem
 import net.minevn.dotman.utils.Utils.Companion.format
+import net.minevn.dotman.utils.Utils.Companion.runAsyncTimer
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
+import net.minevn.dotman.utils.Utils.Companion.runSync
 import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.dotman.utils.Utils.Companion.severe
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.libs.anvilgui.AnvilGUI
 import net.minevn.libs.bukkit.chat.ChatListener
-import net.minevn.libs.bukkit.runSync
 import net.minevn.libs.bukkit.sendMessages
 import net.minevn.libs.post
 import net.minevn.libs.xseries.XMaterial
@@ -25,8 +26,7 @@ import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 
 abstract class CardProvider {
-    val task = Bukkit.getScheduler()
-        .runTaskTimerAsynchronously(DotMan.instance, ::updateStatus, 0L, 20 * 60)
+    val task = runAsyncTimer(0L, 20 * 60, ::updateStatus)
 
     companion object {
         lateinit var instance: CardProvider private set

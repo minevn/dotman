@@ -2,7 +2,7 @@ package net.minevn.dotman
 
 import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.utils.Utils.Companion.runAsync
-import net.minevn.libs.bukkit.runSync
+import net.minevn.dotman.utils.Utils.Companion.runSync
 import org.bukkit.Bukkit
 
 const val TOP_EXPIRE = 1 * 60 * 1000L // 1 phút

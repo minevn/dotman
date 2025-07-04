@@ -42,8 +42,8 @@ class CardTypeUI(viewer: Player?) : ConfiguredUI(viewer, "menu/napthe/loaithe.ym
             config.getInt("info.slot"),
             config.getGuiIcon("info")
                 .apply {
-                    val message = configDao.get("announcement")?.color() ?: lang.uiNoAnnouncement
-                    lore = message.split(32)
+                    val message = configDao.get("announcement") ?: lang.uiNoAnnouncement
+                    lore = message.color().replace("\\n", "\n").split(32)
                 }
                 .toGuiItemStack()
         )
