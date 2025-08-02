@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     `java-library`
-    kotlin("jvm") version "2.1.21"
+    kotlin("jvm") version "2.2.0"
 }
 
 allprojects {
