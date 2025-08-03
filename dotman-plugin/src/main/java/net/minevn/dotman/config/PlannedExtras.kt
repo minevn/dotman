@@ -48,9 +48,8 @@ class PlannedExtras : FileConfig("khuyenmai") {
      * @return Khuyến mãi đang hoạt động, hoặc null nếu không có
      */
     fun getCurrentExtra(): Component? {
-        val currentTime = System.currentTimeMillis()
         return components
-            .filter { it.from <= currentTime && it.to >= currentTime }
+            .filter { it.isActive() }
             .maxByOrNull { it.rate }
     }
 

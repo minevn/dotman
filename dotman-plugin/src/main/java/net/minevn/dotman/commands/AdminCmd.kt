@@ -232,6 +232,7 @@ class AdminCmd {
                     return@action
                 }
 
+                // Tính số point dựa trên số tiền nạp nếu user không truyền option -p
                 if (point == null) {
                     // Giá trị khuyến mãi cũ từ config.yml
                     val legacyExtraRate = if (cfg.extraUntil > System.currentTimeMillis()) cfg.extraRate else 0.0
