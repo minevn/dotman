@@ -121,9 +121,8 @@ abstract class CardProvider {
         if (plannedExtra != null) {
             amount = plannedExtra.calculateAmount(amount)
             extraPercent = plannedExtra.getPercentage()
-        } 
-        // If no planned extra, check legacy extra
-        else if (config.extraRate > 0 && config.extraUntil > System.currentTimeMillis()) {
+        } else if (config.extraRate > 0 && config.extraUntil > System.currentTimeMillis()) {
+            // If no planned extra, check legacy extra
             amount += (amount * config.extraRate).toInt()
             extraPercent = (config.extraRate * 100).toInt()
         }
