@@ -233,8 +233,13 @@ class AdminCmd {
                 }
 
                 if (point == null) {
-                    val isExtra = cfg.extraUntil > System.currentTimeMillis()
-                    val extraRate = if (isExtra) cfg.extraRate else 0.0
+                    // Giá trị khuyến mãi cũ từ config.yml
+                    val legacyExtraRate = if (cfg.extraUntil > System.currentTimeMillis()) cfg.extraRate else 0.0
+
+                    // Giá trị khuyến mãi chính thức: Nếu có khuyến mãi planned thì dùng, không thì lấy legacyExtraRate
+                    val plannedExtra = main.plannedExtras.getCurrentExtra()
+                    val extraRate = plannedExtra?.rate ?: legacyExtraRate
+
                     val pointPer1K = cfg.manualBase + cfg.manualExtra + (cfg.manualBase * extraRate)
                     point = (amount / 1000) * pointPer1K
                 }

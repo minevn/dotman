@@ -1,0 +1,29 @@
+# Đặt lịch khuyến mãi
+# Tại file này, bạn có thể lên kế hoạch cho các khuyến mãi trong tương lai
+# Mỗi gạch đầu dòng là một kế hoạch khuyến mãi
+#
+# Các tùy chọn gồm có:
+# * name: Tên khuyến mãi
+# * rate: Tỉ lệ khuyến mãi, tính theo công thức sau:
+#   * 0: Không có khuyến mãi
+#   * 0.5: Khuyến mãi 50%, ví dụ: nạp 100k được 150k
+#   * 1: Khuyến mãi 100%, ví dụ: nạp 100k được 200k
+#   * 1.5: Khuyến mãi 150%, ví dụ: nạp 100k được 250k
+# * from: Ngày bắt đầu khuyến mãi (định dạng dd/MM/yyyy HH:mm)
+# * to: Ngày kết thúc khuyến mãi (định dạng dd/MM/yyyy HH:mm)
+#
+# Khuyến mãi ở file này sẽ được ưu tiên so với khuyến mãi được thiết lập ở file config.yml
+#
+# Trong trường hợp tại một thời điểm có nhiều khuyến mãi cùng lúc, khuyến mãi có tỉ lệ cao nhất sẽ được ưu tiên
+
+- name: '&aNgày Giải Phóng Miền Nam và Quốc tế Lao Động'
+  rate: 1.0
+  from: 30/04/2024 00:00
+  to: 01/05/2024 23:59
+
+- name: '&aNgày Quốc khánh Việt Nam'
+  rate: 1.0
+  from: 02/09/2024 00:00
+  to: 03/09/2024 23:59
+
+
