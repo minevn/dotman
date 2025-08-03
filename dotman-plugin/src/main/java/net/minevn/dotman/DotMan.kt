@@ -36,6 +36,7 @@ class DotMan : MineVNPlugin() {
     lateinit var milestones: Milestones private set
     lateinit var milestonesMaster: MilestonesMaster private set
     lateinit var discord: Discord private set
+    lateinit var plannedExtras: PlannedExtras private set
 
     override fun onEnable() {
         instance = this
@@ -80,6 +81,7 @@ class DotMan : MineVNPlugin() {
         }
         milestonesMaster = MilestonesMaster()
         discord = Discord()
+        plannedExtras = PlannedExtras()
 
         // init Gui configs
         CardTypeUI()

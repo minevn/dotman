@@ -17,6 +17,7 @@ card-charged-successfully:
   - '&aBạn nhận được &e%AMOUNT% %POINT_UNIT% &atừ thẻ nạp.'
 
 card-charged-with-extra: '&aBạn được khuyến mãi thêm &b&l%RATE%% &agiá trị nạp.'
+card-charged-with-extra-planned: '&aNhân dịp %EXTRA_NAME%&a, bạn được khuyến mãi thêm &b&l%RATE%% &agiá trị nạp.'
 
 card-charged-sent:
   - '%PREFIX% &aThẻ của bạn đang được xử lý, hãy đợi trong giây lát.'
