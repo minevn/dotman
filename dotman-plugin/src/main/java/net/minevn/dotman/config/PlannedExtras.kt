@@ -1,7 +1,10 @@
 package net.minevn.dotman.config
 
+import net.minevn.dotman.utils.Utils.Companion.color
 import net.minevn.dotman.utils.Utils.Companion.info
+import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.dotman.utils.Utils.Companion.warning
+import org.bukkit.Bukkit
 import java.text.SimpleDateFormat
 
 class PlannedExtras : FileConfig("khuyenmai") {
@@ -15,7 +18,7 @@ class PlannedExtras : FileConfig("khuyenmai") {
 
     @Suppress("UNCHECKED_CAST")
     private fun loadComponents() {
-        components = (config.getList("khuyenmai") ?: emptyList()).mapNotNull {
+        components = (config.getList("khuyen-mai") ?: emptyList()).mapNotNull {
             try {
                 it as Map<*, *>
                 val name = it["name"] as String
@@ -33,7 +36,20 @@ class PlannedExtras : FileConfig("khuyenmai") {
             }
         }
 
-        info("Đã nạp ${components.size} khuyến mãi.")
+        info("Đã nạp ${components.size} khuyến mãi")
+
+        val console = Bukkit.getServer().consoleSender
+        val activeComponents = components.filter { it.isActive() }.sortedByDescending { it.rate }
+        if (activeComponents.isNotEmpty()) {
+            val size = activeComponents.size
+            console.send("Có $size chương trình khuyến mãi đang hoạt động:")
+            console.send(activeComponents.joinToString("§r, ") { "${it.name.color()} §r(§b${it.getPercentage()}%§r)" })
+            if (size > 1) {
+                console.send("Khuyến mãi có tỉ lệ cao nhất (đầu danh sách) sẽ được ưu tiên.")
+            }
+        } else {
+            console.send("Không có chương trình khuyến mãi nào đang hoạt động.")
+        }
     }
 
     override fun reload() {

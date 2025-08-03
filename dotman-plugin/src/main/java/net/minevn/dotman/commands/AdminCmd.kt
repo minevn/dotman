@@ -187,6 +187,8 @@ class AdminCmd {
                 var point: Double? = null
                 var content = "THỦ CÔNG"
                 var forceOffline = false
+                var extraRatePercent = 0
+                var plannedExtraName: String? = null
 
                 var index = 0
                 while (args.isNotEmpty()) {
@@ -236,13 +238,17 @@ class AdminCmd {
                 if (point == null) {
                     // Giá trị khuyến mãi cũ từ config.yml
                     val legacyExtraRate = if (cfg.extraUntil > System.currentTimeMillis()) cfg.extraRate else 0.0
+                    // Giá trị khuyến mãi mới từ PlannedExtras
+                    val plannedExtra = main.plannedExtras.getCurrentExtra()
 
                     // Giá trị khuyến mãi chính thức: Nếu có khuyến mãi planned thì dùng, không thì lấy legacyExtraRate
-                    val plannedExtra = main.plannedExtras.getCurrentExtra()
                     val extraRate = plannedExtra?.rate ?: legacyExtraRate
-
                     val pointPer1K = cfg.manualBase + cfg.manualExtra + (cfg.manualBase * extraRate)
                     point = (amount / 1000) * pointPer1K
+
+                    // Lấy % khuyến mãi, đồng thời nếu là planned thì lấy tên để gửi thông báo
+                    extraRatePercent = (extraRate * 100).toInt()
+                    plannedExtraName = plannedExtra?.name
                 }
 
                 runNotSync { transactional {
@@ -271,6 +277,12 @@ class AdminCmd {
                         sender.send("§aĐã nạp §d${amount.format()} VNĐ §acho người chơi §b$playerName " +
                                 "§avà nhận §b${point.toInt()} §apoint")
 
+                        if (extraRatePercent != 0) {
+                            sender.send("§aNgười chơi được khuyến mãi §b$extraRatePercent% §agiá trị nạp.")
+                            if (plannedExtraName != null) {
+                                sender.send("§aTên chương trình khuyến mãi: §b$plannedExtraName")
+                            }
+                        }
                     } catch (e: Exception) {
                         sender.send("§cCó lỗi xảy ra: ${e.message} (chi tiết hãy xem Console và báo lỗi cho MineVN Studio)")
                         throw e

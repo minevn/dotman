@@ -16,6 +16,7 @@
 #
 # Trong trường hợp tại một thời điểm có nhiều khuyến mãi cùng lúc, khuyến mãi có tỉ lệ cao nhất sẽ được ưu tiên
 
+khuyen-mai:
 - name: '&aNgày Giải Phóng Miền Nam và Quốc tế Lao Động'
   rate: 1.0
   from: 30/04/2024 00:00

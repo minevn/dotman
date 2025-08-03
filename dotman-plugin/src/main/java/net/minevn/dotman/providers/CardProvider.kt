@@ -115,12 +115,14 @@ abstract class CardProvider {
         val commands = card.price.getCommands().map { it.replace("%PLAYER%", player.name) }
         val config = main.config
         var extraPercent = 0
+        var plannedExtraName: String? = null
         
         // Check for planned extras first
         val plannedExtra = main.plannedExtras.getCurrentExtra()
         if (plannedExtra != null) {
             amount = plannedExtra.calculateAmount(amount)
             extraPercent = plannedExtra.getPercentage()
+            plannedExtraName = plannedExtra.name
         } else if (config.extraRate > 0 && config.extraUntil > System.currentTimeMillis()) {
             // If no planned extra, check legacy extra
             amount += (amount * config.extraRate).toInt()
@@ -143,10 +145,18 @@ abstract class CardProvider {
             }
         }
         if (extraPercent > 0) {
-            main.language.cardChargedWithExtra
+            var extraMsg = if (plannedExtraName != null) {
+                main.language.cardChargedWithExtraPlanned
+                    .replace("%EXTRA_NAME%", plannedExtraName)
+            } else {
+                main.language.cardChargedWithExtra
+            }
+
+            extraMsg = extraMsg
                 .replace("%RATE%", extraPercent.toString())
                 .replace("%PERCENT%", extraPercent.toString())
-                .let { player.send(it) }
+
+            player.send(extraMsg)
         }
         if (card.logId != null) {
             LogDAO.getInstance().updatePointReceived(card.logId!!, amount)
