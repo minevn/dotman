@@ -54,13 +54,6 @@ class PlannedExtras : FileConfig("khuyenmai") {
             .maxByOrNull { it.rate }
     }
 
-    /**
-     * Lấy tất cả khuyến mãi
-     *
-     * @return Danh sách khuyến mãi
-     */
-    fun getAll() = components.toList()
-
     class Component(val name: String, val rate: Double, val from: Long, val to: Long) {
         /**
          * Kiểm tra xem khuyến mãi có đang hoạt động tại thời điểm hiện tại không
