@@ -1,0 +1,107 @@
+package net.minevn.dotman.config
+
+import net.minevn.dotman.utils.Utils.Companion.color
+import net.minevn.dotman.utils.Utils.Companion.info
+import net.minevn.dotman.utils.Utils.Companion.send
+import net.minevn.dotman.utils.Utils.Companion.warning
+import org.bukkit.Bukkit
+import java.text.SimpleDateFormat
+
+class PlannedExtras : FileConfig("khuyenmai") {
+
+    private var components: List<Component> = emptyList()
+    private val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm")
+
+    init {
+        loadComponents()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun loadComponents() {
+        components = (config.getList("khuyen-mai") ?: emptyList()).mapNotNull {
+            try {
+                it as Map<*, *>
+                val name = it["name"] as String
+                val rate = (it["rate"] as Number).toDouble()
+                val fromStr = it["from"] as String
+                val toStr = it["to"] as String
+
+                val from = dateFormat.parse(fromStr).time
+                val to = dateFormat.parse(toStr).time
+
+                if (from >= to) {
+                    warning("Khuyến mãi '$name' có thời gian bắt đầu không hợp lệ: $fromStr >= $toStr")
+                }
+
+                Component(name, rate, from, to)
+            } catch (e: Exception) {
+                val name = try { (it as Map<*, *>)["name"] as String } catch (_: Exception) { "<unknown>" }
+                e.warning("Khuyến mãi $name không hợp lệ: ${e.message}")
+                null
+            }
+        }
+
+        info("Đã nạp ${components.size} khuyến mãi")
+
+        val console = Bukkit.getServer().consoleSender
+        val activeComponents = components.filter { it.isActive() }.sortedByDescending { it.rate }
+        if (activeComponents.isNotEmpty()) {
+            val size = activeComponents.size
+            console.send("Có $size chương trình khuyến mãi đang hoạt động:")
+            console.send(activeComponents.joinToString("§r, ") { "${it.name.color()} §r(§b${it.getPercentage()}%§r)" })
+            if (size > 1) {
+                console.send("Khuyến mãi có tỉ lệ cao nhất (đầu danh sách) sẽ được ưu tiên.")
+            }
+        } else {
+            console.send("Không có chương trình khuyến mãi nào đang hoạt động.")
+        }
+    }
+
+    override fun reload() {
+        super.reload()
+        loadComponents()
+    }
+
+    /**
+     * Lấy khuyến mãi đang hoạt động tại thời điểm hiện tại
+     * Nếu có nhiều khuyến mãi cùng lúc, sẽ lấy khuyến mãi có tỉ lệ cao nhất
+     *
+     * @return Khuyến mãi đang hoạt động, hoặc null nếu không có
+     */
+    fun getCurrentExtra(): Component? {
+        return components
+            .filter { it.isActive() }
+            .maxByOrNull { it.rate }
+    }
+
+    class Component(val name: String, val rate: Double, val from: Long, val to: Long) {
+        /**
+         * Kiểm tra xem khuyến mãi có đang hoạt động tại thời điểm hiện tại không
+         *
+         * @return true nếu khuyến mãi đang hoạt động
+         */
+        fun isActive(): Boolean {
+            val currentTime = System.currentTimeMillis()
+            return from <= currentTime && to >= currentTime
+        }
+
+        /**
+         * Tính toán số tiền khuyến mãi dựa trên số tiền gốc
+         *
+         * @param baseAmount Số tiền gốc
+         * @return Số tiền sau khi áp dụng khuyến mãi
+         */
+        fun calculateAmount(baseAmount: Int): Int {
+            return baseAmount + (baseAmount * rate).toInt()
+        }
+
+        /**
+         * Lấy phần trăm khuyến mãi
+         *
+         * @return Phần trăm khuyến mãi
+         */
+        fun getPercentage(): Int {
+            return (rate * 100).toInt()
+        }
+    }
+}

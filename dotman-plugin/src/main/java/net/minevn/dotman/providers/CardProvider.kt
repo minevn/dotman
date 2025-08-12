@@ -114,11 +114,19 @@ abstract class CardProvider {
         var amount = card.price.getPointAmount()
         val commands = card.price.getCommands().map { it.replace("%PLAYER%", player.name) }
         val config = main.config
-        val extraRate = config.extraRate
         var extraPercent = 0
-        if (extraRate > 0 && config.extraUntil > System.currentTimeMillis()) {
+        var plannedExtraName: String? = null
+        
+        // Check for planned extras first
+        val plannedExtra = main.plannedExtras.getCurrentExtra()
+        if (plannedExtra != null) {
+            amount = plannedExtra.calculateAmount(amount)
+            extraPercent = plannedExtra.getPercentage()
+            plannedExtraName = plannedExtra.name
+        } else if (config.extraRate > 0 && config.extraUntil > System.currentTimeMillis()) {
+            // If no planned extra, check legacy extra
             amount += (amount * config.extraRate).toInt()
-            extraPercent = (extraRate * 100).toInt()
+            extraPercent = (config.extraRate * 100).toInt()
         }
         DotMan.instance.playerPoints.api.give(player.uniqueId, amount)
 
@@ -137,10 +145,17 @@ abstract class CardProvider {
             }
         }
         if (extraPercent > 0) {
-            main.language.cardChargedWithExtra
+            val extraMsg = if (plannedExtraName != null) {
+                main.language.cardChargedWithExtraPlanned
+                    .replace("%EXTRA_NAME%", plannedExtraName)
+            } else {
+                main.language.cardChargedWithExtra
+            }
+                // continue replacing %RATE% with the extra rate for extraMsg
                 .replace("%RATE%", extraPercent.toString())
                 .replace("%PERCENT%", extraPercent.toString())
-                .let { player.send(it) }
+
+            player.send(extraMsg)
         }
         if (card.logId != null) {
             LogDAO.getInstance().updatePointReceived(card.logId!!, amount)
