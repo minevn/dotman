@@ -22,7 +22,7 @@ class PlannedExtras : FileConfig("khuyenmai") {
             try {
                 it as Map<*, *>
                 val name = it["name"] as String
-                val rate = it["rate"] as Double
+                val rate = (it["rate"] as Number).toDouble()
                 val fromStr = it["from"] as String
                 val toStr = it["to"] as String
 

@@ -145,14 +145,13 @@ abstract class CardProvider {
             }
         }
         if (extraPercent > 0) {
-            var extraMsg = if (plannedExtraName != null) {
+            val extraMsg = if (plannedExtraName != null) {
                 main.language.cardChargedWithExtraPlanned
                     .replace("%EXTRA_NAME%", plannedExtraName)
             } else {
                 main.language.cardChargedWithExtra
             }
-
-            extraMsg = extraMsg
+                // continue replacing %RATE% with the extra rate for extraMsg
                 .replace("%RATE%", extraPercent.toString())
                 .replace("%PERCENT%", extraPercent.toString())
 
