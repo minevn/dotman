@@ -29,9 +29,14 @@ class PlannedExtras : FileConfig("khuyenmai") {
                 val from = dateFormat.parse(fromStr).time
                 val to = dateFormat.parse(toStr).time
 
+                if (from >= to) {
+                    warning("Khuyến mãi '$name' có thời gian bắt đầu không hợp lệ: $fromStr >= $toStr")
+                }
+
                 Component(name, rate, from, to)
             } catch (e: Exception) {
-                e.warning("Có một khuyến mãi không hợp lệ: ${e.message}")
+                val name = try { (it as Map<*, *>)["name"] as String } catch (_: Exception) { "<unknown>" }
+                e.warning("Khuyến mãi $name không hợp lệ: ${e.message}")
                 null
             }
         }
