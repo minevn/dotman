@@ -42,12 +42,27 @@ class PlayerDataDAOImpl : PlayerDataDAO() {
         WHERE "key" = ?;
     """.trimIndent()
 
+    /**
+     * Returns an H2 SQL query that selects all data keys and their values for a single player.
+     *
+     * The returned query expects one bind parameter: the player's UUID (for the WHERE "uuid" = ? clause).
+     *
+     * @return SQL string that selects "key" and "value" from "dotman_player_data" filtered by UUID.
+     */
     override fun getAllDataScript() = """
         SELECT "key", "value"
         FROM "dotman_player_data"
         WHERE "uuid" = ?;
     """.trimIndent()
 
+    /**
+     * Returns an SQL script that deletes player data rows matching a UUID and a key pattern.
+     *
+     * The returned statement uses two placeholders: the first for the player's UUID, the second for a `LIKE` pattern
+     * to match the `"key"` column (e.g. `'score_%'`).
+     *
+     * @return The SQL DELETE statement as a String.
+     */
     override fun deleteDataByKeyLikeScript() = """
         DELETE FROM "dotman_player_data"
         WHERE "uuid" = ? AND "key" LIKE ?;

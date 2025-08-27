@@ -35,12 +35,25 @@ class PlayerDataDAOImpl : PlayerDataDAO() {
         WHERE `key` = ?;
     """.trimIndent()
 
+    /**
+     * Returns an SQL script that selects all key/value pairs for a specific player UUID.
+     *
+     * @return A prepared-statement SQL string: selects `key` and `value` from `dotman_player_data` where `uuid` = ?.
+     */
     override fun getAllDataScript() = """
         SELECT `key`, `value`
         FROM `dotman_player_data`
         WHERE `uuid` = ?;
     """.trimIndent()
 
+    /**
+     * Returns a prepared DELETE SQL script that removes rows from `dotman_player_data`.
+     *
+     * The script deletes entries for a specific `uuid` where the `key` matches a SQL pattern
+     * (uses `LIKE`). It uses prepared-statement placeholders in this order: `uuid`, `keyPattern`.
+     *
+     * @return A SQL string with `?` placeholders for `uuid` and the `key` pattern.
+     */
     override fun deleteDataByKeyLikeScript() = """
         DELETE FROM `dotman_player_data`
         WHERE `uuid` = ? AND `key` LIKE ?;

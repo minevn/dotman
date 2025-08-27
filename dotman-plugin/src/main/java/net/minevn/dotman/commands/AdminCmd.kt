@@ -22,6 +22,15 @@ import kotlin.math.ceil
 
 class AdminCmd {
     companion object {
+        /**
+         * Builds and registers the root "dotman" admin command and its subcommands.
+         *
+         * Registers the following subcommands: reload, thongbao, chuyenkhoan (bank location),
+         * lichsu/history (transaction history), napthucong/manual (manual top-up),
+         * tracuugd/magiaodich (transaction lookup), and cleardata (clear milestone data).
+         * Also sets a default action that sends a short header and the subcommand usage to the sender,
+         * then registers the command with the DotMan plugin instance.
+         */
         fun init() = command {
             addSubCommand(reload(), "reload")
             addSubCommand(thongbao(), "thongbao")
@@ -293,6 +302,13 @@ class AdminCmd {
             }
         }
 
+        /**
+         * Builds the "traCuuGiaoDich" admin subcommand for looking up gateway transaction details by ID.
+         *
+         * When executed, this command validates a single transaction ID argument, performs the lookup off the main thread,
+         * and sends each line of the transaction detail to the command sender. If the ID is missing it sends usage help;
+         * if no details are found it informs the sender that the transaction does not exist or failed.
+         */
         private fun traCuuGiaoDich() = command {
             val usage = "<mã giao dịch>"
             description("Tra cứu thông tin qua mã giao dịch trên cổng gạch thẻ")
@@ -316,6 +332,17 @@ class AdminCmd {
             }
         }
 
+        /**
+         * Register an admin subcommand that deletes a player's top-up/milestone data.
+         *
+         * The subcommand expects a single argument: the target player's name. It resolves
+         * the player's UUID, then deletes all player data entries whose keys match the
+         * pattern "DONATE_TOTAL_ALL%". Database operations run off the main thread inside
+         * a transactional block. The command sends success or error messages back to the
+         * command sender; if the player cannot be resolved the command reports that and
+         * aborts the deletion. Any exceptions from the transactional operation are
+         * rethrown after notifying the sender.
+         */
         private fun clearMilestoneData() = command {
             val usage = "<tên người chơi>"
             description("Xoá dữ liệu top nạp thẻ/milestone của người chơi")
