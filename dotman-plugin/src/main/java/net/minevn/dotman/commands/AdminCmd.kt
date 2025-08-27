@@ -5,6 +5,7 @@ import net.minevn.dotman.DotMan.Companion.transactional
 import net.minevn.dotman.TopupType
 import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.database.LogDAO
+import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.database.PlayerInfoDAO
 import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.makePagination
@@ -28,6 +29,7 @@ class AdminCmd {
             addSubCommand(history(), "lichsu", "history")
             addSubCommand(napThuCong(), "napthucong", "manual")
             addSubCommand(traCuuGiaoDich(), "tracuugd", "magiaodich")
+            addSubCommand(clearMilestoneData(), "cleardata")
 
             action {
                 sender.sendMessage("§b§lCác lệnh của plugin DotMan")
@@ -311,6 +313,49 @@ class AdminCmd {
                     }
                     transactionDetails.forEach(sender::sendMessage)
                 }
+            }
+        }
+
+        private fun clearMilestoneData() = command {
+            val usage = "<tên người chơi>"
+            description("Xoá dữ liệu top nạp thẻ/milestone của người chơi")
+
+            tabComplete {
+                when(args.size) {
+                    0 -> emptyList()
+                    1 -> Bukkit.getOnlinePlayers().map { it.name }
+                        .filter { it.lowercase().startsWith(args.last().lowercase()) }
+                    else -> emptyList()
+                }
+            }
+
+            action {
+                val infoDAO = PlayerInfoDAO.getInstance()
+                val dataDAO = PlayerDataDAO.getInstance()
+
+                if (args.isEmpty()) {
+                    sender.send("§cCách dùng: /$commandTree $usage")
+                    return@action
+                }
+                val playerName = args.first()
+
+                runNotSync { transactional {
+                    try {
+                        val uuid = infoDAO.getUUID(playerName)
+                            ?: run {
+                                sender.send("§cKhông tìm thấy người chơi $playerName, có thể họ chưa vào server bao giờ?")
+                                return@transactional
+                            }
+
+                        val donateKeyOrPattern = "DONATE_TOTAL_ALL%"
+                        dataDAO.deleteDataByKeyLike(uuid, donateKeyOrPattern)
+
+                        sender.send("§aĐã xoá dữ liệu top nạp thẻ/milestone của người chơi §b$playerName")
+                    } catch (e: Exception) {
+                        sender.send("§cCó lỗi xảy ra: ${e.message} (chi tiết hãy xem Console và báo lỗi cho MineVN Studio)")
+                        throw e
+                    }
+                }}
             }
         }
 
