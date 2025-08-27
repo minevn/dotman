@@ -347,8 +347,8 @@ class AdminCmd {
                                 return@transactional
                             }
 
-                        val donateKeyOrPattern = "DONATE_TOTAL_ALL%"
-                        dataDAO.deleteDataByKeyLike(uuid, donateKeyOrPattern)
+                        val playerTotalDonateKey = "DONATE_TOTAL_ALL%"
+                        dataDAO.deleteDataByKeyLike(uuid, playerTotalDonateKey)
 
                         sender.send("§aĐã xoá dữ liệu top nạp thẻ/milestone của người chơi §b$playerName")
                     } catch (e: Exception) {
