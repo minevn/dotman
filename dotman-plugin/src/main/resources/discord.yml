@@ -1,12 +1,46 @@
-# Bạn có thể thêm nhiều discord webhook url cùng lúc.
-# Điều chỉnh enabled thành true để bật
+# Cấu hình Discord Webhook cho DotMan
+# - Chỉ hỗ trợ payload đầy đủ (bao gồm embed). Không còn hỗ trợ cấu hình cũ chỉ text.
+# - Trường enabled mặc định là true nếu không khai báo. Đặt false để tạm tắt webhook.
+# - Có thể sử dụng placeholder sau trong content/embeds:
+#   %PLAYER%, %AMOUNT%, %POINT_AMOUNT%, %POINT_UNIT%, %BALANCE%, %METHOD%, %TIME%
+# - Màu (color) phải là chuỗi hex dạng "#RRGGBB" (ví dụ: "#58b9ff"). Nếu sai định dạng sẽ tự chuyển về trắng "#FFFFFF".
+# Bạn có thể dùng https://discohook.org/ để thiết kế
 
 discord-hooks:
   - enabled: false
     url: https://discord.com/api/webhooks/123456/webhook-token
-    content: |
-        ## Nạp thẻ
-        **%PLAYER%** vừa nạp **%AMOUNT% VNĐ**
-        Nhận được: %POINT_AMOUNT% %POINT_UNIT%
-        Số dư sau khi nạp: %BALANCE% %POINT_UNIT%
-        Hình thức nạp: %METHOD%
+    payload:
+      username: "MineVN"
+      avatarUrl: "https://i.imgur.com/tdZ2LxY.png"
+      content:
+        - "Thông báo nạp tiền thành công!"
+        - "Thời gian: %TIME%"
+      embeds:
+        - title: "Ting ting 💸"
+          description:
+            - "Xin cảm ơn bạn đã ủng hộ server!"
+          color: "#58b9ff"
+          fields:
+            - name: "Người chơi"
+              value: "%PLAYER%"
+              inline: true
+            - name: "Số tiền"
+              value: "%AMOUNT% VNĐ"
+              inline: true
+            - name: "Thực nhận"
+              value: "%POINT_AMOUNT% %POINT_UNIT% (đang có %BALANCE% %POINT_UNIT%)"
+              inline: true
+            - name: "Phương thức"
+              value: "%METHOD%"
+              inline: true
+          image:
+            url: "https://i.imgur.com/4g5sEWu.png"
+          thumbnail:
+            url: "https://i.imgur.com/tdZ2LxY.png"
+          author:
+            name: "MineVN"
+            url: "https://minevn.studio/"
+            iconUrl: "https://i.imgur.com/tdZ2LxY.png"
+          footer:
+            text: "%TIME%"
+            iconUrl: "https://i.imgur.com/tdZ2LxY.png"
