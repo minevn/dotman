@@ -156,8 +156,8 @@ class DotMan : MineVNPlugin() {
                 "%METHOD%" to type.typeName,
                 "%TIME%" to timeStr
             )
-            discord.list.forEach { hook ->
-                hook.send(replacements)
+            discord.webhooks.forEach { sender ->
+                sender.send(replacements)
             }
         }
     }
