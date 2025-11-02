@@ -5,18 +5,30 @@ import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.dotman.discord.Webhook
 
 class Discord : FileConfig("discord") {
-    val webhooks: List<Webhook> = (config.getList("discord-hooks") ?: emptyList()).mapNotNull { raw ->
-        try {
-            val map = raw as? Map<*, *> ?: throw TypeCastException("discord-hooks không hợp lệ")
-            if (map["enabled"] as? Boolean != true) {
+    val webhooks: List<Webhook> = run {
+        val hooks = config.getList("discord-hooks") ?: emptyList<Any>()
+        hooks.mapNotNull { raw ->
+            val map = raw as? Map<*, *>
+            if (map == null) {
+                warning("discord-hooks không hợp lệ")
                 return@mapNotNull null
             }
-            val url = map["url"] as? String ?: throw TypeCastException("url không hợp lệ")
-            val payload = map["payload"] as? Map<*, *> ?: throw TypeCastException("payload không hợp lệ")
+            val enabled = map["enabled"] as? Boolean ?: false
+            if (!enabled) return@mapNotNull null
+
+            val url = map["url"] as? String
+            if (url == null) {
+                warning("url không hợp lệ")
+                return@mapNotNull null
+            }
+
+            val payload = map["payload"] as? Map<*, *>
+            if (payload == null) {
+                warning("payload không hợp lệ")
+                return@mapNotNull null
+            }
+
             Webhook(url, payload)
-        } catch (e: TypeCastException) {
-            warning("Có lỗi xảy ra khi nạp webhook: ${e.message}")
-            null
         }
     }
 
