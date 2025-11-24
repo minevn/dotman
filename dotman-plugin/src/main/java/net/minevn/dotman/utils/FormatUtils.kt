@@ -33,26 +33,26 @@ fun getTimeString(time: Long): String {
 /**
  * Đệ quy thay thế các placeholder trong dữ liệu (String, Map, List) bằng giá trị từ replacements.
  *
- * @param data Dữ liệu đầu vào, có thể là String, Map, List hoặc kiểu khác.
+ * @param input Dữ liệu đầu vào, có thể là String, Map, List hoặc kiểu khác.
  * @param replacements Map chứa các cặp placeholder và giá trị thay thế.
  * @return Dữ liệu đã được thay thế placeholder, giữ nguyên kiểu gốc.
  */
-fun applyReplacements(data: Any?, replacements: Map<String, String>): Any? {
-    return when (data) {
+fun applyReplacements(input: Any?, replacements: Map<String, String>): Any? {
+    return when (input) {
         is String -> {
-            replaceAllPlaceholders(data, replacements)
+            replaceAllPlaceholders(input, replacements)
         }
 
         is Map<*, *> -> {
-            processMap(data, replacements)
+            processMap(input, replacements)
         }
 
         is List<*> -> {
-            processList(data, replacements)
+            processList(input, replacements)
         }
 
         else -> {
-            data
+            input
         }
     }
 }
