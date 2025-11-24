@@ -44,15 +44,53 @@ fun applyReplacements(input: Any?, replacements: Map<String, String>): Any? {
         }
 
         is Map<*, *> -> {
-            processMap(input, replacements)
+            applyReplacements(input, replacements)
         }
 
         is List<*> -> {
-            processList(input, replacements)
+            applyReplacements(input, replacements)
         }
 
         else -> {
             input
+        }
+    }
+}
+
+/**
+ * Đệ quy thay thế các placeholder trong dữ liệu (String, Map, List) bằng giá trị từ replacements.
+ * Overload cho Map.
+ *
+ * @param inputMap Map dữ liệu đầu vào.
+ * @param replacements Map chứa các cặp placeholder và giá trị thay thế.
+ * @return Map đã được thay thế placeholder và chuyển đổi màu nếu cần.
+ */
+fun applyReplacements(inputMap: Map<*, *>, replacements: Map<String, String>): Map<*, *> {
+    return inputMap.mapValues { (key, value) ->
+        if (key == "color" && value is String) {
+            parseHexColorToInt(value)
+        } else {
+            applyReplacements(value, replacements)
+        }
+    }
+}
+
+/**
+ * Đệ quy thay thế các placeholder trong dữ liệu (String, Map, List) bằng giá trị từ replacements.
+ * Overload cho List.
+ *
+ * @param inputList List dữ liệu đầu vào.
+ * @param replacements Map chứa các cặp placeholder và giá trị thay thế.
+ * @return Chuỗi đã thay thế nếu toàn bộ là String, hoặc List đã thay thế từng phần tử.
+ */
+fun applyReplacements(inputList: List<*>, replacements: Map<String, String>): Any {
+    val isAllStrings = inputList.all { it is String }
+    if (isAllStrings) {
+        val joinedText = inputList.filterIsInstance<String>().joinToString("\n")
+        return replaceAllPlaceholders(joinedText, replacements)
+    } else {
+        return inputList.map { element ->
+            applyReplacements(element, replacements)
         }
     }
 }
@@ -70,42 +108,4 @@ fun replaceAllPlaceholders(text: String, replacements: Map<String, String>): Str
         result = result.replace(placeholder, replaceValue, ignoreCase = false)
     }
     return result
-}
-
-/**
- * Xử lý Map: đệ quy thay thế các placeholder cho từng value trong Map.
- * Đặc biệt, nếu key là "color" và value là String, sẽ convert từ mã màu hex sang int.
- *
- * @param map Map dữ liệu đầu vào.
- * @param replacements Map chứa các cặp placeholder và giá trị thay thế.
- * @return Map đã được thay thế placeholder và chuyển đổi màu nếu cần.
- */
-fun processMap(map: Map<*, *>, replacements: Map<String, String>): Map<*, *> {
-    return map.mapValues { (key, value) ->
-        if (key == "color" && value is String) {
-            parseHexColorToInt(value)
-        } else {
-            applyReplacements(value, replacements)
-        }
-    }
-}
-
-/**
- * Xử lý List: nếu toàn bộ phần tử là String thì join thành 1 chuỗi và thay thế placeholder,
- * ngược lại đệ quy thay thế từng phần tử trong List.
- *
- * @param list List dữ liệu đầu vào.
- * @param replacements Map chứa các cặp placeholder và giá trị thay thế.
- * @return Chuỗi đã thay thế nếu toàn bộ là String, hoặc List đã thay thế từng phần tử.
- */
-fun processList(list: List<*>, replacements: Map<String, String>): Any {
-    val isAllStrings = list.all { it is String }
-    if (isAllStrings) {
-        val joinedText = list.filterIsInstance<String>().joinToString("\n")
-        return replaceAllPlaceholders(joinedText, replacements)
-    } else {
-        return list.map { element ->
-            applyReplacements(element, replacements)
-        }
-    }
 }
