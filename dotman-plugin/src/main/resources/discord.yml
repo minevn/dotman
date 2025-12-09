@@ -36,6 +36,9 @@ discord-hooks:
             - name: "Phương thức"
               value: "%METHOD%"
               inline: true
+            - name: "Server"
+              value: "%SERVER%"
+              inline: true
           thumbnail:
             url: "https://i.imgur.com/tdZ2LxY.png"
           image:
@@ -73,6 +76,9 @@ discord-hooks:
               inline: true
             - name: "Phương thức"
               value: "%METHOD%"
+              inline: true
+            - name: "Server"
+              value: "%SERVER%"
               inline: true
           thumbnail:
             url: "https://i.imgur.com/tdZ2LxY.png"
