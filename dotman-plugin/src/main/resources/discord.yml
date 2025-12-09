@@ -1,7 +1,7 @@
 # Cấu hình Discord Webhook cho DotMan
 # - Trường enabled mặc định là true nếu không khai báo. Đặt false để tạm tắt webhook.
 # - Có thể sử dụng placeholder sau trong content/embeds:
-#   %PLAYER%, %AMOUNT%, %POINT_AMOUNT%, %POINT_UNIT%, %BALANCE%, %METHOD%, %TIME%
+#   %PLAYER%, %AMOUNT%, %POINT_AMOUNT%, %POINT_UNIT%, %BALANCE%, %METHOD%, %TIME%, %SERVER%
 # - Màu (color) phải là chuỗi hex dạng "#RRGGBB" (ví dụ: "#58b9ff"). Nếu sai định dạng sẽ tự chuyển về trắng "#FFFFFF".
 # Bạn có thể dùng https://discohook.org/ để thiết kế
 

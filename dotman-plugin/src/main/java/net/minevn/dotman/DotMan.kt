@@ -154,7 +154,8 @@ class DotMan : MineVNPlugin() {
                 "%POINT_UNIT%" to config.pointUnit,
                 "%BALANCE%" to balance.toString(),
                 "%METHOD%" to type.typeName,
-                "%TIME%" to timeStr
+                "%TIME%" to timeStr,
+                "%SERVER%" to config.server
             )
             discord.webhooks.forEach { sender ->
                 sender.send(replacements)
