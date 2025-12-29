@@ -305,8 +305,8 @@ class AdminCmd {
                     }
 
                     val transactionId = args.first()
-                    val logDao = LogDAO.getInstance()
-                    val transactionDetails = logDao.getTransactionDetailsById(transactionId).firstOrNull()
+                    val logDAO = LogDAO.getInstance()
+                    val transactionDetails = logDAO.getTransactionDetailsById(transactionId).firstOrNull()
                     if (transactionDetails == null) {
                         sender.send("§cMã giao dịch $transactionId không tồn tại hoặc giao dịch đã thất bại.")
                         return@runNotSync
@@ -346,10 +346,8 @@ class AdminCmd {
                                 return@transactional
                             }
 
-                        val playerTotalDonateKey = "DONATE_TOTAL_ALL%"
-                        dataDAO.deleteDataByKeyLike(uuid, playerTotalDonateKey)
-
-                        sender.send("§aĐã xoá dữ liệu top nạp thẻ/milestone của người chơi §b$playerName")
+                        dataDAO.deleteDataByKeyLike(uuid, "%")
+                        sender.send("§aĐã xoá toàn bộ dữ liệu của người chơi §b$playerName")
                     } catch (e: Exception) {
                         sender.send("§cCó lỗi xảy ra: ${e.message} (chi tiết hãy xem Console và báo lỗi cho MineVN Studio)")
                         throw e
