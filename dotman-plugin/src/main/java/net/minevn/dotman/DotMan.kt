@@ -21,6 +21,8 @@ import net.minevn.libs.db.Transaction
 import org.black_ixx.playerpoints.PlayerPoints
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.logging.Level
 
@@ -143,15 +145,20 @@ class DotMan : MineVNPlugin() {
         runNotSync {
             val balance = playerPoints.api.look(uuid)
             val playerName = PlayerInfoDAO.getInstance().getName(uuidStr) ?: return@runNotSync
-            discord.list.forEach {
-                val content = it.contentTmpl
-                    .replace("%PLAYER%", playerName)
-                    .replace("%AMOUNT%", amount.format())
-                    .replace("%POINT_AMOUNT%", pointAmount.toString())
-                    .replace("%POINT_UNIT%", config.pointUnit)
-                    .replace("%BALANCE%", balance.toString())
-                    .replace("%METHOD%", type.typeName)
-                it.send(content)
+            val timeStr = LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy"))
+            val replacements = mapOf(
+                "%PLAYER%" to playerName,
+                "%AMOUNT%" to amount.format(),
+                "%POINT_AMOUNT%" to pointAmount.toString(),
+                "%POINT_UNIT%" to config.pointUnit,
+                "%BALANCE%" to balance.toString(),
+                "%METHOD%" to type.typeName,
+                "%TIME%" to timeStr,
+                "%SERVER%" to config.server
+            )
+            discord.webhooks.forEach { sender ->
+                sender.send(replacements)
             }
         }
     }
