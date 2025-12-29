@@ -341,8 +341,7 @@ class AdminCmd {
 
                 runNotSync { transactional {
                     try {
-                        val uuid = infoDAO.getUUID(playerName)
-                            ?: run {
+                        val uuid = infoDAO.getUUID(playerName) ?: run {
                                 sender.send("§cKhông tìm thấy người chơi $playerName, có thể họ chưa vào server bao giờ?")
                                 return@transactional
                             }
