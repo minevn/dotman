@@ -12,6 +12,7 @@ import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.libs.bukkit.asString
+import net.minevn.libs.bukkit.chat.ChatListener
 import net.minevn.libs.bukkit.command
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -317,7 +318,7 @@ class AdminCmd {
         }
 
         private fun clearPlayerData() = command {
-            val usage = "<tên người chơi> -confirm"
+            val usage = "<tên người chơi>"
             description("Xóa toàn bộ dữ liệu của người chơi")
 
             tabComplete {
@@ -325,47 +326,66 @@ class AdminCmd {
                     args.isEmpty() -> emptyList()
                     args.size == 1 -> Bukkit.getOnlinePlayers().map { it.name }
                         .filter { it.lowercase().startsWith(args.last().lowercase()) }
-                    args.size == 2 && !args.last().startsWith("-") ->
-                        listOf("-confirm").filter { it.startsWith(args.last()) }
                     else -> emptyList()
                 }
             }
 
             action {
-                val infoDao = PlayerInfoDAO.getInstance()
-                val dataDao = PlayerDataDAO.getInstance()
-
                 if (args.isEmpty()) {
                     sender.send("§cCách dùng: /$commandTree $usage")
                     return@action
                 }
-                val playerName = args.first()
-                val hasConfirmFlag = args.any { it.equals("-confirm", ignoreCase = true) }
 
-                if (!hasConfirmFlag) {
-                    sender.send("§cBạn sắp xóa toàn bộ dữ liệu của người chơi §b$playerName§c. " +
-                            "Nếu chắc chắn, hãy thêm §a-confirm§c vào lệnh: /$commandTree $playerName -confirm")
+                val playerName = args.first()
+
+                fun removePlayerData() {
+                    val infoDao = PlayerInfoDAO.getInstance()
+                    val dataDao = PlayerDataDAO.getInstance()
+                    runNotSync {
+                        transactional {
+                            try {
+                                val uuid = infoDao.getUUID(playerName) ?: run {
+                                    sender.send("§cNgười chơi $playerName không tồn tại. Có thể họ chưa vào server bao giờ?")
+                                    return@transactional
+                                }
+
+                                val deletedCount = dataDao.deleteDataByKeyLike(uuid, "%")
+                                if (deletedCount > 0) {
+                                    sender.send("§aĐã xóa toàn bộ dữ liệu của người chơi §b$playerName")
+                                } else {
+                                    sender.send("§cNgười chơi §b$playerName§c hiện không có dữ liệu để xóa")
+                                }
+                            } catch (e: Exception) {
+                                sender.send("§cCó lỗi xảy ra: ${e.message} (chi tiết hãy xem Console và báo lỗi cho MineVN Studio)")
+                                throw e
+                            }
+                        }
+                    }
+                }
+
+                val player = sender as? Player ?: run {
+                    // Nếu lệnh chạy trên console thì bỏ qua confirm
+                    removePlayerData()
                     return@action
                 }
 
-                runNotSync { transactional {
-                    try {
-                        val uuid = infoDao.getUUID(playerName) ?: run {
-                            sender.send("§cNgười chơi $playerName không tồn tại. Có thể họ chưa vào server bao giờ?")
-                            return@transactional
-                        }
+                // Nếu gõ lệnh này trong server thì yêu cầu xác nhận
+                player.send("§cBạn sắp xóa toàn bộ dữ liệu của người chơi §b$playerName§c.")
+                player.send("§eNhập §a§lXACNHAN §eđể xác nhận, hoặc nhập §c§lHUY §eđể hủy bỏ")
 
-                        val deletedCount = dataDao.deleteDataByKeyLike(uuid, "%")
-                        if (deletedCount > 0) {
-                            sender.send("§aĐã xóa toàn bộ dữ liệu của người chơi §b$playerName")
-                        } else {
-                            sender.send("§cNgười chơi §b$playerName§c hiện không có dữ liệu để xóa")
-                        }
-                    } catch (e: Exception) {
-                        sender.send("§cCó lỗi xảy ra: ${e.message} (chi tiết hãy xem Console và báo lỗi cho MineVN Studio)")
-                        throw e
+                ChatListener(player) {
+                    if (message.equals("huy", true)) {
+                        player.send("§aĐã hủy bỏ xóa dữ liệu")
+                        return@ChatListener
                     }
-                }}
+
+                    if (!message.equals("XACNHAN", true)) {
+                        player.send("§cXác nhận không hợp lệ. Đã hủy bỏ xóa dữ liệu")
+                        return@ChatListener
+                    }
+
+                    removePlayerData()
+                }
             }
         }
 
