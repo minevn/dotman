@@ -15,6 +15,7 @@ import net.minevn.libs.bukkit.asString
 import net.minevn.libs.bukkit.chat.ChatListener
 import net.minevn.libs.bukkit.command
 import org.bukkit.Bukkit
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
@@ -321,6 +322,32 @@ class AdminCmd {
             val usage = "<tên người chơi>"
             description("Xóa toàn bộ dữ liệu của người chơi")
 
+            /**
+             * Chức năng chính của command
+             */
+            fun removePlayerData(sender: CommandSender, playerName: String) {
+                val infoDao = PlayerInfoDAO.getInstance()
+                val dataDao = PlayerDataDAO.getInstance()
+                runNotSync { transactional {
+                    try {
+                        val uuid = infoDao.getUUID(playerName) ?: run {
+                            sender.send("§cNgười chơi $playerName không tồn tại. Có thể họ chưa vào server bao giờ?")
+                            return@transactional
+                        }
+
+                        val deletedCount = dataDao.deleteAllDataByUuid(uuid)
+                        if (deletedCount > 0) {
+                            sender.send("§aĐã xóa toàn bộ dữ liệu của người chơi §b$playerName")
+                        } else {
+                            sender.send("§cNgười chơi §b$playerName§c hiện không có dữ liệu để xóa")
+                        }
+                    } catch (e: Exception) {
+                        sender.send("§cCó lỗi xảy ra: ${e.message} (chi tiết hãy xem Console và báo lỗi cho MineVN Studio)")
+                        throw e
+                    }
+                }}
+            }
+
             tabComplete {
                 when {
                     args.isEmpty() -> emptyList()
@@ -337,35 +364,9 @@ class AdminCmd {
                 }
 
                 val playerName = args.first()
-
-                fun removePlayerData() {
-                    val infoDao = PlayerInfoDAO.getInstance()
-                    val dataDao = PlayerDataDAO.getInstance()
-                    runNotSync {
-                        transactional {
-                            try {
-                                val uuid = infoDao.getUUID(playerName) ?: run {
-                                    sender.send("§cNgười chơi $playerName không tồn tại. Có thể họ chưa vào server bao giờ?")
-                                    return@transactional
-                                }
-
-                                val deletedCount = dataDao.deleteAllDataByUuid(uuid)
-                                if (deletedCount > 0) {
-                                    sender.send("§aĐã xóa toàn bộ dữ liệu của người chơi §b$playerName")
-                                } else {
-                                    sender.send("§cNgười chơi §b$playerName§c hiện không có dữ liệu để xóa")
-                                }
-                            } catch (e: Exception) {
-                                sender.send("§cCó lỗi xảy ra: ${e.message} (chi tiết hãy xem Console và báo lỗi cho MineVN Studio)")
-                                throw e
-                            }
-                        }
-                    }
-                }
-
                 val player = sender as? Player ?: run {
                     // Nếu lệnh chạy trên console thì bỏ qua confirm
-                    removePlayerData()
+                    removePlayerData(sender, playerName)
                     return@action
                 }
 
@@ -384,7 +385,7 @@ class AdminCmd {
                         return@ChatListener
                     }
 
-                    removePlayerData()
+                    removePlayerData(sender, playerName)
                 }
             }
         }
