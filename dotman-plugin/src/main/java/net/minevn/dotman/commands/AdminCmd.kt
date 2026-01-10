@@ -317,14 +317,16 @@ class AdminCmd {
         }
 
         private fun clearPlayerData() = command {
-            val usage = "<tên người chơi>"
+            val usage = "<tên người chơi> -confirm"
             description("Xóa toàn bộ dữ liệu của người chơi")
 
             tabComplete {
-                when (args.size) {
-                    0 -> emptyList()
-                    1 -> Bukkit.getOnlinePlayers().map { it.name }
+                when {
+                    args.isEmpty() -> emptyList()
+                    args.size == 1 -> Bukkit.getOnlinePlayers().map { it.name }
                         .filter { it.lowercase().startsWith(args.last().lowercase()) }
+                    args.size == 2 && !args.last().startsWith("-") ->
+                        listOf("-confirm").filter { it.startsWith(args.last()) }
                     else -> emptyList()
                 }
             }
