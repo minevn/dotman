@@ -318,7 +318,7 @@ class AdminCmd {
 
         private fun clearPlayerData() = command {
             val usage = "<tên người chơi>"
-            description("Xoá toàn bộ dữ liệu của người chơi")
+            description("Xóa toàn bộ dữ liệu của người chơi")
 
             tabComplete {
                 when (args.size) {
@@ -341,7 +341,7 @@ class AdminCmd {
                 val hasConfirmFlag = args.any { it.equals("-confirm", ignoreCase = true) }
 
                 if (!hasConfirmFlag) {
-                    sender.send("§cBạn sắp xoá toàn bộ dữ liệu của người chơi §b$playerName§c. " +
+                    sender.send("§cBạn sắp xóa toàn bộ dữ liệu của người chơi §b$playerName§c. " +
                             "Nếu chắc chắn, hãy thêm §a-confirm§c vào lệnh: /$commandTree $playerName -confirm")
                     return@action
                 }
@@ -353,8 +353,12 @@ class AdminCmd {
                             return@transactional
                         }
 
-                        dataDao.deleteDataByKeyLike(uuid, "%")
-                        sender.send("§aĐã xoá toàn bộ dữ liệu của người chơi §b$playerName")
+                        val deletedCount = dataDao.deleteDataByKeyLike(uuid, "%")
+                        if (deletedCount > 0) {
+                            sender.send("§aĐã xóa toàn bộ dữ liệu của người chơi §b$playerName")
+                        } else {
+                            sender.send("§cNgười chơi §b$playerName§c hiện không có dữ liệu để xóa")
+                        }
                     } catch (e: Exception) {
                         sender.send("§cCó lỗi xảy ra: ${e.message} (chi tiết hãy xem Console và báo lỗi cho MineVN Studio)")
                         throw e
