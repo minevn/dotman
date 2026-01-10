@@ -29,7 +29,7 @@ class AdminCmd {
             addSubCommand(history(), "lichsu", "history")
             addSubCommand(napThuCong(), "napthucong", "manual")
             addSubCommand(traCuuGiaoDich(), "tracuugd", "magiaodich")
-            addSubCommand(clearMilestoneData(), "cleardata")
+            addSubCommand(clearPlayerData(), "cleardata")
 
             action {
                 sender.sendMessage("§b§lCác lệnh của plugin DotMan")
@@ -316,7 +316,7 @@ class AdminCmd {
             }
         }
 
-        private fun clearMilestoneData() = command {
+        private fun clearPlayerData() = command {
             val usage = "<tên người chơi>"
             description("Xoá toàn bộ dữ liệu của người chơi")
 
