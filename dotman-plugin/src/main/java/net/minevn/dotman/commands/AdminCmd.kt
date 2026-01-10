@@ -349,7 +349,7 @@ class AdminCmd {
                                     return@transactional
                                 }
 
-                                val deletedCount = dataDao.deleteDataByKeyLike(uuid, "%")
+                                val deletedCount = dataDao.deleteAllDataByUuid(uuid)
                                 if (deletedCount > 0) {
                                     sender.send("§aĐã xóa toàn bộ dữ liệu của người chơi §b$playerName")
                                 } else {

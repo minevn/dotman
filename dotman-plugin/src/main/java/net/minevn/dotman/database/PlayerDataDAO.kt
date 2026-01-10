@@ -14,7 +14,7 @@ abstract class PlayerDataDAO : DataAccess() {
     abstract fun getDataScript(): String
     abstract fun getSumDataScript(): String
     abstract fun getAllDataScript(): String
-    abstract fun deleteDataByKeyLikeScript(): String
+    abstract fun deleteAllDataByUuidScript(): String
 
     fun insertData(uuid: String, key: String, value: Int) {
         insertDataScript().statement {
@@ -70,10 +70,9 @@ abstract class PlayerDataDAO : DataAccess() {
         }
     }
 
-    fun deleteDataByKeyLike(uuid: String, likePattern: String): Int {
-        return deleteDataByKeyLikeScript().statement {
+    fun deleteAllDataByUuid(uuid: String): Int {
+        return deleteAllDataByUuidScript().statement {
             setString(1, uuid)
-            setString(2, likePattern)
             update()
         }
     }

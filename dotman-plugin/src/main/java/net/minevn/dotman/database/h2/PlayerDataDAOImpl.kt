@@ -48,8 +48,8 @@ class PlayerDataDAOImpl : PlayerDataDAO() {
         WHERE "uuid" = ?;
     """.trimIndent()
 
-    override fun deleteDataByKeyLikeScript() = """
+    override fun deleteAllDataByUuidScript() = """
         DELETE FROM "dotman_player_data"
-        WHERE "uuid" = ? AND "key" LIKE ?;
+        WHERE "uuid" = ?;
     """.trimIndent()
 }
