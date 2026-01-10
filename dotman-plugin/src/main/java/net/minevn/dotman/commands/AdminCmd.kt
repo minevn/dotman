@@ -338,13 +338,20 @@ class AdminCmd {
                     return@action
                 }
                 val playerName = args.first()
+                val hasConfirmFlag = args.any { it.equals("-confirm", ignoreCase = true) }
+
+                if (!hasConfirmFlag) {
+                    sender.send("§cBạn sắp xoá toàn bộ dữ liệu của người chơi §b$playerName§c. " +
+                            "Nếu chắc chắn, hãy thêm §a-confirm§c vào lệnh: /$commandTree $playerName -confirm")
+                    return@action
+                }
 
                 runNotSync { transactional {
                     try {
                         val uuid = infoDao.getUUID(playerName) ?: run {
-                                sender.send("§cKhông tìm thấy người chơi $playerName, có thể họ chưa vào server bao giờ?")
-                                return@transactional
-                            }
+                            sender.send("§cNgười chơi $playerName không tồn tại. Có thể họ chưa vào server bao giờ?")
+                            return@transactional
+                        }
 
                         dataDao.deleteDataByKeyLike(uuid, "%")
                         sender.send("§aĐã xoá toàn bộ dữ liệu của người chơi §b$playerName")
