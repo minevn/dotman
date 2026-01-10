@@ -305,8 +305,8 @@ class AdminCmd {
                     }
 
                     val transactionId = args.first()
-                    val logDAO = LogDAO.getInstance()
-                    val transactionDetails = logDAO.getTransactionDetailsById(transactionId).firstOrNull()
+                    val logDao = LogDAO.getInstance()
+                    val transactionDetails = logDao.getTransactionDetailsById(transactionId).firstOrNull()
                     if (transactionDetails == null) {
                         sender.send("§cMã giao dịch $transactionId không tồn tại hoặc giao dịch đã thất bại.")
                         return@runNotSync
@@ -318,10 +318,10 @@ class AdminCmd {
 
         private fun clearMilestoneData() = command {
             val usage = "<tên người chơi>"
-            description("Xoá dữ liệu top nạp thẻ/milestone của người chơi")
+            description("Xoá toàn bộ dữ liệu của người chơi")
 
             tabComplete {
-                when(args.size) {
+                when (args.size) {
                     0 -> emptyList()
                     1 -> Bukkit.getOnlinePlayers().map { it.name }
                         .filter { it.lowercase().startsWith(args.last().lowercase()) }
@@ -330,8 +330,8 @@ class AdminCmd {
             }
 
             action {
-                val infoDAO = PlayerInfoDAO.getInstance()
-                val dataDAO = PlayerDataDAO.getInstance()
+                val infoDao = PlayerInfoDAO.getInstance()
+                val dataDao = PlayerDataDAO.getInstance()
 
                 if (args.isEmpty()) {
                     sender.send("§cCách dùng: /$commandTree $usage")
@@ -341,12 +341,12 @@ class AdminCmd {
 
                 runNotSync { transactional {
                     try {
-                        val uuid = infoDAO.getUUID(playerName) ?: run {
+                        val uuid = infoDao.getUUID(playerName) ?: run {
                                 sender.send("§cKhông tìm thấy người chơi $playerName, có thể họ chưa vào server bao giờ?")
                                 return@transactional
                             }
 
-                        dataDAO.deleteDataByKeyLike(uuid, "%")
+                        dataDao.deleteDataByKeyLike(uuid, "%")
                         sender.send("§aĐã xoá toàn bộ dữ liệu của người chơi §b$playerName")
                     } catch (e: Exception) {
                         sender.send("§cCó lỗi xảy ra: ${e.message} (chi tiết hãy xem Console và báo lỗi cho MineVN Studio)")
