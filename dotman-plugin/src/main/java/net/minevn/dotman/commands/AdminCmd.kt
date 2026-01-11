@@ -5,14 +5,17 @@ import net.minevn.dotman.DotMan.Companion.transactional
 import net.minevn.dotman.TopupType
 import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.database.LogDAO
+import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.database.PlayerInfoDAO
 import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.libs.bukkit.asString
+import net.minevn.libs.bukkit.chat.ChatListener
 import net.minevn.libs.bukkit.command
 import org.bukkit.Bukkit
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
@@ -28,6 +31,7 @@ class AdminCmd {
             addSubCommand(history(), "lichsu", "history")
             addSubCommand(napThuCong(), "napthucong", "manual")
             addSubCommand(traCuuGiaoDich(), "tracuugd", "magiaodich")
+            addSubCommand(clearPlayerData(), "cleardata")
 
             action {
                 sender.sendMessage("§b§lCác lệnh của plugin DotMan")
@@ -310,6 +314,78 @@ class AdminCmd {
                         return@runNotSync
                     }
                     transactionDetails.forEach(sender::sendMessage)
+                }
+            }
+        }
+
+        private fun clearPlayerData() = command {
+            val usage = "<tên người chơi>"
+            description("Xóa toàn bộ dữ liệu của người chơi")
+
+            /**
+             * Chức năng chính của command
+             */
+            fun removePlayerData(sender: CommandSender, playerName: String) {
+                val infoDao = PlayerInfoDAO.getInstance()
+                val dataDao = PlayerDataDAO.getInstance()
+                runNotSync { transactional {
+                    try {
+                        val uuid = infoDao.getUUID(playerName) ?: run {
+                            sender.send("§cNgười chơi $playerName không tồn tại. Có thể họ chưa vào server bao giờ?")
+                            return@transactional
+                        }
+
+                        val deletedCount = dataDao.deleteAllDataByUuid(uuid)
+                        if (deletedCount > 0) {
+                            sender.send("§aĐã xóa toàn bộ dữ liệu của người chơi §b$playerName")
+                        } else {
+                            sender.send("§cNgười chơi §b$playerName§c hiện không có dữ liệu để xóa")
+                        }
+                    } catch (e: Exception) {
+                        sender.send("§cCó lỗi xảy ra: ${e.message} (chi tiết hãy xem Console và báo lỗi cho MineVN Studio)")
+                        throw e
+                    }
+                }}
+            }
+
+            tabComplete {
+                when {
+                    args.isEmpty() -> emptyList()
+                    args.size == 1 -> Bukkit.getOnlinePlayers().map { it.name }
+                        .filter { it.lowercase().startsWith(args.last().lowercase()) }
+                    else -> emptyList()
+                }
+            }
+
+            action {
+                if (args.isEmpty()) {
+                    sender.send("§cCách dùng: /$commandTree $usage")
+                    return@action
+                }
+
+                val playerName = args.first()
+                val player = sender as? Player ?: run {
+                    // Nếu lệnh chạy trên console thì bỏ qua confirm
+                    removePlayerData(sender, playerName)
+                    return@action
+                }
+
+                // Nếu gõ lệnh này trong server thì yêu cầu xác nhận
+                player.send("§cBạn sắp xóa toàn bộ dữ liệu của người chơi §b$playerName§c.")
+                player.send("§eNhập §a§lXACNHAN §eđể xác nhận, hoặc nhập §c§lHUY §eđể hủy bỏ")
+
+                ChatListener(player) {
+                    if (message.equals("huy", true)) {
+                        player.send("§aĐã hủy bỏ xóa dữ liệu")
+                        return@ChatListener
+                    }
+
+                    if (!message.equals("XACNHAN", true)) {
+                        player.send("§cXác nhận không hợp lệ. Đã hủy bỏ xóa dữ liệu")
+                        return@ChatListener
+                    }
+
+                    removePlayerData(sender, playerName)
                 }
             }
         }

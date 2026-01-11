@@ -40,4 +40,9 @@ class PlayerDataDAOImpl : PlayerDataDAO() {
         FROM `dotman_player_data`
         WHERE `uuid` = ?;
     """.trimIndent()
+
+    override fun deleteAllDataByUuidScript() = """
+        DELETE FROM `dotman_player_data`
+        WHERE `uuid` = ?;
+    """.trimIndent()
 }
