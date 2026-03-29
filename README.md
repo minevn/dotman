@@ -43,15 +43,16 @@ Hướng dẫn sử dụng
 
 **Placeholder:**
 
-Placeholder có thể sử dụng để hiển thị top nạp
+Placeholder có thể sử dụng để hiển thị top nạp và dữ liệu cá nhân
 
-| Placeholder                          | Chức năng                         | Ghi chú                                                                                                           |
-|--------------------------------------|-----------------------------------|-------------------------------------------------------------------------------------------------------------------|
-| %DOTMAN_TOP_DONATE_TOTAL_XXX_PLAYER% | Trả về tên người chơi đứng top    | XXX là thứ hạng<br>✨Premium: Thay đổi `TOP` thành `TOPWEEK` hoặc `TOPMONTH` để trả về dữ liệu top tuần hoặc tháng |
-| %DOTMAN_TOP_DONATE_TOTAL_XXX_VALUE%  | Trả về giá trị của người chơi đó  | XXX là thứ hạng<br>✨Premium: Thay đổi `TOP` thành `TOPWEEK` hoặc `TOPMONTH` để trả về dữ liệu top tuần hoặc tháng |
-| %DOTMAN_DATA_DONATE_TOTAL%           | Trả về số point người chơi đã nạp | Thay đổi `DATA` thành `DATAWEEK` hoặc `DATAMONTH` để trả về dữ liệu top tuần hoặc tháng                           |
+| Placeholder                              | Chức năng                                      | Ghi chú                                                                                                                                                                          |
+|------------------------------------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| %DOTMAN_TOP_DONATE_TOTAL_XXX_PLAYER%     | Trả về tên người chơi đứng top XXX            | Thay `TOP` thành `TOPWEEK`, `TOPMONTH`, `TOPDAY` để lấy top tuần/tháng/ngày<br>Dùng `TOPFRAME_<frameId>` để lấy top theo khung giờ tuỳ chỉnh (✨ premium)                      |
+| %DOTMAN_TOP_DONATE_TOTAL_XXX_VALUE%      | Trả về giá trị nạp của người đứng top XXX     | Thay `TOP` thành `TOPWEEK`, `TOPMONTH`, `TOPDAY` để lấy top tuần/tháng/ngày<br>Dùng `TOPFRAME_<frameId>` để lấy top theo khung giờ tuỳ chỉnh (✨ premium)                      |
+| %DOTMAN_DATA_DONATE_TOTAL%               | Trả về số point người chơi hiện tại đã nạp    | Thay `DATA` thành `DATAWEEK`, `DATAMONTH`, `DATADAY` để lấy dữ liệu tuần/tháng/ngày<br>Dùng `DATAFRAME_<frameId>` để lấy dữ liệu theo khung giờ tuỳ chỉnh (✨ premium)        |
+| %DOTMAN_MASTERDATA_DONATE_TOTAL%         | Trả về tổng point toàn server đã nạp          | Thay `MASTERDATA` thành `MASTERDATAWEEK`, `MASTERDATAMONTH`, `MASTERDATADAY` để lấy dữ liệu tuần/tháng/ngày<br>Dùng `MASTERDATAFRAME_<frameId>` cho khung giờ tuỳ chỉnh (✨ premium) |
 
-> Ví dụ: `%DOTMAN_TOP_DONATE_TOTAL_1_PLAYER%` sẽ trả về tên của người đứng top 1 nạp thẻ, `%DOTMAN_TOP_DONATE_TOTAL_1_VALUE%` sẽ trả về số tiền nạp của người đứng top 1
+> Ví dụ: `%DOTMAN_TOP_DONATE_TOTAL_1_PLAYER%` trả về tên người đứng top 1, `%DOTMAN_TOP_DONATE_TOTAL_1_VALUE%` trả về số tiền nạp của người đó, `%DOTMAN_DATA_DONATE_TOTAL%` trả về số point cá nhân đã nạp tổng cộng
 
 **Config plugin:**
 
