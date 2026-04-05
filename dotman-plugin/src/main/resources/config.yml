@@ -7,7 +7,9 @@ server: 'server'
 point-unit: 'xu'
 
 # API gạch thẻ sử dụng
-provider: thesieutoc
+# Hỗ trợ các API sau: card2k, gamebank, gachthe1s, gachthe5s
+# MineVN khuyên dùng: card2k
+provider: card2k
 
 # Lượng points được cộng ứng với giá trị nạp
 donate-amounts:
