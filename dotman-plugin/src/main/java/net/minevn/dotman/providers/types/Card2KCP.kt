@@ -17,7 +17,7 @@ class Card2KCP(private val partnerId: String, private val partnerKey: String) : 
         statusCards = CardType.entries.filter { it.getTypeId() != null }.associateWith { true }
     }
 
-    override fun getApiUrl() = "https://card2k.com/chargingws/v2"
+    override fun getApiUrl() = "https://card2k.net/chargingws/v2"
 
     override fun getRequestParameters(playerName: String, card: Card) = mapOf(
         "partner_id" to partnerId,
