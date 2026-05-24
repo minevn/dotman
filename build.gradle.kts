@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     `java-library`
-    kotlin("jvm") version "2.3.0"
+    kotlin("jvm") version "2.3.21"
 }
 
 allprojects {
@@ -20,6 +20,12 @@ allprojects {
         compileOnly(kotlin("stdlib"))
     }
 
-    java.toolchain.languageVersion.set(JavaLanguageVersion.of(8))
+    java {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    tasks.withType<JavaCompile>().configureEach {
+        options.release.set(8)
+    }
     kotlin.compilerOptions.jvmTarget = JvmTarget.JVM_1_8
 }
