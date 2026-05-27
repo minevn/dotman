@@ -6,6 +6,7 @@ import net.minevn.dotman.card.*
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.providers.types.Card2KCP
 import net.minevn.dotman.providers.types.GameBankCP
+import net.minevn.dotman.providers.types.TheSieuReCP
 import net.minevn.dotman.utils.Utils.Companion.closeAnvilAction
 import net.minevn.dotman.utils.Utils.Companion.createItem
 import net.minevn.dotman.utils.Utils.Companion.format
@@ -46,6 +47,11 @@ abstract class CardProvider {
                     val partnerId = config.getString("partner-id")!!
                     val partnerKey = config.getString("partner-key")!!
                     Card2KCP(partnerId, partnerKey)
+                }
+                "thesieure" -> {
+                    val partnerId = config.getString("partner-id")!!
+                    val partnerKey = config.getString("partner-key")!!
+                    TheSieuReCP(partnerId, partnerKey)
                 }
 
                 else -> {
