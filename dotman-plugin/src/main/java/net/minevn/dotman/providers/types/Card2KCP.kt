@@ -63,8 +63,6 @@ class Card2KCP(private val partnerId: String, private val partnerKey: String) : 
         else -> null
     }
 
-    private fun CardPrice.getPriceId() = (CardPrice.entries.indexOf(this) + 1).toString()
-
     override fun CardWaiting.isProcessed(): Boolean {
         val card = toCard()
         val params = mapOf(
