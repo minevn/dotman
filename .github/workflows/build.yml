@@ -3,15 +3,20 @@ on:
   workflow_dispatch:
   pull_request:
   push:
+    branches:
+      - master
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-    if: (github.event_name == 'pull_request' && github.event.action == 'labeled') || github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: gradle/wrapper-validation-action@v1
-      - uses: actions/setup-java@v4.0.0
+      - uses: actions/checkout@v6.0.2
+      - uses: gradle/actions/wrapper-validation@v6
+      - uses: actions/setup-java@v5.2.0
         with:
           distribution: temurin
           java-version: 8
@@ -30,7 +35,7 @@ jobs:
           cp ./dotman-plugin/build/libs/DotMan.jar ./target/DotMan.jar
           wget -O ./target/MineVNLib.jar "https://github.com/minevn/minevn-library/releases/download/${{ steps.minevnlib-plugin.outputs.release }}/MineVNLib.jar"
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: "DotMan"
           path: ./target/
