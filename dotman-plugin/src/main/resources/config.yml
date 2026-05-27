@@ -7,7 +7,7 @@ server: 'server'
 point-unit: 'xu'
 
 # API gạch thẻ sử dụng
-# Hỗ trợ các API sau: card2k, gamebank, gachthe1s, gachthe5s
+# Hỗ trợ các API sau: card2k, gamebank
 # MineVN khuyên dùng: card2k
 provider: card2k
 
