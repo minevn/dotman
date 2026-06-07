@@ -15,6 +15,8 @@ class Expansion : PlaceholderExpansion() {
 
     override fun getVersion() = DotMan.instance.description.version.trim()
 
+    override fun persist() = true
+
     @Suppress("NAME_SHADOWING")
     override fun onPlaceholderRequest(player: Player?, params: String): String? {
         val params = params.lowercase()
