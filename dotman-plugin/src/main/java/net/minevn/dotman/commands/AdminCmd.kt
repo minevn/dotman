@@ -7,6 +7,8 @@ import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.database.PlayerInfoDAO
+import net.minevn.dotman.database.convert.DbConversionService
+import net.minevn.dotman.database.convert.DbConvertEngine
 import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
@@ -32,6 +34,7 @@ class AdminCmd {
             addSubCommand(napThuCong(), "napthucong", "manual")
             addSubCommand(traCuuGiaoDich(), "tracuugd", "magiaodich")
             addSubCommand(clearPlayerData(), "cleardata")
+            addSubCommand(dbConvert(), "dbconvert")
 
             action {
                 sender.sendMessage("§b§lCác lệnh của plugin DotMan")
@@ -399,6 +402,104 @@ class AdminCmd {
         private fun MutableList<String>.removeFirstArgumentOrNull(): String? {
             if (isEmpty() || first().matches("-[a-z]".toRegex())) return null
             return removeFirst()
+        }
+
+        private fun dbConvert() = command {
+            val usage = "<database nguồn> <database đích>"
+            description("Chuyển đổi dữ liệu database H2 <-> MySQL/MariaDB")
+
+            tabComplete {
+                val current = DbConvertEngine.from(DotMan.instance.config.config.getString("database.engine"))
+                when (args.size) {
+                    1 -> availableSources(current).filter { it.startsWith(args.last().lowercase()) }
+                    2 -> availableTargets(args.firstOrNull(), current).filter { it.startsWith(args.last().lowercase()) }
+                    else -> emptyList()
+                }
+            }
+
+            action {
+                if (args.size < 2) {
+                    sender.send("§cCách dùng: /$commandTree $usage")
+                    return@action
+                }
+
+                if (DbConversionService.isRunning()) {
+                    sender.send("§cĐang có một quá trình chuyển đổi database khác chạy.")
+                    return@action
+                }
+
+                val player = sender as? Player ?: run {
+                    sender.send("§cVào server rồi thực hiện lệnh này.")
+                    return@action
+                }
+
+                val source = DbConvertEngine.from(args[0]) ?: run {
+                    sender.send("§cDatabase nguồn không hợp lệ. Chỉ chấp nhận h2, mysql, mariadb.")
+                    return@action
+                }
+                val target = DbConvertEngine.from(args[1]) ?: run {
+                    sender.send("§cDatabase đích không hợp lệ. Chỉ chấp nhận h2, mysql, mariadb.")
+                    return@action
+                }
+                val current = DbConvertEngine.from(DotMan.instance.config.config.getString("database.engine")) ?: DbConvertEngine.H2
+                val error = DbConvertEngine.validate(source, target, current)
+                if (error != null) {
+                    sender.send(error)
+                    return@action
+                }
+
+                player.send("""
+                    §eBạn sắp chuyển đổi database từ §b§n${source.typeName}§f -> §a§n${target.typeName}
+                    §r
+                    §c§lLƯU Ý:
+                    §e- Hãy nhớ backup dữ liệu trước khi tiếp tục.
+                    §e- Dữ liệu ở database đích §b(${target.typeName})§e sẽ bị ghi đè (nếu có).
+                    §e- Chỉ thực hiện khi server không có người chơi.
+                    §e- Quá trình chuyển đổi có thể mất vài phút, hãy kiên nhẫn chờ đợi và đừng tắt server trong quá trình này.
+                    §e- Sau khi chuyển đổi xong, hãy nhớ cập nhật lại cấu hình database trong file config.yml và restart server để áp dụng.
+                    §r
+                    §eNhập §a§lXACNHAN §eđể bắt đầu, hoặc nhập §c§lHUY §eđể hủy bỏ.
+                """.trimIndent())
+
+                ChatListener(player) {
+                    if (message.equals("huy", true)) {
+                        player.send("§aĐã hủy bỏ chuyển đổi database.")
+                        return@ChatListener
+                    }
+
+                    if (!message.equals("XACNHAN", true)) {
+                        player.send("§cXác nhận không hợp lệ. Đã hủy bỏ chuyển đổi database.")
+                        return@ChatListener
+                    }
+
+                    DbConversionService.start(player, source, target)
+                }
+            }
+        }
+
+        private fun availableSources(current: DbConvertEngine?): List<String> {
+            if (current?.isSql() == true) {
+                return listOf("H2", current.typeName)
+            }
+
+            return emptyList()
+        }
+
+        private fun availableTargets(source: String?, current: DbConvertEngine?): List<String> {
+            val sourceEngine = DbConvertEngine.from(source)
+            if (sourceEngine == DbConvertEngine.H2) {
+                if (current?.isSql() == true) {
+                    return listOf(current.typeName)
+                }
+
+                return emptyList()
+            }
+
+            if (sourceEngine?.isSql() == true) {
+                return listOf("H2")
+            }
+
+            return emptyList()
         }
     }
 }
