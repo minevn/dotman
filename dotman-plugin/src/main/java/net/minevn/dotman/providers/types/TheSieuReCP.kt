@@ -11,23 +11,23 @@ import net.minevn.libs.get
 import net.minevn.libs.parseJson
 import org.bukkit.entity.Player
 
-class Card2KCP(private val partnerId: String, private val partnerKey: String) : CardProvider() {
+class TheSieuReCP(private val partnerId: String, private val partnerKey: String) : CardProvider() {
 
     init {
         statusCards = CardType.entries.filter { it.getTypeId() != null }.associateWith { true }
     }
 
-    override fun getApiUrl() = "https://card2k.net/chargingws/v2"
+    override fun getApiUrl() = "https://thesieure.com/chargingws/v2"
 
     override fun getRequestParameters(playerName: String, card: Card) = mapOf(
-        "partner_id" to partnerId,
+        "telco" to card.type.getTypeId()!!,
+        "code" to card.pin,
+        "serial" to card.seri,
+        "amount" to card.price.value.toString(),
         "request_id" to ('A'..'Z').let {
             charpool -> (1..10).map { charpool.random() }.joinToString("") + (0..9).random()
         },
-        "code" to card.pin,
-        "serial" to card.seri,
-        "telco" to card.type.getTypeId()!!,
-        "amount" to card.price.value.toString(),
+        "partner_id" to partnerId,
         "sign" to (partnerKey + card.pin + card.seri).md5(),
         "command" to "charging"
     )
@@ -66,12 +66,12 @@ class Card2KCP(private val partnerId: String, private val partnerKey: String) : 
     override fun CardWaiting.isProcessed(): Boolean {
         val card = toCard()
         val params = mapOf(
-            "partner_id" to partnerId,
-            "request_id" to transactionId,
             "telco" to card.type.getTypeId()!!,
-            "amount" to price.toString(),
             "code" to card.pin,
             "serial" to card.seri,
+            "amount" to price.toString(),
+            "request_id" to transactionId,
+            "partner_id" to partnerId,
             "sign" to (partnerKey + card.pin + card.seri).md5(),
             "command" to "check"
         )
