@@ -13,7 +13,9 @@ class Expansion : PlaceholderExpansion() {
 
     override fun getAuthor() = "MineVN"
 
-    override fun getVersion() = "1.0"
+    override fun getVersion() = DotMan.instance.description.version.trim()
+
+    override fun persist() = true
 
     @Suppress("NAME_SHADOWING")
     override fun onPlaceholderRequest(player: Player?, params: String): String? {
