@@ -1,8 +1,8 @@
-# Cấu hình Discord Webhook cho DotMan
-# - Trường enabled mặc định là true nếu không khai báo. Đặt false để tạm tắt webhook.
+# Cấu hình gửi thông báo nạp tiền qua Discord Webhook
 # - Có thể sử dụng placeholder sau trong content/embeds:
 #   %PLAYER%, %AMOUNT%, %POINT_AMOUNT%, %POINT_UNIT%, %BALANCE%, %METHOD%, %TIME%, %SERVER%
 # - Màu (color) phải là chuỗi hex dạng "#RRGGBB" (ví dụ: "#58b9ff"). Nếu sai định dạng sẽ tự chuyển về trắng "#FFFFFF".
+# - Nếu đã setup sẵn username và avatar bên trong Discord (Integrations -> Webhooks), hãy bỏ trống "" mục username và avatar_url.
 # Bạn có thể dùng https://discohook.org/ để thiết kế
 
 discord-hooks:
@@ -51,8 +51,8 @@ discord-hooks:
   - enabled: false
     url: https://discord.com/api/webhooks/123456/webhook-token
     payload:
-      username: "MineVN"
-      avatar_url: "https://i.imgur.com/tdZ2LxY.png"
+      username: ""
+      avatar_url: ""
       content:
         - "Thông báo nạp tiền thành công!"
         - "Thời gian: %TIME%"
