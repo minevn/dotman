@@ -20,6 +20,7 @@ class Language : FileConfig("messages") {
     val cardChargedWithExtraPlanned = get("card-charged-with-extra-planned")
     val cardChargedSent = getList("card-charged-sent")
     val cardChargedAnnounce = getList("card-charged-announce")
+    val manualChargedAnnounce = getList("manual-charged-announce")
     val cardChargedFailed = getList("card-charged-failed")
     val cardChargedError = getList("card-charged-error")
 

@@ -93,7 +93,7 @@ database:
     password: '123'
     database: dotman
 
-# Bật/tắt tính năng thông báo người chơi khác khi nạp thẻ thành công
+# Bật/tắt tính năng thông báo người chơi khác khi nạp thẻ hoặc nạp thủ công thành công
 announce-charge: true
 
 # Bật/tắt tính năng kiểm tra cập nhật phiên bản mới

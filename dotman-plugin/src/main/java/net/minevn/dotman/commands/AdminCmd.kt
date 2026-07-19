@@ -281,6 +281,16 @@ class AdminCmd {
                         sender.send("§aĐã nạp §d${amount.format()} VNĐ §acho người chơi §b$playerName " +
                                 "§avà nhận §b${point.toInt()} §apoint")
 
+                        if (cfg.announceCharge) {
+                            main.language.manualChargedAnnounce.forEach {
+                                it  .replace("%PLAYER%", playerName)
+                                    .replace("%CARD_PRICE%", amount.toString())
+                                    .replace("%AMOUNT%", point.toInt().toString())
+                                    .replace("%POINT_UNIT%", cfg.pointUnit)
+                                    .apply { Bukkit.broadcastMessage(this) }
+                            }
+                        }
+
                         if (extraRatePercent != 0) {
                             sender.send("§aNgười chơi được khuyến mãi §b$extraRatePercent% §agiá trị nạp.")
                             if (plannedExtraName != null) {

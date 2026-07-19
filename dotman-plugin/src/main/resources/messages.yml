@@ -25,6 +25,9 @@ card-charged-sent:
 card-charged-announce:
   - '%PREFIX% &aNgười chơi &b%PLAYER% &ađã nạp thẻ mệnh giá &e%CARD_PRICE% VNĐ &avà nhận được &e%AMOUNT% %POINT_UNIT%'
 
+manual-charged-announce:
+  - '%PREFIX% &aNgười chơi &b%PLAYER% &ađã nạp &e%CARD_PRICE% VNĐ &avà nhận được &e%AMOUNT% %POINT_UNIT%'
+
 card-charged-failed:
   - '%PREFIX% &cNạp thẻ thất bại: %ERROR%'
   - '&cVui lòng liên hệ với admin để được hỗ trợ.'
