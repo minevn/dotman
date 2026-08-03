@@ -6,10 +6,10 @@ repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://repo.codemc.org/repository/maven-public/")
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
-    maven("https://repo.dmulloy2.net/repository/public/")
     maven("https://jitpack.io")
     maven("https://repo.extendedclip.com/releases")
     maven("https://repo.minevn.net/releases/")
+    maven("https://repo.rosewooddev.io/repository/public/")
 }
 
 dependencies {
@@ -17,10 +17,10 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
 
     // libs
-    compileOnly("net.minevn:minevnlib-plugin:26.1")
-    compileOnly("minevn.depend:playerpoints:3.2.6")
-    compileOnly("me.clip:placeholderapi:2.11.6")
-    implementation("org.bstats:bstats-bukkit:3.0.2")
+    compileOnly("net.minevn:minevnlib-plugin:26.1.2")
+    compileOnly("org.black_ixx:playerpoints:3.3.5")
+    compileOnly("me.clip:placeholderapi:2.12.3")
+    implementation("org.bstats:bstats-bukkit:3.2.1")
 
     // JUnit
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
