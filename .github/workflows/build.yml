@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-java@v5.2.0
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
           cache: "gradle"
 
       - name: Build DotMan
@@ -32,4 +32,4 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         with:
           name: "DotMan"
-          path: ./dotman-plugin/build/libs/*.jar
+          path: ./dotman-plugin/build/libs/DotMan.jar
