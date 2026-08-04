@@ -1,3 +1,5 @@
+import org.gradle.api.attributes.java.TargetJvmVersion
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -21,8 +23,17 @@ allprojects {
     }
 
     java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    configurations.configureEach {
+        if (isCanBeResolved) {
+            attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
+        }
     }
 
     tasks.withType<JavaCompile>().configureEach {
