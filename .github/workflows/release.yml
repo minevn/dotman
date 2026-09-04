@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-java@v5.2.0
         with:
           distribution: temurin
-          java-version: 8
+          java-version: 21
           cache: "gradle"
 
       - name: Build DotMan
@@ -25,4 +25,4 @@ jobs:
       - name: Attach JARs to the Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ./dotman-plugin/build/libs/*.jar
+          files: ./dotman-plugin/build/libs/DotMan.jar
