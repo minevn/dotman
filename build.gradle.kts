@@ -21,14 +21,14 @@ allprojects {
     }
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
         disableAutoTargetJvm()
     }
 
     tasks.withType<JavaCompile>().configureEach {
-        options.release.set(17)
+        options.release.set(8)
     }
 
-    kotlin.compilerOptions.jvmTarget = JvmTarget.JVM_17
+    kotlin.compilerOptions.jvmTarget = JvmTarget.JVM_1_8
 }
