@@ -25,4 +25,4 @@ jobs:
       - name: Attach JARs to the Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ./dotman-plugin/build/libs/*.jar
+          files: ./dotman-plugin/build/libs/DotMan.jar
