@@ -54,3 +54,21 @@ transaction-id-details-output:
 update-available: '%PREFIX% &aĐã có phiên bản mới: &e%NEW_VERSION% &a(phiên bản hiện tại &e%CURRENT_VERSION%&a).'
 update-available-link: '&aTải về tại: &e%URL%'
 update-latest: '%PREFIX% &aBạn đang sử dụng phiên bản mới nhất.'
+
+# Phân trang dùng chung cho các lệnh người chơi.
+# %FIRST% %PREV% %NEXT% %LAST% là nút click được; nút không có đích (đang ở trang đầu/cuối)
+# hiện bằng bản -disabled và không click được.
+pagination-template: '%FIRST% %PREV% &eTrang %PAGE%/%MAX_PAGE% %NEXT% %LAST%'
+pagination-first: '&a<<'
+pagination-prev: '&a<'
+pagination-next: '&a>'
+pagination-last: '&a>>'
+pagination-first-disabled: '&8<<'
+pagination-prev-disabled: '&8<'
+pagination-next-disabled: '&8>'
+pagination-last-disabled: '&8>>'
+# Hover của từng nút; có thể dùng %PAGE% để hiện số trang đích
+pagination-first-hover: '&7Trang đầu'
+pagination-prev-hover: '&7Trang trước'
+pagination-next-hover: '&7Trang sau'
+pagination-last-hover: '&7Trang cuối'
