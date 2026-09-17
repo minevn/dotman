@@ -20,7 +20,8 @@ import java.time.ZonedDateTime
 class PlannedExtrasConfig : FileConfig("khuyenmai") {
 
     private var components: List<PlannedExtra> = emptyList()
-    private val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm")
+    // isLenient = false: ngày sai (31/09, 25:00) báo lỗi thay vì tự cuộn sang ngày/tháng kế
+    private val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm").apply { isLenient = false }
 
     /**
      * Tên hiển thị cho khuyến mãi legacy trong config.yml (extra-rate), vì loại này không có tên
