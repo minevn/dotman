@@ -68,7 +68,7 @@ tasks {
 
     shadowJar {
         relocate("org.bstats", "net.minevn.bstats")
-        archiveFileName.set("$jarName.jar")
+        archiveFileName.set("$jarName-$version.jar")
     }
 
     assemble {
