@@ -48,7 +48,7 @@ tasks {
             doLast {
                 println(path)
                 copy {
-                    from("build/libs/$jarName.jar")
+                    from("build/libs/$jarName-$version.jar")
                     into(path)
                 }
                 println("Copied")
