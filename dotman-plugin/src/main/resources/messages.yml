@@ -72,3 +72,29 @@ pagination-first-hover: '&7Trang đầu'
 pagination-prev-hover: '&7Trang trước'
 pagination-next-hover: '&7Trang sau'
 pagination-last-hover: '&7Trang cuối'
+
+# Định dạng khoảng thời gian, dùng cho %REMAINING%/%DURATION% ở các tính năng khuyến mãi
+duration-day: '%N% ngày'
+duration-hour: '%N% giờ'
+duration-minute: '%N% phút'
+duration-now: 'dưới 1 phút'
+
+# Lệnh /khuyenmai - danh sách khuyến mãi đang và sắp diễn ra
+khuyenmai-usage: '%PREFIX% &cCách dùng: &f/khuyenmai [trang]'
+khuyenmai-empty: '%PREFIX% &7Hiện chưa có chương trình khuyến mãi nào.'
+khuyenmai-header: '%PREFIX% &e&lKhuyến mãi nạp thẻ &7(%PAGE%/%MAX_PAGE%)'
+
+# Mỗi khuyến mãi. %STATUS% là khuyenmai-status-*, %REPEAT% là khuyenmai-repeat hoặc rỗng,
+# %TIME_NOTE% là khuyenmai-note-* (còn bao lâu / bắt đầu sau bao lâu), rỗng khi không xác định được mốc
+khuyenmai-entry:
+  - ''
+  - '%STATUS% &f%NAME%%REPEAT%'
+  - '  &b+%RATE%% &7giá trị nạp%TIME_NOTE%'
+  - '  &7%FROM% &8→ &7%TO%'
+
+khuyenmai-status-active: '&a●'
+khuyenmai-status-upcoming: '&e○'
+khuyenmai-repeat: '  &8(lặp lại)'
+khuyenmai-note-active: ' &8· &acòn %DURATION%'
+khuyenmai-note-upcoming: ' &8· &ebắt đầu sau %DURATION%'
+khuyenmai-time-unknown: 'không xác định'
