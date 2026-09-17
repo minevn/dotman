@@ -435,7 +435,6 @@ class PlannedExtras : FileConfig("khuyenmai") {
 
     companion object {
         private const val MINUTES_PER_DAY = 24 * 60
-        private const val TIME_UNKNOWN = "không xác định"
 
         private val HOURS_REGEX = Regex("^(\\d{1,2}):(\\d{2})-(\\d{1,2}):(\\d{2})$")
 
@@ -488,12 +487,12 @@ class PlannedExtras : FileConfig("khuyenmai") {
         internal fun formatLine(line: String, announcement: Announcement, now: ZonedDateTime, lang: Language): String {
             val remaining = announcement.to
                 ?.let { DurationFormat.format(it.toInstant().toEpochMilli() - now.toInstant().toEpochMilli(), lang) }
-                ?: TIME_UNKNOWN
+                ?: lang.khuyenmaiTimeUnknown
             return line
                 .replace("%NAME%", announcement.name.color() + "§r")
                 .replace("%RATE%", announcement.ratePercent.toString())
-                .replace("%FROM%", announcement.from?.format(DISPLAY_FORMAT) ?: TIME_UNKNOWN)
-                .replace("%TO%", announcement.to?.format(DISPLAY_FORMAT) ?: TIME_UNKNOWN)
+                .replace("%FROM%", announcement.from?.format(DISPLAY_FORMAT) ?: lang.khuyenmaiTimeUnknown)
+                .replace("%TO%", announcement.to?.format(DISPLAY_FORMAT) ?: lang.khuyenmaiTimeUnknown)
                 .replace("%REMAINING%", remaining)
         }
 
