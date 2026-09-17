@@ -39,5 +39,5 @@ class Language : FileConfig("messages") {
     val logOutPut = get("log-output")
     val transactionIdDetailsOutPut = getList("transaction-id-details-output")
 
-    val pagination = PaginationStyle.fromConfig(this, "pagination")
+    val pagination = PaginationStyle.fromConfig(this)
 }

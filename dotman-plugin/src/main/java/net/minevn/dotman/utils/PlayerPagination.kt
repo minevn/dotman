@@ -32,23 +32,22 @@ class PaginationStyle(
 ) {
     companion object {
         /**
-         * Đọc từ FileConfig theo tiền tố key.
-         * prefix "pagination" -> pagination-template, pagination-first, pagination-first-disabled, ...
+         * Đọc bộ key pagination-* trong messages.yml.
          */
-        fun fromConfig(config: FileConfig, prefix: String) = PaginationStyle(
-            template = config.get("$prefix-template"),
-            first = config.get("$prefix-first"),
-            prev = config.get("$prefix-prev"),
-            next = config.get("$prefix-next"),
-            last = config.get("$prefix-last"),
-            firstDisabled = config.get("$prefix-first-disabled"),
-            prevDisabled = config.get("$prefix-prev-disabled"),
-            nextDisabled = config.get("$prefix-next-disabled"),
-            lastDisabled = config.get("$prefix-last-disabled"),
-            firstHover = config.get("$prefix-first-hover"),
-            prevHover = config.get("$prefix-prev-hover"),
-            nextHover = config.get("$prefix-next-hover"),
-            lastHover = config.get("$prefix-last-hover"),
+        fun fromConfig(config: FileConfig) = PaginationStyle(
+            template = config.get("pagination-template"),
+            first = config.get("pagination-first"),
+            prev = config.get("pagination-prev"),
+            next = config.get("pagination-next"),
+            last = config.get("pagination-last"),
+            firstDisabled = config.get("pagination-first-disabled"),
+            prevDisabled = config.get("pagination-prev-disabled"),
+            nextDisabled = config.get("pagination-next-disabled"),
+            lastDisabled = config.get("pagination-last-disabled"),
+            firstHover = config.get("pagination-first-hover"),
+            prevHover = config.get("pagination-prev-hover"),
+            nextHover = config.get("pagination-next-hover"),
+            lastHover = config.get("pagination-last-hover"),
         )
     }
 }
