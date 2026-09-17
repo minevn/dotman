@@ -27,6 +27,7 @@ class DotManListener : Listener {
         val player = e.player
 
         DotMan.instance.milestonesMaster.onJoin(player)
+        DotMan.instance.plannedExtras.onJoin(player)
         UpdateChecker.sendUpdateMessage(player)
     }
 }

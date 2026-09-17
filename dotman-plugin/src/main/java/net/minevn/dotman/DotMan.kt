@@ -83,6 +83,9 @@ class DotMan : MineVNPlugin() {
         }
         milestonesMaster = MilestonesMaster()
         discord = Discord()
+        if (::plannedExtras.isInitialized) {
+            plannedExtras.stop()
+        }
         plannedExtras = PlannedExtras()
 
         // init Gui configs
@@ -112,6 +115,7 @@ class DotMan : MineVNPlugin() {
         dbPool?.disconnect()
         if (::expansion.isInitialized) expansion.unregister()
         if (::milestonesMaster.isInitialized) milestonesMaster.removeBossBars()
+        if (::plannedExtras.isInitialized) plannedExtras.stop()
     }
 
     /**

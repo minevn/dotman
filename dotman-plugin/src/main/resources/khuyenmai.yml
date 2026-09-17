@@ -73,3 +73,39 @@ khuyen-mai:
 #  days: [7, 8]
 #  from: 01/09/2026 00:00
 #  to: 30/09/2026 23:59
+
+# Thông báo khuyến mãi định kỳ cho toàn server
+thong-bao:
+  enabled: true
+  # Số giây giữa hai lần thông báo. Đặt 0 để tắt.
+  interval: 300
+  # Chỉ gửi khi có khuyến mãi đang áp dụng: mục có tỉ lệ cao nhất đang chạy trong file này,
+  # hoặc khuyến mãi trong config.yml nếu file này không có mục nào đang chạy.
+  # Placeholder: %NAME%, %RATE%, %FROM%, %TO%, %REMAINING%, %PREFIX%
+  message:
+    - '&8&m                                                  '
+    - ''
+    - '   &e&l✦ KHUYẾN MÃI NẠP THẺ'
+    - ''
+    - '   &f%NAME%'
+    - '   &7Nạp thẻ nhận thêm &b&l+%RATE%% &7giá trị'
+    - '   &7Thời gian: &e%FROM% &8→ &e%TO%'
+    - '   &7Còn lại: &e%REMAINING%'
+    - ''
+    - '   &a➜ &fGõ &a/napthe &fđể nạp ngay'
+    - ''
+    - '&8&m                                                  '
+
+  # Bossbar hiện trong suốt thời gian có khuyến mãi.
+  # Màu thanh tự đổi theo thời gian còn lại: xanh -> vàng -> đỏ.
+  bossbar:
+    enabled: true
+    style: SEGMENTED_10
+    # Số giây giữa hai lần đổi tiêu đề
+    rotate: 5
+    # Các tiêu đề luân phiên, placeholder giống message
+    titles:
+      - '&e&l✦ %NAME%'
+      - '&fNạp thẻ nhận thêm &b&l+%RATE%% &fgiá trị'
+      - '&fThời gian: &e%FROM% &f→ &e%TO%'
+      - '&fCòn lại: &e%REMAINING% &7- gõ &a/napthe &7để nạp'
