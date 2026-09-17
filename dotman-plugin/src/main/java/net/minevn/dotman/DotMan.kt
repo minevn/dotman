@@ -1,6 +1,7 @@
 package net.minevn.dotman
 
 import net.minevn.dotman.commands.AdminCmd
+import net.minevn.dotman.commands.KhuyenMaiCmd
 import net.minevn.dotman.commands.MainCmd
 import net.minevn.dotman.commands.TopNapCmd
 import net.minevn.dotman.config.*
@@ -56,6 +57,7 @@ class DotMan : MineVNPlugin() {
         MainCmd.init()
         AdminCmd.init()
         TopNapCmd.init()
+        KhuyenMaiCmd.init()
         UpdateChecker.init()
     }
 

@@ -45,4 +45,15 @@ class Language : FileConfig("messages") {
     val durationHour = get("duration-hour")
     val durationMinute = get("duration-minute")
     val durationNow = get("duration-now")
+
+    val khuyenmaiUsage = get("khuyenmai-usage")
+    val khuyenmaiEmpty = get("khuyenmai-empty")
+    val khuyenmaiHeader = get("khuyenmai-header")
+    val khuyenmaiEntry = getList("khuyenmai-entry")
+    val khuyenmaiStatusActive = get("khuyenmai-status-active")
+    val khuyenmaiStatusUpcoming = get("khuyenmai-status-upcoming")
+    val khuyenmaiRepeat = get("khuyenmai-repeat")
+    val khuyenmaiNoteActive = get("khuyenmai-note-active")
+    val khuyenmaiNoteUpcoming = get("khuyenmai-note-upcoming")
+    val khuyenmaiTimeUnknown = get("khuyenmai-time-unknown")
 }
