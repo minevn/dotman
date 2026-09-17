@@ -8,6 +8,7 @@ import net.minevn.dotman.config.*
 import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.database.PlayerInfoDAO
+import net.minevn.dotman.extras.ExtraAnnouncer
 import net.minevn.dotman.gui.CardPriceUI
 import net.minevn.dotman.gui.CardTypeUI
 import net.minevn.dotman.providers.CardProvider
@@ -40,6 +41,7 @@ class DotMan : MineVNPlugin() {
     lateinit var milestonesMaster: MilestonesMaster private set
     lateinit var discord: Discord private set
     lateinit var plannedExtras: PlannedExtras private set
+    lateinit var extraAnnouncer: ExtraAnnouncer private set
 
     override fun onEnable() {
         instance = this
@@ -85,10 +87,11 @@ class DotMan : MineVNPlugin() {
         }
         milestonesMaster = MilestonesMaster()
         discord = Discord()
-        if (::plannedExtras.isInitialized) {
-            plannedExtras.stop()
+        if (::extraAnnouncer.isInitialized) {
+            extraAnnouncer.stop()
         }
         plannedExtras = PlannedExtras()
+        extraAnnouncer = ExtraAnnouncer(plannedExtras).apply { start() }
 
         // init Gui configs
         CardTypeUI()
@@ -117,7 +120,7 @@ class DotMan : MineVNPlugin() {
         dbPool?.disconnect()
         if (::expansion.isInitialized) expansion.unregister()
         if (::milestonesMaster.isInitialized) milestonesMaster.removeBossBars()
-        if (::plannedExtras.isInitialized) plannedExtras.stop()
+        if (::extraAnnouncer.isInitialized) extraAnnouncer.stop()
     }
 
     /**
