@@ -117,9 +117,7 @@ class DotMan : MineVNPlugin() {
         dbPool?.disconnect()
         if (::expansion.isInitialized) expansion.unregister()
         if (::milestonesMaster.isInitialized) milestonesMaster.removeBossBars()
-        if (::plannedExtras.isInitialized) {
-            plannedExtras.stop()
-        }
+        if (::plannedExtras.isInitialized) plannedExtras.stop()
     }
 
     /**
