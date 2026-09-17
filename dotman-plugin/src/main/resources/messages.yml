@@ -72,3 +72,9 @@ pagination-first-hover: '&7Trang đầu'
 pagination-prev-hover: '&7Trang trước'
 pagination-next-hover: '&7Trang sau'
 pagination-last-hover: '&7Trang cuối'
+
+# Định dạng khoảng thời gian, dùng cho %REMAINING%/%DURATION% ở các tính năng khuyến mãi
+duration-day: '%N% ngày'
+duration-hour: '%N% giờ'
+duration-minute: '%N% phút'
+duration-now: 'dưới 1 phút'

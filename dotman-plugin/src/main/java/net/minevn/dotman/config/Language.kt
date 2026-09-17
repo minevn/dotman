@@ -40,4 +40,9 @@ class Language : FileConfig("messages") {
     val transactionIdDetailsOutPut = getList("transaction-id-details-output")
 
     val pagination = PaginationStyle.fromConfig(this)
+
+    val durationDay = get("duration-day")
+    val durationHour = get("duration-hour")
+    val durationMinute = get("duration-minute")
+    val durationNow = get("duration-now")
 }
