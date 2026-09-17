@@ -9,22 +9,67 @@
 #   * 0.5: Khuyến mãi 50%, ví dụ: nạp 100k được 150k
 #   * 1: Khuyến mãi 100%, ví dụ: nạp 100k được 200k
 #   * 1.5: Khuyến mãi 150%, ví dụ: nạp 100k được 250k
-# * from: Ngày bắt đầu khuyến mãi (định dạng dd/MM/yyyy HH:mm)
-# * to: Ngày kết thúc khuyến mãi (định dạng dd/MM/yyyy HH:mm)
+#
+# Thời gian khuyến mãi:
+# 1. Ngày cố định:
+#    * from: Thời điểm bắt đầu, định dạng dd/MM/yyyy HH:mm
+#    * to: Thời điểm kết thúc, định dạng dd/MM/yyyy HH:mm
+# 2. Lặp lại hàng tuần:
+#    * days: Các thứ trong tuần, 2 = thứ 2 ... 7 = thứ 7, 8 = chủ nhật. Bỏ trống = mọi ngày
+#    * hours: Khung giờ trong ngày, định dạng 'HH:mm-HH:mm' (đặt trong dấu nháy đơn). Bỏ trống = cả ngày
+#      Giờ kết thúc phải sau giờ bắt đầu, tối đa 24:00
+# 3. Kết hợp: days/hours kèm from/to = chỉ lặp lại trong khoảng from -> to
+#    (from hoặc to có thể bỏ trống)
 #
 # Khuyến mãi ở file này sẽ được ưu tiên so với khuyến mãi được thiết lập ở file config.yml
 #
 # Trong trường hợp tại một thời điểm có nhiều khuyến mãi cùng lúc, khuyến mãi có tỉ lệ cao nhất sẽ được ưu tiên
 
+# Tên hiển thị cho khuyến mãi đặt trong config.yml (extra-rate), vì loại này không có tên
+legacy-name: '&aKhuyến mãi nạp thẻ'
+
 khuyen-mai:
-- name: '&aNgày Giải Phóng Miền Nam và Quốc tế Lao Động'
+# ===== Ngày cố định =====
+- name: '&aNgày Giải Phóng Miền Nam và Quốc tế Lao Động - Khuyến mãi 100%'
   rate: 1.0
-  from: 30/04/2024 00:00
-  to: 01/05/2024 23:59
+  from: 30/04/2026 00:00
+  to: 01/05/2026 23:59
 
-- name: '&aNgày Quốc khánh Việt Nam'
+- name: '&aNgày Quốc khánh Việt Nam - Khuyến mãi 100%'
   rate: 1.0
-  from: 02/09/2024 00:00
-  to: 03/09/2024 23:59
+  from: 02/09/2026 00:00
+  to: 03/09/2026 23:59
 
+# ===== Lặp lại hàng tuần =====
+# Bỏ dấu # ở đầu các dòng dưới để kích hoạt
 
+# Cuối tuần: trọn vẹn thứ 7 và chủ nhật
+#- name: '&aKhuyến mãi cuối tuần 50%'
+#  rate: 0.5
+#  days: [7, 8]
+
+# Giờ vàng: 18:00 -> 22:00 mỗi ngày
+#- name: '&eGiờ vàng - Khuyến mãi 30%'
+#  rate: 0.3
+#  hours: '18:00-22:00'
+
+# Tối thứ 6: 20:00 -> hết ngày
+#- name: '&dTối thứ 6 - Khuyến mãi 20%'
+#  rate: 0.2
+#  days: [6]
+#  hours: '20:00-24:00'
+
+# Ngày thường: thứ 2 -> thứ 6, 12:00 -> 14:00
+#- name: '&bGiờ nghỉ trưa - Khuyến mãi 10%'
+#  rate: 0.1
+#  days: [2, 3, 4, 5, 6]
+#  hours: '12:00-14:00'
+
+# ===== Lặp lại hàng tuần trong một khoảng =====
+
+# Cuối tuần tháng 9: chỉ các thứ 7, chủ nhật từ 01/09 đến hết 30/09
+#- name: '&aCuối tuần tháng 9 - Khuyến mãi 100%'
+#  rate: 1.0
+#  days: [7, 8]
+#  from: 01/09/2026 00:00
+#  to: 30/09/2026 23:59
