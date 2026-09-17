@@ -80,7 +80,7 @@ class PlannedExtrasConfig : FileConfig("khuyenmai") {
         val to = map["to"]?.let { dateFormat.parse(it.toString().trim()).time }
 
         if (from != null && to != null && from >= to) {
-            warning("Khuyến mãi '$name' có thời gian bắt đầu không hợp lệ: ${map["from"]} >= ${map["to"]}")
+            throw IllegalArgumentException("thời gian bắt đầu phải trước thời gian kết thúc: ${map["from"]} >= ${map["to"]}")
         }
 
         if (!hasWeekly) {
