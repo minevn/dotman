@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - beta
 
 concurrency:
   group: build-${{ github.ref }}
