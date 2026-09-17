@@ -2,11 +2,10 @@ package net.minevn.dotman.commands
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.config.Language
-import net.minevn.dotman.config.PlannedExtras
+import net.minevn.dotman.extras.ExtraFormat
 import net.minevn.dotman.extras.PlannedExtra
 import net.minevn.dotman.utils.DurationFormat
 import net.minevn.dotman.utils.Pagination
-import net.minevn.dotman.utils.Utils.Companion.color
 import net.minevn.libs.bukkit.command
 import java.time.Instant
 import java.time.ZonedDateTime
@@ -131,14 +130,10 @@ class KhuyenMaiCmd {
                     )
                 } ?: ""
             }
-            return line
+            return ExtraFormat.replacePlaceholders(line, entry.name, entry.ratePercent, entry.from, entry.to, lang)
                 .replace("%STATUS%", if (entry.active) lang.khuyenmaiStatusActive else lang.khuyenmaiStatusUpcoming)
-                .replace("%NAME%", entry.name.color() + "§r")
                 .replace("%REPEAT%", if (entry.repeating) lang.khuyenmaiRepeat else "")
-                .replace("%RATE%", entry.ratePercent.toString())
                 .replace("%TIME_NOTE%", timeNote)
-                .replace("%FROM%", entry.from?.format(PlannedExtras.DISPLAY_FORMAT) ?: lang.khuyenmaiTimeUnknown)
-                .replace("%TO%", entry.to?.format(PlannedExtras.DISPLAY_FORMAT) ?: lang.khuyenmaiTimeUnknown)
         }
     }
 }
