@@ -14,7 +14,10 @@ import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.ZonedDateTime
 
-class PlannedExtras : FileConfig("khuyenmai") {
+/**
+ * Nạp và giữ danh sách khuyến mãi theo lịch từ khuyenmai.yml (mỗi mục là một PlannedExtra)
+ */
+class PlannedExtrasConfig : FileConfig("khuyenmai") {
 
     private var components: List<PlannedExtra> = emptyList()
     private val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm")
@@ -115,7 +118,7 @@ class PlannedExtras : FileConfig("khuyenmai") {
         private val HOURS_REGEX = Regex("^(\\d{1,2}):(\\d{2})-(\\d{1,2}):(\\d{2})$")
 
         /**
-         * Logic thuần của getCurrentExtra, không phụ thuộc trạng thái PlannedExtras
+         * Logic thuần của getCurrentExtra, không phụ thuộc trạng thái PlannedExtrasConfig
          */
         internal fun pickCurrent(components: List<PlannedExtra>, now: ZonedDateTime): PlannedExtra? =
             components.filter { it.isActive(now) }.maxByOrNull { it.rate }

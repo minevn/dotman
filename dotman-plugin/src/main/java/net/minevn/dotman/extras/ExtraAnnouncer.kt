@@ -2,7 +2,7 @@ package net.minevn.dotman.extras
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.config.Language
-import net.minevn.dotman.config.PlannedExtras
+import net.minevn.dotman.config.PlannedExtrasConfig
 import net.minevn.dotman.utils.BukkitBossBar
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.runAsyncTimer
@@ -16,9 +16,9 @@ import java.time.ZonedDateTime
 
 /**
  * Thông báo khuyến mãi định kỳ ra chat và bossbar theo section thong-bao của khuyenmai.yml.
- * Một instance sống cùng một PlannedExtras: DotMan tạo sau khi nạp PlannedExtras và gọi stop() khi reload/disable.
+ * Một instance sống cùng một PlannedExtrasConfig: DotMan tạo sau khi nạp PlannedExtrasConfig và gọi stop() khi reload/disable.
  */
-class ExtraAnnouncer(private val extras: PlannedExtras) {
+class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
     private val main = DotMan.instance
     private var announceTask: BukkitTask? = null
     private var bossBar: BukkitBossBar? = null
@@ -121,7 +121,7 @@ class ExtraAnnouncer(private val extras: PlannedExtras) {
     }
 
     /**
-     * Hủy timer và bossbar; gọi trước khi tạo PlannedExtras mới hoặc khi disable plugin
+     * Hủy timer và bossbar; gọi trước khi tạo PlannedExtrasConfig mới hoặc khi disable plugin
      */
     fun stop() {
         announceTask?.cancel()
@@ -152,7 +152,7 @@ class ExtraAnnouncer(private val extras: PlannedExtras) {
             components: List<PlannedExtra>, legacyRate: Double, legacyUntil: Long, legacyName: String,
             now: ZonedDateTime
         ): Announcement? {
-            PlannedExtras.pickCurrent(components, now)?.let { extra ->
+            PlannedExtrasConfig.pickCurrent(components, now)?.let { extra ->
                 val window = extra.schedule.window(now) ?: return null
                 return Announcement(extra.name, extra.getPercentage(), window.from, window.to)
             }
