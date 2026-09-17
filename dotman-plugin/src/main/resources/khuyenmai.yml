@@ -99,7 +99,7 @@ thong-bao:
   # Bossbar hiện trong suốt thời gian có khuyến mãi.
   # Màu thanh tự đổi theo thời gian còn lại: xanh -> vàng -> đỏ.
   bossbar:
-    enabled: true
+    enabled: false
     style: SEGMENTED_10
     # Số giây giữa hai lần đổi tiêu đề
     rotate: 5

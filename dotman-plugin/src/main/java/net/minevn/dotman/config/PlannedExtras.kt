@@ -135,7 +135,7 @@ class PlannedExtras : FileConfig("khuyenmai") {
      * Tạo bossbar hiện trong suốt thời gian có khuyến mãi, tiêu đề luân phiên theo thong-bao.bossbar.titles
      */
     private fun startBossBar() {
-        if (!config.getBoolean("thong-bao.bossbar.enabled", true)) {
+        if (!config.getBoolean("thong-bao.bossbar.enabled", false)) {
             return
         }
         val titles = getList("thong-bao.bossbar.titles")
