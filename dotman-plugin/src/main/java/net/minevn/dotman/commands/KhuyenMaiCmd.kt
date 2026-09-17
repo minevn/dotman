@@ -116,15 +116,19 @@ class KhuyenMaiCmd { companion object {
      */
     internal fun formatLine(line: String, entry: Entry, now: ZonedDateTime, lang: Language): String {
         val nowMillis = now.toInstant().toEpochMilli()
-        val timeNote = when {
-            entry.active -> entry.to?.let {
+        // Không có mốc tương ứng (legacy thiếu from, lịch vĩnh viễn thiếu to) thì bỏ trống ghi chú
+        val timeNote = if (entry.active) {
+            entry.to?.let {
                 lang.khuyenmaiNoteActive.replace(
                     "%DURATION%", DurationFormat.format(it.toInstant().toEpochMilli() - nowMillis, lang)
                 )
             } ?: ""
-            else -> lang.khuyenmaiNoteUpcoming.replace(
-                "%DURATION%", DurationFormat.format(entry.from!!.toInstant().toEpochMilli() - nowMillis, lang)
-            )
+        } else {
+            entry.from?.let {
+                lang.khuyenmaiNoteUpcoming.replace(
+                    "%DURATION%", DurationFormat.format(it.toInstant().toEpochMilli() - nowMillis, lang)
+                )
+            } ?: ""
         }
         return line
             .replace("%STATUS%", if (entry.active) lang.khuyenmaiStatusActive else lang.khuyenmaiStatusUpcoming)
