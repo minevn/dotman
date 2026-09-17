@@ -90,10 +90,22 @@ class PlannedExtrasConfig : FileConfig("khuyenmai") {
             return FixedSchedule(from, to)
         }
 
-        val days = map["days"]?.let { parseDays(it) } ?: DayOfWeek.values().toSet()
-        val hours = map["hours"]?.let { parseHours(it.toString().trim()) } ?: (0 to MINUTES_PER_DAY)
+        // Bỏ hẳn key = mọi ngày / cả ngày; có key mà để trống là lỗi để tránh vô tình bật khuyến mãi mọi lúc
+        val days = if (map.containsKey("days")) {
+            parseDays(requireValue(map, "days"))
+        } else {
+            DayOfWeek.values().toSet()
+        }
+        val hours = if (map.containsKey("hours")) {
+            parseHours(requireValue(map, "hours").toString().trim())
+        } else {
+            0 to MINUTES_PER_DAY
+        }
         return WeeklySchedule(days, hours.first, hours.second, from, to)
     }
+
+    private fun requireValue(map: Map<*, *>, key: String): Any =
+        map[key] ?: throw IllegalArgumentException("$key rỗng")
 
     override fun reload() {
         super.reload()
