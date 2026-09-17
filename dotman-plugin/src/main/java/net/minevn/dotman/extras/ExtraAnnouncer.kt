@@ -4,8 +4,6 @@ import net.minevn.dotman.DotMan
 import net.minevn.dotman.config.Language
 import net.minevn.dotman.config.PlannedExtras
 import net.minevn.dotman.utils.BukkitBossBar
-import net.minevn.dotman.utils.DurationFormat
-import net.minevn.dotman.utils.Utils.Companion.color
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.runAsyncTimer
 import net.minevn.dotman.utils.Utils.Companion.runSync
@@ -165,19 +163,12 @@ class ExtraAnnouncer(private val extras: PlannedExtras) {
         }
 
         /**
-         * Thay placeholder %NAME%, %RATE%, %FROM%, %TO%, %REMAINING% cho một dòng thông báo.
-         * Nối §r sau tên để màu của tên không lan sang phần còn lại của dòng.
+         * Thay placeholder %NAME%, %RATE%, %FROM%, %TO%, %REMAINING% cho một dòng thông báo
          */
         internal fun formatLine(line: String, announcement: Announcement, now: ZonedDateTime, lang: Language): String {
-            val remaining = announcement.to
-                ?.let { DurationFormat.format(it.toInstant().toEpochMilli() - now.toInstant().toEpochMilli(), lang) }
-                ?: lang.khuyenmaiTimeUnknown
-            return line
-                .replace("%NAME%", announcement.name.color() + "§r")
-                .replace("%RATE%", announcement.ratePercent.toString())
-                .replace("%FROM%", announcement.from?.format(PlannedExtras.DISPLAY_FORMAT) ?: lang.khuyenmaiTimeUnknown)
-                .replace("%TO%", announcement.to?.format(PlannedExtras.DISPLAY_FORMAT) ?: lang.khuyenmaiTimeUnknown)
-                .replace("%REMAINING%", remaining)
+            return ExtraFormat
+                .replacePlaceholders(line, announcement.name, announcement.ratePercent, announcement.from, announcement.to, lang)
+                .replace("%REMAINING%", ExtraFormat.formatRemaining(announcement.to, now, lang))
         }
 
         /**

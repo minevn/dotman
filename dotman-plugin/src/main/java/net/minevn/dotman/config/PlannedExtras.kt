@@ -13,7 +13,6 @@ import org.bukkit.Bukkit
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 
 class PlannedExtras : FileConfig("khuyenmai") {
 
@@ -114,12 +113,6 @@ class PlannedExtras : FileConfig("khuyenmai") {
 
     companion object {
         private val HOURS_REGEX = Regex("^(\\d{1,2}):(\\d{2})-(\\d{1,2}):(\\d{2})$")
-
-        /**
-         * Định dạng mốc thời gian để hiển thị (log, /khuyenmai, thông báo).
-         * DateTimeFormatter là thread-safe nên dùng được từ các timer async.
-         */
-        val DISPLAY_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
 
         /**
          * Logic thuần của getCurrentExtra, không phụ thuộc trạng thái PlannedExtras

@@ -1,6 +1,5 @@
 package net.minevn.dotman.extras
 
-import net.minevn.dotman.config.PlannedExtras
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
@@ -173,16 +172,16 @@ class WeeklySchedule(
             "${startMinute.toHourText()}-${endMinute.toHourText()}"
         }
         val rangeText = buildString {
-            from?.let { append(", từ ${it.toZoned(now).format(PlannedExtras.DISPLAY_FORMAT)}") }
-            to?.let { append(", đến ${it.toZoned(now).format(PlannedExtras.DISPLAY_FORMAT)}") }
+            from?.let { append(", từ ${it.toZoned(now).format(ExtraFormat.DISPLAY_FORMAT)}") }
+            to?.let { append(", đến ${it.toZoned(now).format(ExtraFormat.DISPLAY_FORMAT)}") }
         }
         val window = window(now)
         val windowText = if (window == null) {
             "đã kết thúc"
         } else {
             val state = if (window.active) "đang chạy" else "kế tiếp"
-            val end = window.to?.format(PlannedExtras.DISPLAY_FORMAT) ?: "không kết thúc"
-            "$state ${window.from.format(PlannedExtras.DISPLAY_FORMAT)} -> $end"
+            val end = window.to?.format(ExtraFormat.DISPLAY_FORMAT) ?: "không kết thúc"
+            "$state ${window.from.format(ExtraFormat.DISPLAY_FORMAT)} -> $end"
         }
         return "$dayText, $hourText$rangeText; $windowText"
     }
