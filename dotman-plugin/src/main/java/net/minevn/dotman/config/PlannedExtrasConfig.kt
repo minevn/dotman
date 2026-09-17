@@ -38,7 +38,7 @@ class PlannedExtrasConfig : FileConfig("khuyenmai") {
                 it as Map<*, *>
                 val name = it["name"] as String
                 val rate = (it["rate"] as Number).toDouble()
-                PlannedExtra(name, rate, parseSchedule(name, it))
+                PlannedExtra(name, rate, parseSchedule(it))
             } catch (e: Exception) {
                 val name = try { (it as Map<*, *>)["name"] as String } catch (_: Exception) { "<unknown>" }
                 e.warning("Khuyến mãi $name không hợp lệ: ${e.message}")
@@ -74,7 +74,7 @@ class PlannedExtrasConfig : FileConfig("khuyenmai") {
      * - Chỉ có from/to: ngày cố định
      * - Có days hoặc hours: lặp lại theo tuần; from/to (nếu có) là giới hạn khoảng áp dụng
      */
-    private fun parseSchedule(name: String, map: Map<*, *>): Schedule {
+    private fun parseSchedule(map: Map<*, *>): Schedule {
         val hasWeekly = map.containsKey("days") || map.containsKey("hours")
         val from = map["from"]?.let { dateFormat.parse(it.toString().trim()).time }
         val to = map["to"]?.let { dateFormat.parse(it.toString().trim()).time }
