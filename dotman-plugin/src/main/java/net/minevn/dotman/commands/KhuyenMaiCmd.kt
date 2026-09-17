@@ -3,7 +3,7 @@ package net.minevn.dotman.commands
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.config.Language
 import net.minevn.dotman.config.PlannedExtras
-import net.minevn.dotman.config.PlannedExtras.Component
+import net.minevn.dotman.extras.PlannedExtra
 import net.minevn.dotman.utils.DurationFormat
 import net.minevn.dotman.utils.Pagination
 import net.minevn.dotman.utils.Utils.Companion.color
@@ -85,7 +85,7 @@ class KhuyenMaiCmd {
          * Logic thuần, không đụng Bukkit/DotMan.
          */
         internal fun buildEntries(
-            components: List<Component>, legacyRate: Double, legacyUntil: Long, legacyName: String,
+            components: List<PlannedExtra>, legacyRate: Double, legacyUntil: Long, legacyName: String,
             now: ZonedDateTime
         ): List<Entry> {
             val planned = components
