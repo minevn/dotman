@@ -85,16 +85,20 @@ khuyenmai-empty: '%PREFIX% &7Hiện chưa có chương trình khuyến mãi nào
 khuyenmai-header: '%PREFIX% &e&lKhuyến mãi nạp thẻ &7(%PAGE%/%MAX_PAGE%)'
 
 # Mỗi khuyến mãi. %STATUS% là khuyenmai-status-*, %REPEAT% là khuyenmai-repeat hoặc rỗng,
+# %APPLIED_TAG% là khuyenmai-applied-tag khi đây là khuyến mãi đang thực sự được áp dụng (nhiều khuyến mãi
+# active cùng lúc thì chỉ khuyến mãi tỉ lệ cao nhất mới có tag này), còn lại rỗng.
 # %TIME_NOTE% là khuyenmai-note-* (còn bao lâu / bắt đầu sau bao lâu), rỗng khi không xác định được mốc
 khuyenmai-entry:
   - ''
-  - '%STATUS% &f%NAME%%REPEAT%'
+  - '%STATUS% &f%NAME%%REPEAT%%APPLIED_TAG%'
   - '  &b+%RATE%% &7giá trị nạp%TIME_NOTE%'
   - '  &7%FROM% &8→ &7%TO%'
+  - ''
 
 khuyenmai-status-active: '&a●'
 khuyenmai-status-upcoming: '&e○'
 khuyenmai-repeat: '  &8(lặp lại)'
+khuyenmai-applied-tag: ' &6&l★'
 khuyenmai-note-active: ' &8· &acòn %DURATION%'
 khuyenmai-note-upcoming: ' &8· &ebắt đầu sau %DURATION%'
 khuyenmai-time-unknown: 'không xác định'
