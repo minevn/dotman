@@ -10,99 +10,125 @@ import net.minevn.dotman.utils.Utils.Companion.runSync
 import net.minevn.dotman.utils.Utils.Companion.warning
 import org.bukkit.Bukkit
 import org.bukkit.boss.BarColor
+import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitTask
 import java.time.ZonedDateTime
 
 /**
- * Thông báo khuyến mãi định kỳ ra chat và bossbar theo section thong-bao của khuyenmai.yml.
+ * Thông báo khuyến mãi ra chat và bossbar theo section thong-bao của khuyenmai.yml.
+ * Một vòng lặp tick mỗi giây theo dõi khuyến mãi đang áp dụng (cùng logic ưu tiên với CardProvider:
+ * planned trước, legacy config.yml sau). Khi khuyến mãi bắt đầu/kết thúc: gửi message.active/message.ended
+ * ngay lập tức (không chờ chu kỳ) và render lại bossbar ngay; chu kỳ lặp lại message.active được tính lại
+ * từ lúc gửi gần nhất, dù gửi do bắt đầu hay do đến chu kỳ.
  * Một instance sống cùng một PlannedExtrasConfig: DotMan tạo sau khi nạp PlannedExtrasConfig và gọi stop() khi reload/disable.
  */
 class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
     private val main = DotMan.instance
-    private var announceTask: BukkitTask? = null
+    private var tickTask: BukkitTask? = null
     private var bossBar: BukkitBossBar? = null
-    private var bossBarTask: BukkitTask? = null
 
     fun start() {
-        startAnnouncer()
-        startBossBar()
-    }
-
-    /**
-     * Tạo timer gửi thông báo khuyến mãi định kỳ ra chat theo section thong-bao
-     */
-    private fun startAnnouncer() {
         val config = extras.config
-        val enabled = config.getBoolean("thong-bao.enabled", true)
-        val interval = config.getInt("thong-bao.interval", 300)
-        if (!enabled || interval <= 0) {
-            return
+        val chatEnabled = config.getBoolean("thong-bao.enabled", true)
+        val activeMessage = extras.getList("thong-bao.message.active")
+        val endedMessage = extras.getList("thong-bao.message.ended")
+        val interval = config.getInt("thong-bao.interval", 300).coerceAtLeast(0)
+        if (chatEnabled && activeMessage.isEmpty()) {
+            warning("thong-bao.message.active trống, không gửi thông báo khuyến mãi")
         }
-        val message = extras.getList("thong-bao.message")
-        if (message.isEmpty()) {
-            warning("thong-bao.message trống, không gửi thông báo khuyến mãi")
-            return
-        }
-        // delay 0: gửi ngay lần đầu khi start/reload
-        announceTask = runAsyncTimer(0, interval * 20L) { announce(message) }
-        info("Thông báo khuyến mãi mỗi $interval giây")
-    }
+        val chatReady = chatEnabled && activeMessage.isNotEmpty()
 
-    private fun announce(message: List<String>) {
-        if (Bukkit.getOnlinePlayers().isEmpty()) {
-            return
-        }
-        val now = ZonedDateTime.now()
-        val announcement = currentAnnouncement(now) ?: return
-        message.forEach { Bukkit.broadcastMessage(formatLine(it, announcement, now, main.language)) }
-    }
-
-    /**
-     * Tạo bossbar hiện trong suốt thời gian có khuyến mãi, tiêu đề luân phiên theo thong-bao.bossbar.titles
-     */
-    private fun startBossBar() {
-        val config = extras.config
-        if (!config.getBoolean("thong-bao.bossbar.enabled", false)) {
-            return
-        }
+        val bossBarEnabled = config.getBoolean("thong-bao.bossbar.enabled", false)
         val titles = extras.getList("thong-bao.bossbar.titles")
-        if (titles.isEmpty()) {
-            warning("thong-bao.bossbar.titles trống, không hiển thị bossbar")
-            return
-        }
-        val style = config.getString("thong-bao.bossbar.style", "SEGMENTED_10")!!
         val rotate = config.getInt("thong-bao.bossbar.rotate", 5).coerceAtLeast(1)
-        val bar = try {
-            BukkitBossBar("§r", "GREEN", style)
-        } catch (e: IllegalArgumentException) {
-            e.warning("thong-bao.bossbar.style không hợp lệ, không hiển thị bossbar")
+        if (bossBarEnabled && titles.isEmpty()) {
+            warning("thong-bao.bossbar.titles trống, không hiển thị bossbar")
+        }
+        val bar = if (bossBarEnabled && titles.isNotEmpty()) newBossBar(config) else null
+        bossBar = bar
+
+        if (!chatReady && bar == null) {
             return
         }
-        bar.isVisible = false
-        bossBar = bar
-        var index = 0
-        bossBarTask = runAsyncTimer(0, rotate * 20L) {
+        if (chatReady) {
+            val repeatNote = if (interval > 0) ", lặp lại mỗi $interval giây khi đang áp dụng" else ""
+            info("Thông báo khuyến mãi khi bắt đầu/kết thúc$repeatNote")
+        }
+        if (bar != null) {
+            info("Bossbar khuyến mãi: ${titles.size} tiêu đề, đổi mỗi $rotate giây")
+        }
+
+        var lastAnnouncement: Announcement? = null
+        var secondsSinceAnnounce = 0
+        var secondsSinceRotate = 0
+        var titleIndex = 0
+
+        // Tick mỗi giây: phát hiện khuyến mãi bắt đầu/kết thúc để gửi ngay & render lại bossbar ngay,
+        // đồng thời tự đếm chu kỳ lặp lại message.active và chu kỳ đổi tiêu đề bossbar.
+        tickTask = runAsyncTimer(0, 20L) {
             val now = ZonedDateTime.now()
-            val announcement = currentAnnouncement(now)
-            if (announcement == null) {
+            val current = currentAnnouncement(now)
+
+            if (current?.name != lastAnnouncement?.name) {
+                if (chatReady) {
+                    lastAnnouncement?.let { broadcast(endedMessage, it, now) }
+                    current?.let { broadcast(activeMessage, it, now) }
+                }
+                lastAnnouncement = current
+                secondsSinceAnnounce = 0
+                secondsSinceRotate = 0
+                titleIndex = 0
+            } else if (chatReady && current != null && interval > 0) {
+                secondsSinceAnnounce++
+                if (secondsSinceAnnounce >= interval) {
+                    broadcast(activeMessage, current, now)
+                    secondsSinceAnnounce = 0
+                }
+            }
+
+            if (bar == null) {
+                return@runAsyncTimer
+            }
+            if (current == null) {
                 if (bar.isVisible) {
                     bar.removeAll()
                     bar.isVisible = false
                 }
                 return@runAsyncTimer
             }
-            val progress = bossBarProgress(announcement, now)
-            bar.setTitle(formatLine(titles[index % titles.size], announcement, now, main.language))
-            bar.progress = progress
-            bar.color = bossBarColor(progress)
-            index++
+            secondsSinceRotate++
+            if (secondsSinceRotate >= rotate) {
+                secondsSinceRotate = 0
+                titleIndex++
+            }
+            bar.setTitle(formatLine(titles[titleIndex % titles.size], current, now, main.language))
+            bar.progress = bossBarProgress(current, now)
+            bar.color = bossBarColor(bar.progress)
             if (!bar.isVisible) {
                 bar.isVisible = true
                 runSync { Bukkit.getOnlinePlayers().forEach { bar.addPlayer(it) } }
             }
         }
-        info("Bossbar khuyến mãi: ${titles.size} tiêu đề, đổi mỗi $rotate giây")
+    }
+
+    private fun newBossBar(config: YamlConfiguration): BukkitBossBar? {
+        val style = config.getString("thong-bao.bossbar.style", "SEGMENTED_10")!!
+        return try {
+            BukkitBossBar("§r", "GREEN", style).apply { isVisible = false }
+        } catch (e: IllegalArgumentException) {
+            e.warning("thong-bao.bossbar.style không hợp lệ, không hiển thị bossbar")
+            null
+        }
+    }
+
+    private fun broadcast(message: List<String>, announcement: Announcement, now: ZonedDateTime) {
+        val players = Bukkit.getOnlinePlayers()
+        if (players.isEmpty()) {
+            return
+        }
+        val lines = message.map { formatLine(it, announcement, now, main.language) }
+        players.forEach { player -> lines.forEach { player.sendMessage(it) } }
     }
 
     /**
@@ -124,10 +150,8 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
      * Hủy timer và bossbar; gọi trước khi tạo PlannedExtrasConfig mới hoặc khi disable plugin
      */
     fun stop() {
-        announceTask?.cancel()
-        announceTask = null
-        bossBarTask?.cancel()
-        bossBarTask = null
+        tickTask?.cancel()
+        tickTask = null
         bossBar?.removeAll()
         bossBar?.isVisible = false
         bossBar = null
