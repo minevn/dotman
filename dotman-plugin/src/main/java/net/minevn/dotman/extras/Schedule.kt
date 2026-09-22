@@ -179,7 +179,7 @@ class WeeklySchedule(
         val windowText = if (window == null) {
             "đã kết thúc"
         } else {
-            val state = if (window.active) "đang chạy" else "kế tiếp"
+            val state = if (window.active) "đang chạy từ" else "kế tiếp vào lúc"
             val end = window.to?.format(ExtraFormat.DISPLAY_FORMAT) ?: "không kết thúc"
             "$state ${window.from.format(ExtraFormat.DISPLAY_FORMAT)} -> $end"
         }
