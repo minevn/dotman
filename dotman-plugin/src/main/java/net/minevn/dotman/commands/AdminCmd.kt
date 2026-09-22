@@ -3,6 +3,7 @@ package net.minevn.dotman.commands
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.DotMan.Companion.transactional
 import net.minevn.dotman.TopupType
+import net.minevn.dotman.card.CardPrice
 import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.database.PlayerDataDAO
@@ -34,6 +35,7 @@ class AdminCmd {
             addSubCommand(traCuuGiaoDich(), "tracuugd", "magiaodich")
             addSubCommand(clearPlayerData(), "cleardata")
             addSubCommand(testPagination(), "testphantrang")
+            addSubCommand(testKhuyenMai(), "testkhuyenmai", "tkm")
 
             action {
                 sender.sendMessage("§b§lCác lệnh của plugin DotMan")
@@ -427,6 +429,54 @@ class AdminCmd {
                 sender.send("Test phân trang: §e$size §rmục, §e5 §rmục/trang, trang §e${pagination.page}/${pagination.maxPage}")
                 pagination.pageItems.forEach { sender.sendMessage("§7- $it") }
                 pagination.sendNav(sender, DotMan.instance.language.pagination, "/$commandTree $size")
+            }
+        }
+
+        private fun testKhuyenMai() = command {
+            val usage = "<số tiền>"
+            description("Test flow tính khuyến mãi nạp thẻ (dry-run, không cộng point thật)")
+
+            action {
+                val amountArg = args.getOrNull(0)?.toIntOrNull() ?: run {
+                    sender.send("§cCách dùng: /$commandTree $usage")
+                    return@action
+                }
+
+                val cardPrice = CardPrice[amountArg] ?: run {
+                    sender.send("§cSố tiền §b${amountArg.format()} §ckhông khớp mệnh giá thẻ nào đã cấu hình (xem donate-amounts trong config.yml)")
+                    return@action
+                }
+
+                // Từ đây trở xuống lấy đúng flow nghiệp vụ của CardProvider.onChargeSuccess, không ghi dữ liệu thật
+                val main = DotMan.instance
+                val cfg = main.config
+                val basePoint = cardPrice.getPointAmount()
+
+                var amount = basePoint
+                var extraPercent = 0
+                var extraName = "Không có"
+
+                val plannedExtra = main.plannedExtras.getCurrentExtra()
+                if (plannedExtra != null) {
+                    amount = plannedExtra.calculateAmount(basePoint)
+                    extraPercent = plannedExtra.getPercentage()
+                    extraName = plannedExtra.name
+                } else if (cfg.extraRate > 0 && cfg.extraUntil > System.currentTimeMillis()) {
+                    amount += (amount * cfg.extraRate).toInt()
+                    extraPercent = (cfg.extraRate * 100).toInt()
+                    extraName = main.plannedExtras.legacyName
+                }
+                val bonus = amount - basePoint
+
+                sender.send("§b§l== Test khuyến mãi nạp thẻ ==")
+                sender.send("§7Số tiền nhập vào: §f${amountArg.format()} VNĐ")
+                sender.send(
+                    if (extraPercent > 0) "§7Khuyến mãi đang hoạt động: §f$extraName §7(§b$extraPercent%§7)"
+                    else "§7Khuyến mãi đang hoạt động: §fKhông có"
+                )
+                sender.send("§7Point nhận được (chưa khuyến mãi): §f${basePoint.format()} ${cfg.pointUnit}")
+                sender.send("§7Point nhận thêm từ khuyến mãi: §f+${bonus.format()} ${cfg.pointUnit}")
+                sender.send("§a§lTổng point nhận được: §b${amount.format()} ${cfg.pointUnit}")
             }
         }
 
