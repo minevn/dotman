@@ -52,21 +52,22 @@ class PlannedExtrasConfig : FileConfig("khuyenmai") {
         components.forEach { component ->
             val schedule = component.schedule
             if (schedule is WeeklySchedule) {
-                info("Khuyến mãi '${component.name}' (lặp lại): ${schedule.describe(now)}")
+                info("Khuyến mãi '${component.name.color()}' (lặp lại): ${schedule.describe(now)}")
             }
         }
 
         val console = Bukkit.getServer().consoleSender
         val activeComponents = components.filter { it.isActive(now) }.sortedByDescending { it.rate }
-        if (activeComponents.isNotEmpty()) {
-            val size = activeComponents.size
-            console.send("Có $size chương trình khuyến mãi đang hoạt động:")
-            console.send(activeComponents.joinToString("§r, ") { "${it.name.color()} §r(§b${it.getPercentage()}%§r)" })
-            if (size > 1) {
-                console.send("Khuyến mãi có tỉ lệ cao nhất (đầu danh sách) sẽ được ưu tiên.")
-            }
-        } else {
+        val applied = activeComponents.firstOrNull()
+        if (applied == null) {
             console.send("Không có chương trình khuyến mãi nào đang hoạt động.")
+        } else {
+            console.send("Áp dụng khuyến mãi: ${applied.name.color()} §r(§b${applied.getPercentage()}%§r)")
+            val ignored = activeComponents.drop(1)
+            if (ignored.isNotEmpty()) {
+                console.send("Đang có ${activeComponents.size} khuyến mãi cùng hoạt động, khuyến mãi có tỉ lệ cao nhất đã được áp dụng, các khuyến mãi còn lại bị bỏ qua:")
+                ignored.forEach { console.send(" - ${it.name.color()} §r(§b${it.getPercentage()}%§r)") }
+            }
         }
     }
 
