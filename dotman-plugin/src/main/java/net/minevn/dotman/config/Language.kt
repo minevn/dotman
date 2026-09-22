@@ -53,6 +53,7 @@ class Language : FileConfig("messages") {
     val khuyenmaiStatusActive = get("khuyenmai-status-active")
     val khuyenmaiStatusUpcoming = get("khuyenmai-status-upcoming")
     val khuyenmaiRepeat = get("khuyenmai-repeat")
+    val khuyenmaiAppliedTag = get("khuyenmai-applied-tag")
     val khuyenmaiNoteActive = get("khuyenmai-note-active")
     val khuyenmaiNoteUpcoming = get("khuyenmai-note-upcoming")
     val khuyenmaiTimeUnknown = get("khuyenmai-time-unknown")

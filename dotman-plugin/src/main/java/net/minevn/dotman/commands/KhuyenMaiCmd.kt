@@ -2,6 +2,7 @@ package net.minevn.dotman.commands
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.config.Language
+import net.minevn.dotman.config.PlannedExtrasConfig
 import net.minevn.dotman.extras.ExtraFormat
 import net.minevn.dotman.extras.PlannedExtra
 import net.minevn.dotman.utils.DurationFormat
@@ -16,6 +17,8 @@ class KhuyenMaiCmd {
      *
      * @param from null với legacy
      * @param to null với lịch tuần vĩnh viễn
+     * @param applied true nếu đây là khuyến mãi đang thực sự được áp dụng (tỉ lệ cao nhất trong các
+     * khuyến mãi active cùng lúc)
      */
     class Entry(
         val name: String,
@@ -24,6 +27,7 @@ class KhuyenMaiCmd {
         val to: ZonedDateTime?,
         val active: Boolean,
         val repeating: Boolean,
+        val applied: Boolean,
     )
 
     companion object {
@@ -87,12 +91,14 @@ class KhuyenMaiCmd {
             components: List<PlannedExtra>, legacyRate: Double, legacyUntil: Long, legacyName: String,
             now: ZonedDateTime
         ): List<Entry> {
+            // Khuyến mãi thực sự được áp dụng khi có nhiều khuyến mãi active cùng lúc, cùng logic với getCurrentExtra
+            val appliedComponent = PlannedExtrasConfig.pickCurrent(components, now)
             val planned = components
                 .mapNotNull { component ->
                     component.schedule.window(now)?.let { window ->
                         Entry(
                             component.name, component.getPercentage(), window.from, window.to,
-                            window.active, component.schedule.isRepeating
+                            window.active, component.schedule.isRepeating, component === appliedComponent
                         )
                     }
                 }
@@ -102,13 +108,13 @@ class KhuyenMaiCmd {
                         .thenBy { if (it.active) null else it.from }
                 )
 
-            val legacyApplied = planned.none { it.active }
+            val legacyApplied = appliedComponent == null
                 && legacyRate > 0 && legacyUntil > now.toInstant().toEpochMilli()
             if (!legacyApplied) {
                 return planned
             }
             val until = ZonedDateTime.ofInstant(Instant.ofEpochMilli(legacyUntil), now.zone)
-            return listOf(Entry(legacyName, (legacyRate * 100).toInt(), null, until, true, false)) + planned
+            return listOf(Entry(legacyName, (legacyRate * 100).toInt(), null, until, true, false, true)) + planned
         }
 
         /**
@@ -133,6 +139,7 @@ class KhuyenMaiCmd {
             return ExtraFormat.replacePlaceholders(line, entry.name, entry.ratePercent, entry.from, entry.to, lang)
                 .replace("%STATUS%", if (entry.active) lang.khuyenmaiStatusActive else lang.khuyenmaiStatusUpcoming)
                 .replace("%REPEAT%", if (entry.repeating) lang.khuyenmaiRepeat else "")
+                .replace("%APPLIED_TAG%", if (entry.applied) lang.khuyenmaiAppliedTag else "")
                 .replace("%TIME_NOTE%", timeNote)
         }
     }
