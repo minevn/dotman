@@ -100,7 +100,7 @@ thong-bao:
   # Màu thanh tự đổi theo thời gian còn lại: xanh -> vàng -> đỏ.
   bossbar:
     enabled: false
-    style: SEGMENTED_10
+    style: SOLID
     # Số giây giữa hai lần đổi tiêu đề
     rotate: 5
     # Các tiêu đề luân phiên, placeholder giống message
