@@ -123,10 +123,12 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
     }
 
     private fun broadcast(message: List<String>, announcement: Announcement, now: ZonedDateTime) {
-        if (Bukkit.getOnlinePlayers().isEmpty()) {
+        val players = Bukkit.getOnlinePlayers()
+        if (players.isEmpty()) {
             return
         }
-        message.forEach { Bukkit.broadcastMessage(formatLine(it, announcement, now, main.language)) }
+        val lines = message.map { formatLine(it, announcement, now, main.language) }
+        players.forEach { player -> lines.forEach { player.sendMessage(it) } }
     }
 
     /**
