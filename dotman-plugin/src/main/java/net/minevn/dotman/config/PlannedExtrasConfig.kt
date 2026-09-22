@@ -34,6 +34,7 @@ class PlannedExtrasConfig : FileConfig("khuyenmai") {
 
     @Suppress("UNCHECKED_CAST")
     private fun loadComponents() {
+        val console = Bukkit.getServer().consoleSender
         components = (config.getList("khuyen-mai") ?: emptyList()).mapNotNull {
             try {
                 it as Map<*, *>
@@ -52,11 +53,10 @@ class PlannedExtrasConfig : FileConfig("khuyenmai") {
         components.forEach { component ->
             val schedule = component.schedule
             if (schedule is WeeklySchedule) {
-                info("Khuyến mãi '${component.name.color()}' (lặp lại): ${schedule.describe(now)}")
+                console.send("Khuyến mãi '${component.name.color()}' (lặp lại): ${schedule.describe(now)}")
             }
         }
 
-        val console = Bukkit.getServer().consoleSender
         val activeComponents = components.filter { it.isActive(now) }.sortedByDescending { it.rate }
         val applied = activeComponents.firstOrNull()
         if (applied == null) {
