@@ -7,6 +7,7 @@ import net.minevn.dotman.extras.ExtraFormat
 import net.minevn.dotman.extras.PlannedExtra
 import net.minevn.dotman.utils.DurationFormat
 import net.minevn.dotman.utils.Pagination
+import net.minevn.dotman.utils.replaceAllPlaceholders
 import net.minevn.libs.bukkit.command
 import java.time.Instant
 import java.time.ZonedDateTime
@@ -136,11 +137,16 @@ class KhuyenMaiCmd {
                     )
                 } ?: ""
             }
-            return ExtraFormat.replacePlaceholders(line, entry.name, entry.ratePercent, entry.from, entry.to, lang)
-                .replace("%STATUS%", if (entry.active) lang.khuyenmaiStatusActive else lang.khuyenmaiStatusUpcoming)
-                .replace("%REPEAT%", if (entry.repeating) lang.khuyenmaiRepeat else "")
-                .replace("%APPLIED_TAG%", if (entry.applied) lang.khuyenmaiAppliedTag else "")
-                .replace("%TIME_NOTE%", timeNote)
+            val replacements = mapOf(
+                "%STATUS%" to if (entry.active) lang.khuyenmaiStatusActive else lang.khuyenmaiStatusUpcoming,
+                "%REPEAT%" to if (entry.repeating) lang.khuyenmaiRepeat else "",
+                "%APPLIED_TAG%" to if (entry.applied) lang.khuyenmaiAppliedTag else "",
+                "%TIME_NOTE%" to timeNote,
+            )
+            return replaceAllPlaceholders(
+                ExtraFormat.replacePlaceholders(line, entry.name, entry.ratePercent, entry.from, entry.to, lang),
+                replacements
+            )
         }
     }
 }
