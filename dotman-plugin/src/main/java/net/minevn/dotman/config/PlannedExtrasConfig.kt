@@ -53,7 +53,7 @@ class PlannedExtrasConfig : FileConfig("khuyenmai") {
         components.forEach { component ->
             val schedule = component.schedule
             if (schedule is WeeklySchedule) {
-                console.send("Khuyến mãi '${component.name.color()}' (lặp lại): ${schedule.describe(now)}")
+                console.send("Khuyến mãi '${component.name.color()}' §r(lặp lại): ${schedule.describe(now)}")
             }
         }
 
