@@ -106,8 +106,10 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
             }
             if (current == null) {
                 if (bar.isVisible) {
-                    bar.removeAll()
-                    bar.isVisible = false
+                    runSync {
+                        bar.removeAll()
+                        bar.isVisible = false
+                    }
                 }
                 return@runAsyncTimer
             }
@@ -116,12 +118,17 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
                 secondsSinceRotate = 0
                 titleIndex++
             }
-            bar.setTitle(formatLine(titles[titleIndex % titles.size], current, now, main.language))
-            bar.progress = bossBarProgress(current, now)
-            bar.color = bossBarColor(bar.progress)
-            if (!bar.isVisible) {
-                bar.isVisible = true
-                runSync { Bukkit.getOnlinePlayers().forEach { bar.addPlayer(it) } }
+            val title = formatLine(titles[titleIndex % titles.size], current, now, main.language)
+            val progress = bossBarProgress(current, now)
+            val color = bossBarColor(progress)
+            runSync {
+                bar.setTitle(title)
+                bar.progress = progress
+                bar.color = color
+                if (!bar.isVisible) {
+                    bar.isVisible = true
+                    Bukkit.getOnlinePlayers().forEach { bar.addPlayer(it) }
+                }
             }
         }
     }
