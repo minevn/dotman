@@ -75,8 +75,9 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
             if (current?.name != lastAnnouncement?.name) {
                 // Khuyến mãi trước vẫn còn hiệu lực (chỉ bị ghi đè bởi khuyến mãi tỉ lệ cao hơn) thì
                 // không phải là "kết thúc", chỉ đổi khuyến mãi đang được áp dụng
+                val previousPlanned = lastPlanned
                 val previousStillActive = when {
-                    lastPlanned != null -> lastPlanned.isActive(now)
+                    previousPlanned != null -> previousPlanned.isActive(now)
                     lastAnnouncement != null ->
                         main.config.extraRate > 0 && main.config.extraUntil > now.toInstant().toEpochMilli()
                     else -> false
