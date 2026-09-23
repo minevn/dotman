@@ -76,38 +76,40 @@ khuyen-mai:
 
 # Thông báo khuyến mãi cho toàn server
 thong-bao:
-  enabled: true
-  # Số giây giữa các lần lặp lại message.active trong khi khuyến mãi đang áp dụng. Đặt 0 để không lặp lại
-  # (vẫn gửi 1 lần ngay lúc bắt đầu). Khi khuyến mãi bắt đầu áp dụng, message.active được gửi ngay lập tức,
-  # không chờ hết chu kỳ, đồng thời chu kỳ lặp lại được tính lại từ lúc này.
-  interval: 300
-  # Chỉ gửi khi có khuyến mãi đang áp dụng: mục có tỉ lệ cao nhất đang chạy trong file này,
-  # hoặc khuyến mãi trong config.yml nếu file này không có mục nào đang chạy.
-  # Placeholder: %NAME%, %RATE%, %FROM%, %TO%, %REMAINING%, %PREFIX%
-  message:
-    # Gửi ngay khi khuyến mãi bắt đầu áp dụng, sau đó lặp lại mỗi `interval` giây trong khi còn hiệu lực
-    active:
-      - '&8&m                                                  '
-      - ''
-      - '   &e&l✦ KHUYẾN MÃI NẠP THẺ'
-      - ''
-      - '   &f%NAME%'
-      - '   &7Nạp thẻ nhận thêm &b&l+%RATE%% &7giá trị'
-      - '   &7Thời gian: &e%FROM% &8→ &e%TO%'
-      - '   &7Còn lại: &e%REMAINING%'
-      - ''
-      - '   &a➜ &fGõ &a/napthe &fđể nạp ngay'
-      - ''
-      - '&8&m                                                  '
-    # Gửi đúng 1 lần khi khuyến mãi kết thúc. %REMAINING% không còn ý nghĩa nên không dùng ở đây
-    ended:
-      - '&8&m                                                  '
-      - ''
-      - '   &7✦ %NAME% &7đã kết thúc'
-      - ''
-      - '   &7Cảm ơn các bạn đã ủng hộ server!'
-      - ''
-      - '&8&m                                                  '
+  # Chat và bossbar bật/tắt độc lập nhau (thong-bao.chat.enabled / thong-bao.bossbar.enabled)
+  chat:
+    enabled: true
+    # Số giây giữa các lần lặp lại message.active trong khi khuyến mãi đang áp dụng. Đặt 0 để không lặp lại
+    # (vẫn gửi 1 lần ngay lúc bắt đầu). Khi khuyến mãi bắt đầu áp dụng, message.active được gửi ngay lập tức,
+    # không chờ hết chu kỳ, đồng thời chu kỳ lặp lại được tính lại từ lúc này.
+    interval: 300
+    # Chỉ gửi khi có khuyến mãi đang áp dụng: mục có tỉ lệ cao nhất đang chạy trong file này,
+    # hoặc khuyến mãi trong config.yml nếu file này không có mục nào đang chạy.
+    # Placeholder: %NAME%, %RATE%, %FROM%, %TO%, %REMAINING%, %PREFIX%
+    message:
+      # Gửi ngay khi khuyến mãi bắt đầu áp dụng, sau đó lặp lại mỗi `interval` giây trong khi còn hiệu lực
+      active:
+        - '&8&m                                                  '
+        - ''
+        - '   &e&l✦ KHUYẾN MÃI NẠP THẺ'
+        - ''
+        - '   &f%NAME%'
+        - '   &7Nạp thẻ nhận thêm &b&l+%RATE%% &7giá trị'
+        - '   &7Thời gian: &e%FROM% &8→ &e%TO%'
+        - '   &7Còn lại: &e%REMAINING%'
+        - ''
+        - '   &a➜ &fGõ &a/napthe &fđể nạp ngay'
+        - ''
+        - '&8&m                                                  '
+      # Gửi đúng 1 lần khi khuyến mãi kết thúc. %REMAINING% không còn ý nghĩa nên không dùng ở đây
+      ended:
+        - '&8&m                                                  '
+        - ''
+        - '   &7✦ %NAME% &7đã kết thúc'
+        - ''
+        - '   &7Cảm ơn các bạn đã ủng hộ server!'
+        - ''
+        - '&8&m                                                  '
 
   # Bossbar hiện trong suốt thời gian có khuyến mãi, ẩn/hiện và render lại ngay khi khuyến mãi bắt đầu/kết thúc.
   # Màu thanh tự đổi theo thời gian còn lại: xanh -> vàng -> đỏ.
