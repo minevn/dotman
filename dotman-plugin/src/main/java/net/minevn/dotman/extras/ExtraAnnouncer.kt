@@ -30,12 +30,12 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
 
     fun start() {
         val config = extras.config
-        val chatEnabled = config.getBoolean("thong-bao.enabled", true)
-        val activeMessage = extras.getList("thong-bao.message.active")
-        val endedMessage = extras.getList("thong-bao.message.ended")
-        val interval = config.getInt("thong-bao.interval", 300).coerceAtLeast(0)
+        val chatEnabled = config.getBoolean("thong-bao.chat.enabled", true)
+        val activeMessage = extras.getList("thong-bao.chat.message.active")
+        val endedMessage = extras.getList("thong-bao.chat.message.ended")
+        val interval = config.getInt("thong-bao.chat.interval", 300).coerceAtLeast(0)
         if (chatEnabled && activeMessage.isEmpty()) {
-            warning("thong-bao.message.active trống, không gửi thông báo khuyến mãi")
+            warning("thong-bao.chat.message.active trống, không gửi thông báo khuyến mãi")
         }
         val chatReady = chatEnabled && activeMessage.isNotEmpty()
 
