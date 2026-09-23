@@ -60,6 +60,7 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
         }
 
         var lastAnnouncement: Announcement? = null
+        var lastPlanned: PlannedExtra? = null
         var secondsSinceAnnounce = 0
         var secondsSinceRotate = 0
         var titleIndex = 0
@@ -68,14 +69,26 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
         // đồng thời tự đếm chu kỳ lặp lại message.active và chu kỳ đổi tiêu đề bossbar.
         tickTask = runAsyncTimer(0, 20L) {
             val now = ZonedDateTime.now()
+            val currentPlanned = PlannedExtrasConfig.pickCurrent(extras.getAll(), now)
             val current = currentAnnouncement(now)
 
             if (current?.name != lastAnnouncement?.name) {
+                // Khuyến mãi trước vẫn còn hiệu lực (chỉ bị ghi đè bởi khuyến mãi tỉ lệ cao hơn) thì
+                // không phải là "kết thúc", chỉ đổi khuyến mãi đang được áp dụng
+                val previousStillActive = when {
+                    lastPlanned != null -> lastPlanned.isActive(now)
+                    lastAnnouncement != null ->
+                        main.config.extraRate > 0 && main.config.extraUntil > now.toInstant().toEpochMilli()
+                    else -> false
+                }
                 if (chatReady) {
-                    lastAnnouncement?.let { broadcast(endedMessage, it, now) }
+                    if (!previousStillActive) {
+                        lastAnnouncement?.let { broadcast(endedMessage, it, now) }
+                    }
                     current?.let { broadcast(activeMessage, it, now) }
                 }
                 lastAnnouncement = current
+                lastPlanned = currentPlanned
                 secondsSinceAnnounce = 0
                 secondsSinceRotate = 0
                 titleIndex = 0
