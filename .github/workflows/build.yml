@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - beta
 
 concurrency:
   group: build-${{ github.ref }}
@@ -32,4 +33,4 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         with:
           name: "DotMan"
-          path: ./dotman-plugin/build/libs/DotMan.jar
+          path: ./dotman-plugin/build/libs/DotMan-*.jar
