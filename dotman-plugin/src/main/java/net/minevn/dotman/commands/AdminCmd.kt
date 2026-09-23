@@ -454,7 +454,7 @@ class AdminCmd {
 
                 var amount = basePoint
                 var extraPercent = 0
-                var extraName = "Không có"
+                var extraName = ""
 
                 val plannedExtra = main.plannedExtras.getCurrentExtra()
                 if (plannedExtra != null) {
