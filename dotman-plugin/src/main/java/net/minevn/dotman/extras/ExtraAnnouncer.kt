@@ -136,12 +136,10 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
     }
 
     private fun broadcast(message: List<String>, announcement: Announcement, now: ZonedDateTime) {
-        val players = Bukkit.getOnlinePlayers()
-        if (players.isEmpty()) {
-            return
-        }
         val lines = message.map { formatLine(it, announcement, now, main.language) }
-        players.forEach { player -> lines.forEach { player.sendMessage(it) } }
+        runSync {
+            Bukkit.getOnlinePlayers().forEach { player -> lines.forEach { player.sendMessage(it) } }
+        }
     }
 
     /**
