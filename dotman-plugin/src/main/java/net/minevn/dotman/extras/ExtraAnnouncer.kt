@@ -30,12 +30,12 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
 
     fun start() {
         val config = extras.config
-        val chatEnabled = config.getBoolean("thong-bao.enabled", true)
-        val activeMessage = extras.getList("thong-bao.message.active")
-        val endedMessage = extras.getList("thong-bao.message.ended")
-        val interval = config.getInt("thong-bao.interval", 300).coerceAtLeast(0)
+        val chatEnabled = config.getBoolean("thong-bao.chat.enabled", true)
+        val activeMessage = extras.getList("thong-bao.chat.message.active")
+        val endedMessage = extras.getList("thong-bao.chat.message.ended")
+        val interval = config.getInt("thong-bao.chat.interval", 300).coerceAtLeast(0)
         if (chatEnabled && activeMessage.isEmpty()) {
-            warning("thong-bao.message.active trống, không gửi thông báo khuyến mãi")
+            warning("thong-bao.chat.message.active trống, không gửi thông báo khuyến mãi")
         }
         val chatReady = chatEnabled && activeMessage.isNotEmpty()
 
@@ -60,6 +60,7 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
         }
 
         var lastAnnouncement: Announcement? = null
+        var lastPlanned: PlannedExtra? = null
         var secondsSinceAnnounce = 0
         var secondsSinceRotate = 0
         var titleIndex = 0
@@ -68,14 +69,27 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
         // đồng thời tự đếm chu kỳ lặp lại message.active và chu kỳ đổi tiêu đề bossbar.
         tickTask = runAsyncTimer(0, 20L) {
             val now = ZonedDateTime.now()
+            val currentPlanned = PlannedExtrasConfig.pickCurrent(extras.getAll(), now)
             val current = currentAnnouncement(now)
 
             if (current?.name != lastAnnouncement?.name) {
+                // Khuyến mãi trước vẫn còn hiệu lực (chỉ bị ghi đè bởi khuyến mãi tỉ lệ cao hơn) thì
+                // không phải là "kết thúc", chỉ đổi khuyến mãi đang được áp dụng
+                val previousPlanned = lastPlanned
+                val previousStillActive = when {
+                    previousPlanned != null -> previousPlanned.isActive(now)
+                    lastAnnouncement != null ->
+                        main.config.extraRate > 0 && main.config.extraUntil > now.toInstant().toEpochMilli()
+                    else -> false
+                }
                 if (chatReady) {
-                    lastAnnouncement?.let { broadcast(endedMessage, it, now) }
+                    if (!previousStillActive) {
+                        lastAnnouncement?.let { broadcast(endedMessage, it, now) }
+                    }
                     current?.let { broadcast(activeMessage, it, now) }
                 }
                 lastAnnouncement = current
+                lastPlanned = currentPlanned
                 secondsSinceAnnounce = 0
                 secondsSinceRotate = 0
                 titleIndex = 0
@@ -92,8 +106,10 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
             }
             if (current == null) {
                 if (bar.isVisible) {
-                    bar.removeAll()
-                    bar.isVisible = false
+                    runSync {
+                        bar.removeAll()
+                        bar.isVisible = false
+                    }
                 }
                 return@runAsyncTimer
             }
@@ -102,12 +118,17 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
                 secondsSinceRotate = 0
                 titleIndex++
             }
-            bar.setTitle(formatLine(titles[titleIndex % titles.size], current, now, main.language))
-            bar.progress = bossBarProgress(current, now)
-            bar.color = bossBarColor(bar.progress)
-            if (!bar.isVisible) {
-                bar.isVisible = true
-                runSync { Bukkit.getOnlinePlayers().forEach { bar.addPlayer(it) } }
+            val title = formatLine(titles[titleIndex % titles.size], current, now, main.language)
+            val progress = bossBarProgress(current, now)
+            val color = bossBarColor(progress)
+            runSync {
+                bar.setTitle(title)
+                bar.progress = progress
+                bar.color = color
+                if (!bar.isVisible) {
+                    bar.isVisible = true
+                    Bukkit.getOnlinePlayers().forEach { bar.addPlayer(it) }
+                }
             }
         }
     }
@@ -123,12 +144,10 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
     }
 
     private fun broadcast(message: List<String>, announcement: Announcement, now: ZonedDateTime) {
-        val players = Bukkit.getOnlinePlayers()
-        if (players.isEmpty()) {
-            return
-        }
         val lines = message.map { formatLine(it, announcement, now, main.language) }
-        players.forEach { player -> lines.forEach { player.sendMessage(it) } }
+        runSync {
+            Bukkit.getOnlinePlayers().forEach { player -> lines.forEach { player.sendMessage(it) } }
+        }
     }
 
     /**

@@ -35,7 +35,7 @@ class AdminCmd {
             addSubCommand(traCuuGiaoDich(), "tracuugd", "magiaodich")
             addSubCommand(clearPlayerData(), "cleardata")
             addSubCommand(testPagination(), "testphantrang")
-            addSubCommand(testKhuyenMai(), "testkhuyenmai", "tkm")
+            addSubCommand(testPointCalculation(), "testpoint", "tp")
 
             action {
                 sender.sendMessage("§b§lCác lệnh của plugin DotMan")
@@ -432,9 +432,16 @@ class AdminCmd {
             }
         }
 
-        private fun testKhuyenMai() = command {
+        private fun testPointCalculation() = command {
             val usage = "<số tiền>"
-            description("Test flow tính khuyến mãi nạp thẻ (dry-run, không cộng point thật)")
+            description("Test flow tính toán nạp thẻ (dry-run, không cộng point thật)")
+
+            tabComplete {
+                if (args.size != 1) {
+                    return@tabComplete emptyList()
+                }
+                CardPrice.entries.map { it.value.toString() }.filter { it.startsWith(args.last()) }
+            }
 
             action {
                 val amountArg = args.getOrNull(0)?.toIntOrNull() ?: run {
@@ -447,14 +454,13 @@ class AdminCmd {
                     return@action
                 }
 
-                // Từ đây trở xuống lấy đúng flow nghiệp vụ của CardProvider.onChargeSuccess, không ghi dữ liệu thật
                 val main = DotMan.instance
                 val cfg = main.config
                 val basePoint = cardPrice.getPointAmount()
 
                 var amount = basePoint
                 var extraPercent = 0
-                var extraName = "Không có"
+                var extraName = ""
 
                 val plannedExtra = main.plannedExtras.getCurrentExtra()
                 if (plannedExtra != null) {
@@ -467,16 +473,24 @@ class AdminCmd {
                     extraName = main.plannedExtras.legacyName
                 }
                 val bonus = amount - basePoint
+                val divider = "§8§m                                                  "
 
-                sender.send("§b§l== Test khuyến mãi nạp thẻ ==")
-                sender.send("§7Số tiền nhập vào: §f${amountArg.format()} VNĐ")
-                sender.send(
-                    if (extraPercent > 0) "§7Khuyến mãi đang hoạt động: §f$extraName §7(§b$extraPercent%§7)"
-                    else "§7Khuyến mãi đang hoạt động: §fKhông có"
+                sender.send("  §b§l✦ TÍNH TOÁN POINT")
+                sender.sendMessage(divider)
+                sender.sendMessage("  §7Số tiền nhập: §f${amountArg.format()} §7VNĐ")
+                sender.sendMessage(
+                    if (extraPercent > 0) {
+                        "  ${main.language.khuyenmaiAppliedTag} §e$extraName §7(§b$extraPercent%§7)"
+                    } else {
+                        "  §7Không có khuyến mãi áp dụng"
+                    }
                 )
-                sender.send("§7Point nhận được (chưa khuyến mãi): §f${basePoint.format()} ${cfg.pointUnit}")
-                sender.send("§7Point nhận thêm từ khuyến mãi: §f+${bonus.format()} ${cfg.pointUnit}")
-                sender.send("§a§lTổng point nhận được: §b${amount.format()} ${cfg.pointUnit}")
+                sender.sendMessage(" ")
+                sender.sendMessage("  §7Point chưa khuyến mãi: §f${basePoint.format()} ${cfg.pointUnit}")
+                sender.sendMessage("  §7Point khuyến mãi thêm: §a+${bonus.format()} ${cfg.pointUnit}")
+                sender.sendMessage(divider)
+                sender.sendMessage("  §a§lTổng nhận được: §b§l${amount.format()} ${cfg.pointUnit}")
+                sender.sendMessage(divider)
             }
         }
 
