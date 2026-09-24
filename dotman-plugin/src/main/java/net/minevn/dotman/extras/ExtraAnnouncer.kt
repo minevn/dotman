@@ -27,6 +27,7 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
     private val main = DotMan.instance
     private var tickTask: BukkitTask? = null
     private var bossBar: BukkitBossBar? = null
+    private var stopped = false
 
     fun start() {
         val config = extras.config
@@ -100,6 +101,9 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
             if (current == null) {
                 if (bar.isVisible) {
                     runSync {
+                        if (stopped) {
+                            return@runSync
+                        }
                         bar.removeAll()
                         bar.isVisible = false
                     }
@@ -115,6 +119,9 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
             val progress = bossBarProgress(current, now)
             val color = bossBarColor(progress)
             runSync {
+                if (stopped) {
+                    return@runSync
+                }
                 bar.setTitle(title)
                 bar.progress = progress
                 bar.color = color
@@ -139,6 +146,9 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
     private fun broadcast(message: List<String>, announcement: Announcement, now: ZonedDateTime) {
         val lines = message.map { formatLine(it, announcement, now, main.language) }
         runSync {
+            if (stopped) {
+                return@runSync
+            }
             Bukkit.getOnlinePlayers().forEach { player -> lines.forEach { player.sendMessage(it) } }
         }
     }
@@ -162,6 +172,7 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
      * Hủy timer và bossbar; gọi trước khi tạo PlannedExtrasConfig mới hoặc khi disable plugin
      */
     fun stop() {
+        stopped = true
         tickTask?.cancel()
         tickTask = null
         bossBar?.removeAll()
