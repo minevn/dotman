@@ -78,8 +78,9 @@ class PlannedExtrasConfig : FileConfig("khuyenmai") {
      */
     private fun parseSchedule(map: Map<*, *>): Schedule {
         val hasWeekly = map.containsKey("days") || map.containsKey("hours")
-        val from = map["from"]?.let { dateFormat.parse(it.toString().trim()).time }
-        val to = map["to"]?.let { dateFormat.parse(it.toString().trim()).time }
+        // Bỏ hẳn key = không giới hạn; có key mà để trống là lỗi, giống days/hours
+        val from = parseTime(map, "from")
+        val to = parseTime(map, "to")
 
         if (from != null && to != null && from >= to) {
             throw IllegalArgumentException("thời gian bắt đầu phải trước thời gian kết thúc: ${map["from"]} >= ${map["to"]}")
@@ -108,6 +109,19 @@ class PlannedExtrasConfig : FileConfig("khuyenmai") {
 
     private fun requireValue(map: Map<*, *>, key: String): Any =
         map[key] ?: throw IllegalArgumentException("$key rỗng")
+
+    /**
+     * Đọc mốc thời gian from/to (epoch millis)
+     *
+     * @return null nếu không có key
+     * @throws IllegalArgumentException nếu có key mà để trống
+     */
+    private fun parseTime(map: Map<*, *>, key: String): Long? {
+        if (!map.containsKey(key)) {
+            return null
+        }
+        return dateFormat.parse(requireValue(map, key).toString().trim()).time
+    }
 
     override fun reload() {
         super.reload()
