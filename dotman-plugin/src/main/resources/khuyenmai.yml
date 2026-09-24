@@ -90,24 +90,23 @@ thong-bao:
       # Gửi ngay khi khuyến mãi bắt đầu áp dụng, sau đó lặp lại mỗi `interval` giây trong khi còn hiệu lực
       active:
         - '&8&m                                                  '
-        - ''
-        - '   &e&l✦ KHUYẾN MÃI NẠP THẺ'
+        - '   &e&l✦ KHUYẾN MÃI NẠP THẺ &e&l✦'
         - ''
         - '   &f%NAME%'
+        - ''
         - '   &7Nạp thẻ nhận thêm &b&l+%RATE%% &7giá trị'
         - '   &7Thời gian: &e%FROM% &8→ &e%TO%'
         - '   &7Còn lại: &e%REMAINING%'
         - ''
-        - '   &a➜ &fGõ &a/napthe &fđể nạp ngay'
-        - ''
+        - '   &a➜ &fGõ &a/napthe &fhoặc &a/bank &fđể nạp ngay'
         - '&8&m                                                  '
       # Gửi đúng 1 lần khi khuyến mãi kết thúc. %REMAINING% không còn ý nghĩa nên không dùng ở đây
       ended:
         - '&8&m                                                  '
         - ''
-        - '   &7✦ %NAME% &7đã kết thúc'
+        - '   &7&l✦ %NAME% &7đã kết thúc &7&l✦'
         - ''
-        - '   &7Cảm ơn các bạn đã ủng hộ server!'
+        - '   &fCảm ơn các bạn đã ủng hộ server!'
         - ''
         - '&8&m                                                  '
 
@@ -120,7 +119,7 @@ thong-bao:
     rotate: 5
     # Các tiêu đề luân phiên, placeholder giống message
     titles:
-      - '&e&l✦ %NAME%'
+      - '&e&l✦ %NAME% &e&l✦'
       - '&fNạp thẻ nhận thêm &b&l+%RATE%% &fgiá trị'
       - '&fThời gian: &e%FROM% &f→ &e%TO%'
-      - '&fCòn lại: &e%REMAINING% &7- gõ &a/napthe &7để nạp'
+      - '&fCòn lại: &e%REMAINING% &7- gõ &a/napthe &7hoặc &a/bank &7để nạp'
