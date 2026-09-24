@@ -51,13 +51,6 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
         if (!chatReady && bar == null) {
             return
         }
-        if (chatReady) {
-            val repeatNote = if (interval > 0) ", lặp lại mỗi $interval giây khi đang áp dụng" else ""
-            info("Thông báo khuyến mãi khi bắt đầu/kết thúc$repeatNote")
-        }
-        if (bar != null) {
-            info("Bossbar khuyến mãi: ${titles.size} tiêu đề, đổi mỗi $rotate giây")
-        }
 
         var lastAnnouncement: Announcement? = null
         var lastPlanned: PlannedExtra? = null
@@ -134,7 +127,7 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
     }
 
     private fun newBossBar(config: YamlConfiguration): BukkitBossBar? {
-        val style = config.getString("thong-bao.bossbar.style", "SEGMENTED_10")!!
+        val style = config.getString("thong-bao.bossbar.style", "SOLID")!!
         return try {
             BukkitBossBar("§r", "GREEN", style).apply { isVisible = false }
         } catch (e: IllegalArgumentException) {
