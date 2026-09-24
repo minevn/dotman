@@ -15,9 +15,10 @@
 #    * from: Thời điểm bắt đầu, định dạng dd/MM/yyyy HH:mm
 #    * to: Thời điểm kết thúc, định dạng dd/MM/yyyy HH:mm
 # 2. Lặp lại hàng tuần:
-#    * days: Các thứ trong tuần, 2 = thứ 2 ... 7 = thứ 7, 8 = chủ nhật. Bỏ trống = mọi ngày
-#    * hours: Khung giờ trong ngày, định dạng 'HH:mm-HH:mm' (đặt trong dấu nháy đơn). Bỏ trống = cả ngày
+#    * days: Các thứ trong tuần, 2 = thứ 2 ... 7 = thứ 7, 8 = chủ nhật. Bỏ hẳn dòng days = mọi ngày
+#    * hours: Khung giờ trong ngày, định dạng 'HH:mm-HH:mm' (đặt trong dấu nháy đơn). Bỏ hẳn dòng hours = cả ngày
 #      Giờ kết thúc phải sau giờ bắt đầu, tối đa 24:00
+#    (có dòng days/hours mà để trống giá trị sẽ bị báo lỗi)
 # 3. Kết hợp: days/hours kèm from/to = chỉ lặp lại trong khoảng from -> to
 #    (có thể bỏ hẳn dòng from hoặc to để không giới hạn; có dòng mà để trống giá trị sẽ bị báo lỗi)
 #
