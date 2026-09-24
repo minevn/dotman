@@ -78,6 +78,8 @@ duration-day: '%N% ngày'
 duration-hour: '%N% giờ'
 duration-minute: '%N% phút'
 duration-now: 'dưới 1 phút'
+# Ngăn cách giữa 2 đơn vị, ví dụ "1 ngày, 5 giờ"
+duration-separator: ', '
 
 # Lệnh /khuyenmai - danh sách khuyến mãi đang và sắp diễn ra
 khuyenmai-usage: '%PREFIX% &cCách dùng: &f/khuyenmai [trang]'

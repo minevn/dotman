@@ -94,7 +94,7 @@ thong-bao:
         - '&8&m                                                  '
         - '   &e&l✦ KHUYẾN MÃI NẠP THẺ &e&l✦'
         - ''
-        - '   &f%NAME%'
+        - '   %NAME%'
         - ''
         - '   &7Nạp thẻ nhận thêm &b&l+%RATE%% &7giá trị'
         - '   &7Thời gian: &e%FROM% &8→ &e%TO%'

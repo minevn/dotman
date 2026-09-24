@@ -8,7 +8,8 @@ object DurationFormat {
     private const val DAY = 24 * HOUR
 
     /**
-     * Ghép tối đa 2 đơn vị lớn nhất khác 0: "1 ngày 5 giờ", "5 giờ 20 phút", "20 phút".
+     * Đơn vị lớn nhất khác 0 kèm đơn vị liền kề nhỏ hơn, không nhảy cóc đơn vị:
+     * "1 ngày, 5 giờ", "5 giờ, 20 phút", "20 phút"; đơn vị liền kề bằng 0 thì bỏ ("98 ngày" chứ không "98 ngày, 15 phút").
      * Dưới 1 phút -> lang.durationNow. Âm -> coi như 0.
      *
      * @param millis khoảng thời gian tính bằng mili giây
@@ -19,18 +20,17 @@ object DurationFormat {
         val hours = total % DAY / HOUR
         val minutes = total % HOUR / MINUTE
 
-        val parts = listOf(
+        val units = listOf(
             days to lang.durationDay,
             hours to lang.durationHour,
             minutes to lang.durationMinute,
         )
-            .filter { it.first > 0 }
-            .take(2)
-            .map { it.second.replace("%N%", it.first.toString()) }
-
-        if (parts.isEmpty()) {
+        val largest = units.indexOfFirst { it.first > 0 }
+        if (largest == -1) {
             return lang.durationNow
         }
-        return parts.joinToString(" ")
+        return units.drop(largest).take(2)
+            .filter { it.first > 0 }
+            .joinToString(lang.durationSeparator) { it.second.replace("%N%", it.first.toString()) }
     }
 }
