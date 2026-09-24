@@ -2,7 +2,7 @@ package net.minevn.dotman.extras
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.config.Language
-import net.minevn.dotman.config.PlannedExtrasConfig
+import net.minevn.dotman.config.PlannedExtras
 import net.minevn.dotman.utils.BukkitBossBar
 import net.minevn.dotman.utils.Utils.Companion.runAsyncTimer
 import net.minevn.dotman.utils.Utils.Companion.runSync
@@ -20,9 +20,9 @@ import java.time.ZonedDateTime
  * planned trước, legacy config.yml sau). Khi khuyến mãi bắt đầu/kết thúc: gửi message.active/message.ended
  * ngay lập tức (không chờ chu kỳ) và render lại bossbar ngay; chu kỳ lặp lại message.active được tính lại
  * từ lúc gửi gần nhất, dù gửi do bắt đầu hay do đến chu kỳ.
- * Một instance sống cùng một PlannedExtrasConfig: DotMan tạo sau khi nạp PlannedExtrasConfig và gọi stop() khi reload/disable.
+ * Một instance sống cùng một PlannedExtras: DotMan tạo sau khi nạp PlannedExtras và gọi stop() khi reload/disable.
  */
-class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
+class ExtraAnnouncer(private val extras: PlannedExtras) {
     private val main = DotMan.instance
     private var tickTask: BukkitTask? = null
     private var bossBar: BukkitBossBar? = null
@@ -53,7 +53,7 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
         }
 
         var lastAnnouncement: Announcement? = null
-        var lastPlanned: PlannedExtra? = null
+        var lastPlanned: PlannedExtraEntry? = null
         var secondsSinceAnnounce = 0
         var secondsSinceRotate = 0
         var titleIndex = 0
@@ -62,7 +62,7 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
         // đồng thời tự đếm chu kỳ lặp lại message.active và chu kỳ đổi tiêu đề bossbar.
         tickTask = runAsyncTimer(0, 20L) {
             val now = ZonedDateTime.now()
-            val currentPlanned = PlannedExtrasConfig.pickCurrent(extras.getAll(), now)
+            val currentPlanned = PlannedExtras.pickCurrent(extras.getAll(), now)
             val current = currentAnnouncement(now)
 
             if (current?.name != lastAnnouncement?.name) {
@@ -170,7 +170,7 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
     }
 
     /**
-     * Hủy timer và bossbar; gọi trước khi tạo PlannedExtrasConfig mới hoặc khi disable plugin
+     * Hủy timer và bossbar; gọi trước khi tạo PlannedExtras mới hoặc khi disable plugin
      */
     fun stop() {
         stopped = true
@@ -197,10 +197,10 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
          * @return null nếu không có khuyến mãi nào đang áp dụng
          */
         internal fun resolveAnnouncement(
-            components: List<PlannedExtra>, legacyRate: Double, legacyUntil: Long, legacyName: String,
+            components: List<PlannedExtraEntry>, legacyRate: Double, legacyUntil: Long, legacyName: String,
             now: ZonedDateTime
         ): Announcement? {
-            PlannedExtrasConfig.pickCurrent(components, now)?.let { extra ->
+            PlannedExtras.pickCurrent(components, now)?.let { extra ->
                 val window = extra.schedule.window(now) ?: return null
                 return Announcement(extra.name, extra.getPercentage(), window.from, window.to)
             }

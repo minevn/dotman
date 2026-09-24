@@ -9,7 +9,7 @@ import java.time.ZonedDateTime
  * @param rate Tỉ lệ khuyến mãi, 0.5 = 50%
  * @param schedule Lịch hoạt động
  */
-class PlannedExtra(val name: String, val rate: Double, val schedule: Schedule) {
+class PlannedExtraEntry(val name: String, val rate: Double, val schedule: Schedule) {
     /**
      * Kiểm tra xem khuyến mãi có đang hoạt động tại thời điểm chỉ định không
      *
