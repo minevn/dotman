@@ -45,6 +45,7 @@ class Language : FileConfig("messages") {
     val durationHour = get("duration-hour")
     val durationMinute = get("duration-minute")
     val durationNow = get("duration-now")
+    val durationSeparator = get("duration-separator")
 
     val khuyenmaiUsage = get("khuyenmai-usage")
     val khuyenmaiEmpty = get("khuyenmai-empty")
