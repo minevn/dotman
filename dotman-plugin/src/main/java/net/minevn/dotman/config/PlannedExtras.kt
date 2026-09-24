@@ -2,7 +2,7 @@ package net.minevn.dotman.config
 
 import net.minevn.dotman.extras.FixedSchedule
 import net.minevn.dotman.extras.MINUTES_PER_DAY
-import net.minevn.dotman.extras.PlannedExtra
+import net.minevn.dotman.extras.PlannedExtraEntry
 import net.minevn.dotman.extras.Schedule
 import net.minevn.dotman.extras.WeeklySchedule
 import net.minevn.dotman.utils.Utils.Companion.color
@@ -15,11 +15,11 @@ import java.time.DayOfWeek
 import java.time.ZonedDateTime
 
 /**
- * Nạp và giữ danh sách khuyến mãi theo lịch từ khuyenmai.yml (mỗi mục là một PlannedExtra)
+ * Nạp và giữ danh sách khuyến mãi theo lịch từ khuyenmai.yml (mỗi mục là một PlannedExtraEntry)
  */
-class PlannedExtrasConfig : FileConfig("khuyenmai") {
+class PlannedExtras : FileConfig("khuyenmai") {
 
-    private var components: List<PlannedExtra> = emptyList()
+    private var components: List<PlannedExtraEntry> = emptyList()
     // isLenient = false: ngày sai (31/09, 25:00) báo lỗi thay vì tự cuộn sang ngày/tháng kế
     private val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm").apply { isLenient = false }
 
@@ -40,7 +40,7 @@ class PlannedExtrasConfig : FileConfig("khuyenmai") {
                 it as Map<*, *>
                 val name = it["name"] as String
                 val rate = (it["rate"] as Number).toDouble()
-                PlannedExtra(name, rate, parseSchedule(it))
+                PlannedExtraEntry(name, rate, parseSchedule(it))
             } catch (e: Exception) {
                 val name = try { (it as Map<*, *>)["name"] as String } catch (_: Exception) { "<unknown>" }
                 e.warning("Khuyến mãi $name không hợp lệ: ${e.message}")
@@ -131,7 +131,7 @@ class PlannedExtrasConfig : FileConfig("khuyenmai") {
     /**
      * Toàn bộ khuyến mãi đã nạp, theo thứ tự trong file
      */
-    fun getAll(): List<PlannedExtra> = components
+    fun getAll(): List<PlannedExtraEntry> = components
 
     /**
      * Lấy khuyến mãi đang hoạt động tại thời điểm chỉ định
@@ -140,15 +140,15 @@ class PlannedExtrasConfig : FileConfig("khuyenmai") {
      * @param now Thời điểm cần kiểm tra, mặc định là hiện tại
      * @return Khuyến mãi đang hoạt động, hoặc null nếu không có
      */
-    fun getCurrentExtra(now: ZonedDateTime = ZonedDateTime.now()): PlannedExtra? = pickCurrent(components, now)
+    fun getCurrentExtra(now: ZonedDateTime = ZonedDateTime.now()): PlannedExtraEntry? = pickCurrent(components, now)
 
     companion object {
         private val HOURS_REGEX = Regex("^(\\d{1,2}):(\\d{2})-(\\d{1,2}):(\\d{2})$")
 
         /**
-         * Logic thuần của getCurrentExtra, không phụ thuộc trạng thái PlannedExtrasConfig
+         * Logic thuần của getCurrentExtra, không phụ thuộc trạng thái PlannedExtras
          */
-        internal fun pickCurrent(components: List<PlannedExtra>, now: ZonedDateTime): PlannedExtra? =
+        internal fun pickCurrent(components: List<PlannedExtraEntry>, now: ZonedDateTime): PlannedExtraEntry? =
             components.filter { it.isActive(now) }.maxByOrNull { it.rate }
 
         /**

@@ -2,9 +2,9 @@ package net.minevn.dotman.commands
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.config.Language
-import net.minevn.dotman.config.PlannedExtrasConfig
+import net.minevn.dotman.config.PlannedExtras
 import net.minevn.dotman.extras.ExtraFormat
-import net.minevn.dotman.extras.PlannedExtra
+import net.minevn.dotman.extras.PlannedExtraEntry
 import net.minevn.dotman.utils.DurationFormat
 import net.minevn.dotman.utils.Pagination
 import net.minevn.dotman.utils.replaceAllPlaceholders
@@ -89,11 +89,11 @@ class KhuyenMaiCmd {
          * Logic thuần, không đụng Bukkit/DotMan.
          */
         internal fun buildEntries(
-            components: List<PlannedExtra>, legacyRate: Double, legacyUntil: Long, legacyName: String,
+            components: List<PlannedExtraEntry>, legacyRate: Double, legacyUntil: Long, legacyName: String,
             now: ZonedDateTime
         ): List<Entry> {
             // Khuyến mãi thực sự được áp dụng khi có nhiều khuyến mãi active cùng lúc, cùng logic với getCurrentExtra
-            val appliedComponent = PlannedExtrasConfig.pickCurrent(components, now)
+            val appliedComponent = PlannedExtras.pickCurrent(components, now)
             val planned = components
                 .mapNotNull { component ->
                     component.schedule.window(now)?.let { window ->
