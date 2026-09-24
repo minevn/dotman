@@ -11,6 +11,8 @@ import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.dotman.utils.parseConfigDateTime
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
+import java.text.ParseException
 import java.time.DayOfWeek
 import java.time.ZonedDateTime
 
@@ -30,18 +32,27 @@ class PlannedExtras : FileConfig("khuyenmai") {
         loadComponents()
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun loadComponents() {
         val console = Bukkit.getServer().consoleSender
-        components = (config.getList("khuyen-mai") ?: emptyList()).mapNotNull {
+        components = (config.getList("khuyen-mai") ?: emptyList()).mapNotNull { item ->
+            val map = item as? Map<*, *>
+            val name = map?.get("name") as? String
+            val logName = name?.let { ChatColor.stripColor(it.color()) } ?: "<không có tên>"
             try {
-                it as Map<*, *>
-                val name = it["name"] as String
-                val rate = (it["rate"] as Number).toDouble()
-                PlannedExtraEntry(name, rate, parseSchedule(it))
+                if (map == null) {
+                    throw IllegalArgumentException("mỗi khuyến mãi phải là một mục có name, rate và thời gian")
+                }
+                if (name == null) {
+                    throw IllegalArgumentException("thiếu name")
+                }
+                val rate = map["rate"] as? Number ?: throw IllegalArgumentException("thiếu rate hoặc rate không phải số")
+                PlannedExtraEntry(name, rate.toDouble(), parseSchedule(map))
             } catch (e: Exception) {
-                val name = try { (it as Map<*, *>)["name"] as String } catch (_: Exception) { "<unknown>" }
-                e.warning("Khuyến mãi $name không hợp lệ: ${e.message}")
+                if (e is IllegalArgumentException) {
+                    warning("Khuyến mãi '$logName' sẽ bị bỏ qua do không hợp lệ: ${e.message}")
+                } else {
+                    e.warning("Khuyến mãi '$logName' sẽ bị bỏ qua do không hợp lệ: ${e.message}")
+                }
                 null
             }
         }
@@ -112,14 +123,17 @@ class PlannedExtras : FileConfig("khuyenmai") {
      * Đọc mốc thời gian from/to (epoch millis), nhận dd/MM/yyyy HH:mm:ss hoặc dd/MM/yyyy HH:mm
      *
      * @return null nếu không có key
-     * @throws IllegalArgumentException nếu có key mà để trống
-     * @throws ParseException nếu sai định dạng hoặc ngày giờ không tồn tại
+     * @throws IllegalArgumentException nếu có key mà để trống, sai định dạng hoặc ngày giờ không tồn tại
      */
     private fun parseTime(map: Map<*, *>, key: String): Long? {
         if (!map.containsKey(key)) {
             return null
         }
-        return parseConfigDateTime(requireValue(map, key).toString())
+        return try {
+            parseConfigDateTime(requireValue(map, key).toString())
+        } catch (e: ParseException) {
+            throw IllegalArgumentException("$key ${e.message}")
+        }
     }
 
     override fun reload() {
