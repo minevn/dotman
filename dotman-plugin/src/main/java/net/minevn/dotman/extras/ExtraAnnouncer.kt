@@ -4,7 +4,6 @@ import net.minevn.dotman.DotMan
 import net.minevn.dotman.config.Language
 import net.minevn.dotman.config.PlannedExtrasConfig
 import net.minevn.dotman.utils.BukkitBossBar
-import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.runAsyncTimer
 import net.minevn.dotman.utils.Utils.Companion.runSync
 import net.minevn.dotman.utils.Utils.Companion.warning

@@ -57,4 +57,5 @@ class Language : FileConfig("messages") {
     val khuyenmaiNoteActive = get("khuyenmai-note-active")
     val khuyenmaiNoteUpcoming = get("khuyenmai-note-upcoming")
     val khuyenmaiTimeNow = get("khuyenmai-time-now")
+    val khuyenmaiTimeUnlimited = get("khuyenmai-time-unlimited")
 }
