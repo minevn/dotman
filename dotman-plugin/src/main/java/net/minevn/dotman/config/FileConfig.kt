@@ -9,4 +9,6 @@ open class FileConfig(fileName: String) : FileConfig(DotMan.instance, fileName) 
     override fun get(key: String) = super.get(key).replace("%PREFIX%", main.prefix)
 
     override fun getList(key: String) = super.getList(key).map { it.replace("%PREFIX%", main.prefix) }
+
+    override fun getListAllowEmpty(key: String) = super.getListAllowEmpty(key).map { it.replace("%PREFIX%", main.prefix) }
 }
