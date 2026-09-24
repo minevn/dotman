@@ -83,7 +83,6 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
                     current?.let { broadcast(activeMessage, it, now) }
                 }
                 lastAnnouncement = current
-                lastPlanned = currentPlanned
                 secondsSinceAnnounce = 0
                 secondsSinceRotate = 0
                 titleIndex = 0
@@ -94,6 +93,9 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
                     secondsSinceAnnounce = 0
                 }
             }
+            // Cập nhật mỗi tick: hai mục khác nhau cùng tên nối tiếp nhau (ví dụ tách khung qua nửa đêm)
+            // không qua nhánh đổi tên ở trên, nhưng lastPlanned vẫn phải trỏ đúng mục đang chạy
+            lastPlanned = currentPlanned
 
             if (bar == null) {
                 return@runAsyncTimer
