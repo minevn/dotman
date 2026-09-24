@@ -2,6 +2,8 @@ package net.minevn.dotman.utils
 
 import net.minevn.libs.parseHexColorToInt
 import java.text.DecimalFormat
+import java.text.ParseException
+import java.text.ParsePosition
 import java.text.SimpleDateFormat
 
 val nonDecimalFormat = DecimalFormat("###,###")
@@ -14,6 +16,29 @@ fun formatFloat(value: Float) = String.format("%.1f", value)
 
 val dateAndTimeFormat = SimpleDateFormat("dd/MM/yyyy HH:mm")
 fun Long.formatDate() = dateAndTimeFormat.format(this)
+
+private val CONFIG_DATE_TIME_PATTERNS = listOf("dd/MM/yyyy HH:mm:ss", "dd/MM/yyyy HH:mm")
+
+/**
+ * Parse thời gian trong file config, nhận "dd/MM/yyyy HH:mm:ss" hoặc "dd/MM/yyyy HH:mm".
+ * Không lenient (31/09, 25:00 báo lỗi) và phải khớp hết chuỗi: ký tự thừa như "23:59abc" báo lỗi
+ * thay vì bị SimpleDateFormat.parse(String) âm thầm bỏ qua.
+ *
+ * @return epoch millis
+ * @throws ParseException nếu không khớp định dạng nào
+ */
+fun parseConfigDateTime(text: String): Long {
+    val value = text.trim()
+    for (pattern in CONFIG_DATE_TIME_PATTERNS) {
+        val format = SimpleDateFormat(pattern).apply { isLenient = false }
+        val position = ParsePosition(0)
+        val date = format.parse(value, position)
+        if (date != null && position.index == value.length) {
+            return date.time
+        }
+    }
+    throw ParseException("'$value' không đúng định dạng dd/MM/yyyy HH:mm hoặc dd/MM/yyyy HH:mm:ss", 0)
+}
 
 fun getTimeString(time: Long): String {
     val totalsecond = time / 1000

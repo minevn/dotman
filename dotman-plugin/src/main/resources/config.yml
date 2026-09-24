@@ -65,7 +65,8 @@ manual:
 extra-rate: 0
 
 # Thời gian kết thúc khuyến mãi
-# Định dạng: dd/MM/yyyy HH:mm
+# Định dạng: dd/MM/yyyy HH:mm:ss hoặc dd/MM/yyyy HH:mm
+# Khuyến mãi dừng đúng tại thời điểm này: 23:59 = dừng lúc 23:59:00, muốn trọn ngày thì dùng 23:59:59
 extra-until: 06/09/2023 17:00
 
 # Các loại thẻ được chấp nhận
