@@ -1,8 +1,8 @@
 package net.minevn.dotman.extras
 
 import net.minevn.dotman.config.Language
-import net.minevn.dotman.utils.DurationFormat
 import net.minevn.dotman.utils.Utils.Companion.color
+import net.minevn.dotman.utils.formatDuration
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -32,12 +32,12 @@ object ExtraFormat {
     }
 
     /**
-     * Thời gian còn lại tới [to] dạng DurationFormat; to null -> lang.khuyenmaiTimeUnlimited
+     * Khoảng thời gian từ [now] tới mốc [to] dạng formatDuration; to null -> lang.khuyenmaiTimeUnlimited
      */
     fun formatRemaining(to: ZonedDateTime?, now: ZonedDateTime, lang: Language): String {
         if (to == null) {
             return lang.khuyenmaiTimeUnlimited
         }
-        return DurationFormat.format(to.toInstant().toEpochMilli() - now.toInstant().toEpochMilli(), lang)
+        return formatDuration(to.toInstant().toEpochMilli() - now.toInstant().toEpochMilli(), lang)
     }
 }
