@@ -475,7 +475,7 @@ class AdminCmd {
                 val bonus = amount - basePoint
                 val divider = "§8§m                                                  "
 
-                sender.send("  §b§l✦ TÍNH TOÁN POINT")
+                sender.send("§b§lTÍNH TOÁN POINT")
                 sender.sendMessage(divider)
                 sender.sendMessage("  §7Số tiền nhập: §f${amountArg.format()} §7VNĐ")
                 sender.sendMessage(
@@ -488,7 +488,6 @@ class AdminCmd {
                 sender.sendMessage(" ")
                 sender.sendMessage("  §7Point chưa khuyến mãi: §f${basePoint.format()} ${cfg.pointUnit}")
                 sender.sendMessage("  §7Point khuyến mãi thêm: §a+${bonus.format()} ${cfg.pointUnit}")
-                sender.sendMessage(divider)
                 sender.sendMessage("  §a§lTổng nhận được: §b§l${amount.format()} ${cfg.pointUnit}")
                 sender.sendMessage(divider)
             }

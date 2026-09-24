@@ -19,7 +19,7 @@ object ExtraFormat {
     /**
      * Thay 4 placeholder dùng chung: %NAME%, %RATE%, %FROM%, %TO%.
      * Nối §r sau tên để màu của tên không lan sang phần còn lại của dòng;
-     * from/to null hiện lang.khuyenmaiTimeUnknown.
+     * from/to null hiện lang.khuyenmaiTimeNow.
      */
     fun replacePlaceholders(
         line: String, name: String, ratePercent: Int, from: ZonedDateTime?, to: ZonedDateTime?, lang: Language
@@ -27,16 +27,16 @@ object ExtraFormat {
         return line
             .replace("%NAME%", name.color() + "§r")
             .replace("%RATE%", ratePercent.toString())
-            .replace("%FROM%", from?.format(DISPLAY_FORMAT) ?: lang.khuyenmaiTimeUnknown)
-            .replace("%TO%", to?.format(DISPLAY_FORMAT) ?: lang.khuyenmaiTimeUnknown)
+            .replace("%FROM%", from?.format(DISPLAY_FORMAT) ?: lang.khuyenmaiTimeNow)
+            .replace("%TO%", to?.format(DISPLAY_FORMAT) ?: lang.khuyenmaiTimeNow)
     }
 
     /**
-     * Thời gian còn lại tới [to] dạng DurationFormat; to null -> lang.khuyenmaiTimeUnknown
+     * Thời gian còn lại tới [to] dạng DurationFormat; to null -> lang.khuyenmaiTimeNow
      */
     fun formatRemaining(to: ZonedDateTime?, now: ZonedDateTime, lang: Language): String {
         if (to == null) {
-            return lang.khuyenmaiTimeUnknown
+            return lang.khuyenmaiTimeNow
         }
         return DurationFormat.format(to.toInstant().toEpochMilli() - now.toInstant().toEpochMilli(), lang)
     }

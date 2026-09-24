@@ -81,7 +81,7 @@ duration-now: 'dưới 1 phút'
 
 # Lệnh /khuyenmai - danh sách khuyến mãi đang và sắp diễn ra
 khuyenmai-usage: '%PREFIX% &cCách dùng: &f/khuyenmai [trang]'
-khuyenmai-empty: '%PREFIX% &7Hiện chưa có chương trình khuyến mãi nào.'
+khuyenmai-empty: '%PREFIX% &cHiện chưa có chương trình khuyến mãi nào.'
 khuyenmai-header: '%PREFIX% &e&lKhuyến mãi nạp thẻ &7(%PAGE%/%MAX_PAGE%)'
 
 # Mỗi khuyến mãi. %STATUS% là khuyenmai-status-*, %REPEAT% là khuyenmai-repeat hoặc rỗng,
@@ -101,4 +101,4 @@ khuyenmai-repeat: '&8(lặp lại)'
 khuyenmai-applied-tag: '&6&l★'
 khuyenmai-note-active: '&8· &acòn %DURATION%'
 khuyenmai-note-upcoming: '&8· &ebắt đầu sau %DURATION%'
-khuyenmai-time-unknown: 'không xác định'
+khuyenmai-time-now: 'Hiện tại'
