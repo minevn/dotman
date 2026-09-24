@@ -19,7 +19,7 @@
 #    * hours: Khung giờ trong ngày, định dạng 'HH:mm-HH:mm' (đặt trong dấu nháy đơn). Bỏ trống = cả ngày
 #      Giờ kết thúc phải sau giờ bắt đầu, tối đa 24:00
 # 3. Kết hợp: days/hours kèm from/to = chỉ lặp lại trong khoảng from -> to
-#    (from hoặc to có thể bỏ trống)
+#    (có thể bỏ hẳn dòng from hoặc to để không giới hạn; có dòng mà để trống giá trị sẽ bị báo lỗi)
 #
 # Khuyến mãi ở file này sẽ được ưu tiên so với khuyến mãi được thiết lập ở file config.yml
 #
