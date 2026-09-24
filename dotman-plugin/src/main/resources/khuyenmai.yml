@@ -88,6 +88,7 @@ thong-bao:
     # Placeholder: %NAME%, %RATE%, %FROM%, %TO%, %REMAINING%, %PREFIX%
     message:
       # Gửi ngay khi khuyến mãi bắt đầu áp dụng, sau đó lặp lại mỗi `interval` giây trong khi còn hiệu lực
+      # Đặt `active: []` để không gửi thông báo bắt đầu/lặp lại
       active:
         - '&8&m                                                  '
         - '   &e&l✦ KHUYẾN MÃI NẠP THẺ &e&l✦'
@@ -101,6 +102,7 @@ thong-bao:
         - '   &a➜ &fGõ &a/napthe &fhoặc &a/bank &fđể nạp ngay'
         - '&8&m                                                  '
       # Gửi đúng 1 lần khi khuyến mãi kết thúc. %REMAINING% không còn ý nghĩa nên không dùng ở đây
+      # Đặt `ended: []` để không gửi thông báo kết thúc
       ended:
         - '&8&m                                                  '
         - ''

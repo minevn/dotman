@@ -16,6 +16,7 @@ import java.time.ZonedDateTime
 
 /**
  * Thông báo khuyến mãi ra chat và bossbar theo section thong-bao của khuyenmai.yml.
+ *
  * Một vòng lặp tick mỗi giây theo dõi khuyến mãi đang áp dụng (cùng logic ưu tiên với CardProvider:
  * planned trước, legacy config.yml sau). Khi khuyến mãi bắt đầu/kết thúc: gửi message.active/message.ended
  * ngay lập tức (không chờ chu kỳ) và render lại bossbar ngay; chu kỳ lặp lại message.active được tính lại
@@ -31,20 +32,14 @@ class ExtraAnnouncer(private val extras: PlannedExtras) {
     fun start() {
         val config = extras.config
         val chatEnabled = config.getBoolean("thong-bao.chat.enabled", true)
-        val activeMessage = extras.getList("thong-bao.chat.message.active")
-        val endedMessage = extras.getList("thong-bao.chat.message.ended")
+        val activeMessage = extras.getListAllowEmpty("thong-bao.chat.message.active")
+        val endedMessage = extras.getListAllowEmpty("thong-bao.chat.message.ended")
         val interval = config.getInt("thong-bao.chat.interval", 300).coerceAtLeast(0)
-        if (chatEnabled && activeMessage.isEmpty()) {
-            warning("thong-bao.chat.message.active trống, không gửi thông báo khuyến mãi")
-        }
-        val chatReady = chatEnabled && activeMessage.isNotEmpty()
+        val chatReady = chatEnabled && (activeMessage.isNotEmpty() || endedMessage.isNotEmpty())
 
         val bossBarEnabled = config.getBoolean("thong-bao.bossbar.enabled", false)
         val titles = extras.getList("thong-bao.bossbar.titles")
         val rotate = config.getInt("thong-bao.bossbar.rotate", 5).coerceAtLeast(1)
-        if (bossBarEnabled && titles.isEmpty()) {
-            warning("thong-bao.bossbar.titles trống, không hiển thị bossbar")
-        }
         val bar = if (bossBarEnabled && titles.isNotEmpty()) newBossBar(config) else null
         bossBar = bar
 
@@ -76,16 +71,18 @@ class ExtraAnnouncer(private val extras: PlannedExtras) {
                     else -> false
                 }
                 if (chatReady) {
-                    if (!previousStillActive) {
+                    if (!previousStillActive && endedMessage.isNotEmpty()) {
                         lastAnnouncement?.let { broadcast(endedMessage, it, now) }
                     }
-                    current?.let { broadcast(activeMessage, it, now) }
+                    if (activeMessage.isNotEmpty()) {
+                        current?.let { broadcast(activeMessage, it, now) }
+                    }
                 }
                 lastAnnouncement = current
                 secondsSinceAnnounce = 0
                 secondsSinceRotate = 0
                 titleIndex = 0
-            } else if (chatReady && current != null && interval > 0) {
+            } else if (chatReady && activeMessage.isNotEmpty() && current != null && interval > 0) {
                 secondsSinceAnnounce++
                 if (secondsSinceAnnounce >= interval) {
                     broadcast(activeMessage, current, now)
