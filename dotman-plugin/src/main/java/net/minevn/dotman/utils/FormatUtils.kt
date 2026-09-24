@@ -1,5 +1,6 @@
 package net.minevn.dotman.utils
 
+import net.minevn.dotman.config.Language
 import net.minevn.libs.parseHexColorToInt
 import java.text.DecimalFormat
 import java.text.ParseException
@@ -38,6 +39,33 @@ fun parseConfigDateTime(text: String): Long {
         }
     }
     throw ParseException("'$value' không đúng định dạng dd/MM/yyyy HH:mm hoặc dd/MM/yyyy HH:mm:ss", 0)
+}
+
+private const val MINUTE_MILLIS = 60_000L
+private const val HOUR_MILLIS = 60 * MINUTE_MILLIS
+private const val DAY_MILLIS = 24 * HOUR_MILLIS
+
+/**
+ * Định dạng khoảng thời gian: đơn vị lớn nhất khác 0 kèm đơn vị liền kề nhỏ hơn, không nhảy cóc đơn vị.
+ * "1 ngày, 5 giờ", "5 giờ, 20 phút", "20 phút"; đơn vị liền kề bằng 0 thì bỏ ("98 ngày" chứ không "98 ngày, 15 phút").
+ * Dưới 1 phút -> lang.durationNow. Âm -> coi như 0. Text lấy từ key duration-* trong messages.yml.
+ *
+ * @param millis khoảng thời gian tính bằng mili giây
+ */
+fun formatDuration(millis: Long, lang: Language): String {
+    val total = millis.coerceAtLeast(0)
+    val units = listOf(
+        total / DAY_MILLIS to lang.durationDay,
+        total % DAY_MILLIS / HOUR_MILLIS to lang.durationHour,
+        total % HOUR_MILLIS / MINUTE_MILLIS to lang.durationMinute,
+    )
+    val largest = units.indexOfFirst { it.first > 0 }
+    if (largest == -1) {
+        return lang.durationNow
+    }
+    return units.drop(largest).take(2)
+        .filter { it.first > 0 }
+        .joinToString(lang.durationSeparator) { it.second.replace("%N%", it.first.toString()) }
 }
 
 fun getTimeString(time: Long): String {
