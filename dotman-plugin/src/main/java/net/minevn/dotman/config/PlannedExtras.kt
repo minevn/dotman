@@ -9,8 +9,8 @@ import net.minevn.dotman.utils.Utils.Companion.color
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.send
 import net.minevn.dotman.utils.Utils.Companion.warning
+import net.minevn.dotman.utils.parseConfigDateTime
 import org.bukkit.Bukkit
-import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.ZonedDateTime
 
@@ -20,8 +20,6 @@ import java.time.ZonedDateTime
 class PlannedExtras : FileConfig("khuyenmai") {
 
     private var components: List<PlannedExtraEntry> = emptyList()
-    // isLenient = false: ngày sai (31/09, 25:00) báo lỗi thay vì tự cuộn sang ngày/tháng kế
-    private val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm").apply { isLenient = false }
 
     /**
      * Tên hiển thị cho khuyến mãi legacy trong config.yml (extra-rate), vì loại này không có tên
@@ -111,16 +109,17 @@ class PlannedExtras : FileConfig("khuyenmai") {
         map[key] ?: throw IllegalArgumentException("$key rỗng")
 
     /**
-     * Đọc mốc thời gian from/to (epoch millis)
+     * Đọc mốc thời gian from/to (epoch millis), nhận dd/MM/yyyy HH:mm:ss hoặc dd/MM/yyyy HH:mm
      *
      * @return null nếu không có key
      * @throws IllegalArgumentException nếu có key mà để trống
+     * @throws ParseException nếu sai định dạng hoặc ngày giờ không tồn tại
      */
     private fun parseTime(map: Map<*, *>, key: String): Long? {
         if (!map.containsKey(key)) {
             return null
         }
-        return dateFormat.parse(requireValue(map, key).toString().trim()).time
+        return parseConfigDateTime(requireValue(map, key).toString())
     }
 
     override fun reload() {
