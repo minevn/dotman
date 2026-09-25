@@ -9,6 +9,7 @@ import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.database.PlayerInfoDAO
 import net.minevn.dotman.utils.Pagination
+import net.minevn.dotman.utils.Utils.Companion.color
 import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
@@ -246,7 +247,7 @@ class AdminCmd {
                 if (point == null) {
                     // Giá trị khuyến mãi cũ từ config.yml
                     val legacyExtraRate = if (cfg.extraUntil > System.currentTimeMillis()) cfg.extraRate else 0.0
-                    // Giá trị khuyến mãi mới từ PlannedExtrasConfig
+                    // Giá trị khuyến mãi mới từ PlannedExtras
                     val plannedExtra = main.plannedExtras.getCurrentExtra()
 
                     // Giá trị khuyến mãi chính thức: Nếu có khuyến mãi planned thì dùng, không thì lấy legacyExtraRate
@@ -434,7 +435,7 @@ class AdminCmd {
 
         private fun testPointCalculation() = command {
             val usage = "<số tiền>"
-            description("Test flow tính toán nạp thẻ (dry-run, không cộng point thật)")
+            description("Test flow tính toán nạp thẻ & nạp thủ công (dry-run, không cộng point thật)")
 
             tabComplete {
                 if (args.size != 1) {
@@ -449,47 +450,46 @@ class AdminCmd {
                     return@action
                 }
 
-                val cardPrice = CardPrice[amountArg] ?: run {
-                    sender.send("§cSố tiền §b${amountArg.format()} §ckhông khớp mệnh giá thẻ nào đã cấu hình (xem donate-amounts trong config.yml)")
-                    return@action
-                }
-
                 val main = DotMan.instance
                 val cfg = main.config
-                val basePoint = cardPrice.getPointAmount()
-
-                var amount = basePoint
-                var extraPercent = 0
-                var extraName = ""
 
                 val plannedExtra = main.plannedExtras.getCurrentExtra()
-                if (plannedExtra != null) {
-                    amount = plannedExtra.calculateAmount(basePoint)
-                    extraPercent = plannedExtra.getPercentage()
-                    extraName = plannedExtra.name
-                } else if (cfg.extraRate > 0 && cfg.extraUntil > System.currentTimeMillis()) {
-                    amount += (amount * cfg.extraRate).toInt()
-                    extraPercent = (cfg.extraRate * 100).toInt()
-                    extraName = main.plannedExtras.legacyName
-                }
-                val bonus = amount - basePoint
-                val divider = "§8§m                                                  "
+                val legacyExtraRate = if (cfg.extraUntil > System.currentTimeMillis()) cfg.extraRate else 0.0
+                val extraRate = plannedExtra?.rate ?: legacyExtraRate
+                val extraPercent = (extraRate * 100).toInt()
+                val extraName = plannedExtra?.name ?: main.plannedExtras.legacyName
 
-                sender.send("§b§lTÍNH TOÁN POINT")
-                sender.sendMessage(divider)
-                sender.sendMessage("  §7Số tiền nhập: §f${amountArg.format()} §7VNĐ")
+                sender.send("§b§lTính toán point")
                 sender.sendMessage(
                     if (extraPercent > 0) {
-                        "  ${main.language.khuyenmaiAppliedTag} §e$extraName §7(§b$extraPercent%§7)"
+                        "${main.language.khuyenmaiAppliedTag} §e${extraName.color()} §7(§b$extraPercent%§7)"
                     } else {
-                        "  §7Không có khuyến mãi áp dụng"
+                        "§cKhông có khuyến mãi áp dụng"
                     }
                 )
-                sender.sendMessage(" ")
-                sender.sendMessage("  §7Point chưa khuyến mãi: §f${basePoint.format()} ${cfg.pointUnit}")
-                sender.sendMessage("  §7Point khuyến mãi thêm: §a+${bonus.format()} ${cfg.pointUnit}")
-                sender.sendMessage("  §a§lTổng nhận được: §b§l${amount.format()} ${cfg.pointUnit}")
-                sender.sendMessage(divider)
+
+                fun sendFlow(title: String, basePoint: Int, bonus: Int) {
+                    sender.sendMessage("§7")
+                    sender.sendMessage("§6§l$title:")
+                    sender.sendMessage("§7- Số tiền nhập: §f${amountArg.format()} §7VNĐ")
+                    sender.sendMessage("§7- Point chưa khuyến mãi: §f${basePoint.format()} ${cfg.pointUnit}")
+                    sender.sendMessage("§7- Point khuyến mãi thêm: §a+${bonus.format()} ${cfg.pointUnit}")
+                    sender.sendMessage("§a§lTổng nhận được: §b§l${(basePoint + bonus).format()} ${cfg.pointUnit}")
+                }
+
+                val cardPrice = CardPrice[amountArg]
+                if (cardPrice == null) {
+                    sender.sendMessage("§7")
+                    sender.sendMessage("§6§lFlow nạp thẻ cào:")
+                    sender.sendMessage("§cSố tiền §b${amountArg.format()} §ckhông khớp mệnh giá thẻ nào đã cấu hình (xem donate-amounts trong config.yml)")
+                } else {
+                    val basePoint = cardPrice.getPointAmount()
+                    sendFlow("Flow nạp thẻ cào", basePoint, (basePoint * extraRate).toInt())
+                }
+
+                val manualBasePoint = ((amountArg / 1000) * (cfg.manualBase + cfg.manualExtra)).toInt()
+                val manualBonus = ((amountArg / 1000) * (cfg.manualBase * extraRate)).toInt()
+                sendFlow("Flow nạp thủ công", manualBasePoint, manualBonus)
             }
         }
 

@@ -10,16 +10,18 @@
 #   * 1: Khuyến mãi 100%, ví dụ: nạp 100k được 200k
 #   * 1.5: Khuyến mãi 150%, ví dụ: nạp 100k được 250k
 #
-# Thời gian khuyến mãi:
-# 1. Ngày cố định:
-#    * from: Thời điểm bắt đầu, định dạng dd/MM/yyyy HH:mm
-#    * to: Thời điểm kết thúc, định dạng dd/MM/yyyy HH:mm
-# 2. Lặp lại hàng tuần:
-#    * days: Các thứ trong tuần, 2 = thứ 2 ... 7 = thứ 7, 8 = chủ nhật. Bỏ trống = mọi ngày
-#    * hours: Khung giờ trong ngày, định dạng 'HH:mm-HH:mm' (đặt trong dấu nháy đơn). Bỏ trống = cả ngày
-#      Giờ kết thúc phải sau giờ bắt đầu, tối đa 24:00
-# 3. Kết hợp: days/hours kèm from/to = chỉ lặp lại trong khoảng from -> to
-#    (from hoặc to có thể bỏ trống)
+# Thời gian khuyến mãi (bắt buộc, chọn 1 trong 2 kiểu):
+# 1. Ngày cố định: bắt buộc có đủ from và to
+#    * from: Thời điểm bắt đầu, định dạng dd/MM/yyyy HH:mm:ss hoặc dd/MM/yyyy HH:mm
+#    * to: Thời điểm kết thúc, định dạng dd/MM/yyyy HH:mm:ss hoặc dd/MM/yyyy HH:mm
+#      Khuyến mãi dừng đúng tại thời điểm to: 23:59 = dừng lúc 23:59:00, muốn trọn ngày thì dùng 23:59:59
+# 2. Lặp lại hàng tuần: bắt buộc có ít nhất một trong days hoặc hours
+#    * days: Các thứ trong tuần, 2 = thứ 2 ... 7 = thứ 7, 8 = chủ nhật. Chỉ có hours, không có days = mọi ngày
+#    * hours: Khung giờ trong ngày, định dạng 'HH:mm-HH:mm' (đặt trong dấu nháy đơn), tối đa 24:00,
+#      giờ kết thúc phải sau giờ bắt đầu. Chỉ có days, không có hours = cả ngày
+#    * from/to (tùy chọn): chỉ lặp lại trong khoảng from -> to, có thể chỉ dùng from hoặc chỉ dùng to
+#
+# Mục không có thời gian (chỉ có name và rate), hoặc có dòng mà để trống giá trị, sẽ bị bỏ qua kèm cảnh báo
 #
 # Khuyến mãi ở file này sẽ được ưu tiên so với khuyến mãi được thiết lập ở file config.yml
 #
@@ -33,25 +35,45 @@ khuyen-mai:
 - name: '&aNgày Giải Phóng Miền Nam và Quốc tế Lao Động - Khuyến mãi 100%'
   rate: 1.0
   from: 30/04/2026 00:00
-  to: 01/05/2026 23:59
+  to: 01/05/2026 23:59:59
 
 - name: '&aNgày Quốc khánh Việt Nam - Khuyến mãi 100%'
   rate: 1.0
   from: 02/09/2026 00:00
-  to: 03/09/2026 23:59
+  to: 03/09/2026 23:59:59
 
-# ===== Lặp lại hàng tuần =====
-# Bỏ dấu # ở đầu các dòng dưới để kích hoạt
+# Các ví dụ bên dưới đang tắt, bỏ dấu # ở đầu các dòng để kích hoạt
+
+# Cả năm 2026
+#- name: '&cThe Year of &f2026'
+#  rate: 1.0
+#  from: 01/01/2026 00:00
+#  to: 31/12/2026 23:59:59
+
+# ===== Lặp lại hàng tuần: chỉ có days (cả ngày) =====
 
 # Cuối tuần: trọn vẹn thứ 7 và chủ nhật
 #- name: '&aKhuyến mãi cuối tuần 50%'
 #  rate: 0.5
 #  days: [7, 8]
 
+# days còn nhận chuỗi cách nhau bằng dấu phẩy, hoặc một số duy nhất
+#- name: '&aKhuyến mãi cuối tuần 50%'
+#  rate: 0.5
+#  days: '7, 8'
+
+#- name: '&aChủ nhật vui vẻ 40%'
+#  rate: 0.4
+#  days: 8
+
+# ===== Lặp lại hàng tuần: chỉ có hours (mọi ngày) =====
+
 # Giờ vàng: 18:00 -> 22:00 mỗi ngày
 #- name: '&eGiờ vàng - Khuyến mãi 30%'
 #  rate: 0.3
 #  hours: '18:00-22:00'
+
+# ===== Lặp lại hàng tuần: có cả days và hours =====
 
 # Tối thứ 6: 20:00 -> hết ngày
 #- name: '&dTối thứ 6 - Khuyến mãi 20%'
@@ -65,18 +87,55 @@ khuyen-mai:
 #  days: [2, 3, 4, 5, 6]
 #  hours: '12:00-14:00'
 
-# ===== Lặp lại hàng tuần trong một khoảng =====
+# Khung giờ qua nửa đêm: không viết được '22:00-02:00', tách thành 2 mục cùng tên
+# Đêm thứ 7 22:00 -> 02:00 sáng chủ nhật
+#- name: '&5Cú đêm cuối tuần - Khuyến mãi 25%'
+#  rate: 0.25
+#  days: [7]
+#  hours: '22:00-24:00'
+#- name: '&5Cú đêm cuối tuần - Khuyến mãi 25%'
+#  rate: 0.25
+#  days: [8]
+#  hours: '00:00-02:00'
 
-# Cuối tuần tháng 9: chỉ các thứ 7, chủ nhật từ 01/09 đến hết 30/09
+# ===== Lặp lại hàng tuần: chạy liên tục =====
+
+# Mọi ngày, cả ngày, không giới hạn: luôn áp dụng cho tới khi xóa mục này
+#- name: '&6Khuyến mãi thường trực 10%'
+#  rate: 0.1
+#  hours: '00:00-24:00'
+
+# ===== Lặp lại hàng tuần trong một khoảng (from/to tùy chọn) =====
+
+# Có cả from và to: chỉ các thứ 7, chủ nhật từ 01/09 đến hết 30/09
 #- name: '&aCuối tuần tháng 9 - Khuyến mãi 100%'
 #  rate: 1.0
 #  days: [7, 8]
 #  from: 01/09/2026 00:00
-#  to: 30/09/2026 23:59
+#  to: 30/09/2026 23:59:59
+
+# Chỉ có from: giờ vàng mỗi ngày bắt đầu từ 01/10/2026, không hẹn ngày kết thúc
+#- name: '&eGiờ vàng mùa thu - Khuyến mãi 30%'
+#  rate: 0.3
+#  hours: '18:00-22:00'
+#  from: 01/10/2026 00:00
+
+# Chỉ có to: cuối tuần từ bây giờ đến hết năm 2026
+#- name: '&aCuối tuần cuối năm - Khuyến mãi 50%'
+#  rate: 0.5
+#  days: [7, 8]
+#  to: 31/12/2026 23:59:59
+
+# Có days, hours và from/to: tối thứ 6 trong tháng 12
+#- name: '&dTối thứ 6 tháng 12 - Khuyến mãi 20%'
+#  rate: 0.2
+#  days: [6]
+#  hours: '20:00-24:00'
+#  from: 01/12/2026 00:00
+#  to: 31/12/2026 23:59:59
 
 # Thông báo khuyến mãi cho toàn server
 thong-bao:
-  # Chat và bossbar bật/tắt độc lập nhau (thong-bao.chat.enabled / thong-bao.bossbar.enabled)
   chat:
     enabled: true
     # Số giây giữa các lần lặp lại message.active trong khi khuyến mãi đang áp dụng. Đặt 0 để không lặp lại
@@ -88,11 +147,12 @@ thong-bao:
     # Placeholder: %NAME%, %RATE%, %FROM%, %TO%, %REMAINING%, %PREFIX%
     message:
       # Gửi ngay khi khuyến mãi bắt đầu áp dụng, sau đó lặp lại mỗi `interval` giây trong khi còn hiệu lực
+      # Đặt `active: []` để không gửi thông báo bắt đầu/lặp lại
       active:
         - '&8&m                                                  '
         - '   &e&l✦ KHUYẾN MÃI NẠP THẺ &e&l✦'
         - ''
-        - '   &f%NAME%'
+        - '   %NAME%'
         - ''
         - '   &7Nạp thẻ nhận thêm &b&l+%RATE%% &7giá trị'
         - '   &7Thời gian: &e%FROM% &8→ &e%TO%'
@@ -101,6 +161,7 @@ thong-bao:
         - '   &a➜ &fGõ &a/napthe &fhoặc &a/bank &fđể nạp ngay'
         - '&8&m                                                  '
       # Gửi đúng 1 lần khi khuyến mãi kết thúc. %REMAINING% không còn ý nghĩa nên không dùng ở đây
+      # Đặt `ended: []` để không gửi thông báo kết thúc
       ended:
         - '&8&m                                                  '
         - ''
@@ -115,7 +176,7 @@ thong-bao:
   bossbar:
     enabled: false
     style: SOLID
-    # Số giây giữa hai lần đổi tiêu đề
+    # Số giây giữa các lần đổi tiêu đề
     rotate: 5
     # Các tiêu đề luân phiên, placeholder giống message
     titles:

@@ -2,10 +2,9 @@ package net.minevn.dotman.commands
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.config.Language
-import net.minevn.dotman.config.PlannedExtrasConfig
+import net.minevn.dotman.config.PlannedExtras
 import net.minevn.dotman.extras.ExtraFormat
-import net.minevn.dotman.extras.PlannedExtra
-import net.minevn.dotman.utils.DurationFormat
+import net.minevn.dotman.extras.PlannedExtraEntry
 import net.minevn.dotman.utils.Pagination
 import net.minevn.dotman.utils.replaceAllPlaceholders
 import net.minevn.libs.bukkit.command
@@ -89,11 +88,11 @@ class KhuyenMaiCmd {
          * Logic thuần, không đụng Bukkit/DotMan.
          */
         internal fun buildEntries(
-            components: List<PlannedExtra>, legacyRate: Double, legacyUntil: Long, legacyName: String,
+            components: List<PlannedExtraEntry>, legacyRate: Double, legacyUntil: Long, legacyName: String,
             now: ZonedDateTime
         ): List<Entry> {
             // Khuyến mãi thực sự được áp dụng khi có nhiều khuyến mãi active cùng lúc, cùng logic với getCurrentExtra
-            val appliedComponent = PlannedExtrasConfig.pickCurrent(components, now)
+            val appliedComponent = PlannedExtras.pickCurrent(components, now)
             val planned = components
                 .mapNotNull { component ->
                     component.schedule.window(now)?.let { window ->
@@ -122,21 +121,12 @@ class KhuyenMaiCmd {
          * Thay placeholder cho một dòng của khuyenmai-entry
          */
         internal fun formatLine(line: String, entry: Entry, now: ZonedDateTime, lang: Language): String {
-            val nowMillis = now.toInstant().toEpochMilli()
             // Không có mốc tương ứng (legacy thiếu from, lịch vĩnh viễn thiếu to) thì bỏ trống ghi chú
             val timeNote = if (entry.active) {
-                entry.to?.let {
-                    lang.khuyenmaiNoteActive.replace(
-                        "%DURATION%", DurationFormat.format(it.toInstant().toEpochMilli() - nowMillis, lang)
-                    )
-                } ?: ""
+                entry.to?.let { lang.khuyenmaiNoteActive.replace("%DURATION%", ExtraFormat.formatRemaining(it, now, lang)) }
             } else {
-                entry.from?.let {
-                    lang.khuyenmaiNoteUpcoming.replace(
-                        "%DURATION%", DurationFormat.format(it.toInstant().toEpochMilli() - nowMillis, lang)
-                    )
-                } ?: ""
-            }
+                entry.from?.let { lang.khuyenmaiNoteUpcoming.replace("%DURATION%", ExtraFormat.formatRemaining(it, now, lang)) }
+            } ?: ""
             val replacements = mapOf(
                 "%STATUS%" to if (entry.active) lang.khuyenmaiStatusActive else lang.khuyenmaiStatusUpcoming,
                 "%REPEAT%" to if (entry.repeating) lang.khuyenmaiRepeat else "",

@@ -40,7 +40,7 @@ class DotMan : MineVNPlugin() {
     lateinit var milestones: Milestones private set
     lateinit var milestonesMaster: MilestonesMaster private set
     lateinit var discord: Discord private set
-    lateinit var plannedExtras: PlannedExtrasConfig private set
+    lateinit var plannedExtras: PlannedExtras private set
     lateinit var extraAnnouncer: ExtraAnnouncer private set
 
     override fun onEnable() {
@@ -90,7 +90,7 @@ class DotMan : MineVNPlugin() {
         if (::extraAnnouncer.isInitialized) {
             extraAnnouncer.stop()
         }
-        plannedExtras = PlannedExtrasConfig()
+        plannedExtras = PlannedExtras()
         extraAnnouncer = ExtraAnnouncer(plannedExtras).apply { start() }
 
         // init Gui configs

@@ -2,9 +2,8 @@ package net.minevn.dotman.extras
 
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.config.Language
-import net.minevn.dotman.config.PlannedExtrasConfig
+import net.minevn.dotman.config.PlannedExtras
 import net.minevn.dotman.utils.BukkitBossBar
-import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.runAsyncTimer
 import net.minevn.dotman.utils.Utils.Companion.runSync
 import net.minevn.dotman.utils.Utils.Companion.warning
@@ -17,34 +16,30 @@ import java.time.ZonedDateTime
 
 /**
  * Thông báo khuyến mãi ra chat và bossbar theo section thong-bao của khuyenmai.yml.
+ *
  * Một vòng lặp tick mỗi giây theo dõi khuyến mãi đang áp dụng (cùng logic ưu tiên với CardProvider:
  * planned trước, legacy config.yml sau). Khi khuyến mãi bắt đầu/kết thúc: gửi message.active/message.ended
  * ngay lập tức (không chờ chu kỳ) và render lại bossbar ngay; chu kỳ lặp lại message.active được tính lại
  * từ lúc gửi gần nhất, dù gửi do bắt đầu hay do đến chu kỳ.
- * Một instance sống cùng một PlannedExtrasConfig: DotMan tạo sau khi nạp PlannedExtrasConfig và gọi stop() khi reload/disable.
+ * Một instance sống cùng một PlannedExtras: DotMan tạo sau khi nạp PlannedExtras và gọi stop() khi reload/disable.
  */
-class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
+class ExtraAnnouncer(private val extras: PlannedExtras) {
     private val main = DotMan.instance
     private var tickTask: BukkitTask? = null
     private var bossBar: BukkitBossBar? = null
+    private var stopped = false
 
     fun start() {
         val config = extras.config
         val chatEnabled = config.getBoolean("thong-bao.chat.enabled", true)
-        val activeMessage = extras.getList("thong-bao.chat.message.active")
-        val endedMessage = extras.getList("thong-bao.chat.message.ended")
+        val activeMessage = extras.getListAllowEmpty("thong-bao.chat.message.active")
+        val endedMessage = extras.getListAllowEmpty("thong-bao.chat.message.ended")
         val interval = config.getInt("thong-bao.chat.interval", 300).coerceAtLeast(0)
-        if (chatEnabled && activeMessage.isEmpty()) {
-            warning("thong-bao.chat.message.active trống, không gửi thông báo khuyến mãi")
-        }
-        val chatReady = chatEnabled && activeMessage.isNotEmpty()
+        val chatReady = chatEnabled && (activeMessage.isNotEmpty() || endedMessage.isNotEmpty())
 
         val bossBarEnabled = config.getBoolean("thong-bao.bossbar.enabled", false)
         val titles = extras.getList("thong-bao.bossbar.titles")
         val rotate = config.getInt("thong-bao.bossbar.rotate", 5).coerceAtLeast(1)
-        if (bossBarEnabled && titles.isEmpty()) {
-            warning("thong-bao.bossbar.titles trống, không hiển thị bossbar")
-        }
         val bar = if (bossBarEnabled && titles.isNotEmpty()) newBossBar(config) else null
         bossBar = bar
 
@@ -53,7 +48,7 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
         }
 
         var lastAnnouncement: Announcement? = null
-        var lastPlanned: PlannedExtra? = null
+        var lastPlanned: PlannedExtraEntry? = null
         var secondsSinceAnnounce = 0
         var secondsSinceRotate = 0
         var titleIndex = 0
@@ -62,7 +57,7 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
         // đồng thời tự đếm chu kỳ lặp lại message.active và chu kỳ đổi tiêu đề bossbar.
         tickTask = runAsyncTimer(0, 20L) {
             val now = ZonedDateTime.now()
-            val currentPlanned = PlannedExtrasConfig.pickCurrent(extras.getAll(), now)
+            val currentPlanned = PlannedExtras.pickCurrent(extras.getAll(), now)
             val current = currentAnnouncement(now)
 
             if (current?.name != lastAnnouncement?.name) {
@@ -76,23 +71,27 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
                     else -> false
                 }
                 if (chatReady) {
-                    if (!previousStillActive) {
+                    if (!previousStillActive && endedMessage.isNotEmpty()) {
                         lastAnnouncement?.let { broadcast(endedMessage, it, now) }
                     }
-                    current?.let { broadcast(activeMessage, it, now) }
+                    if (activeMessage.isNotEmpty()) {
+                        current?.let { broadcast(activeMessage, it, now) }
+                    }
                 }
                 lastAnnouncement = current
-                lastPlanned = currentPlanned
                 secondsSinceAnnounce = 0
                 secondsSinceRotate = 0
                 titleIndex = 0
-            } else if (chatReady && current != null && interval > 0) {
+            } else if (chatReady && activeMessage.isNotEmpty() && current != null && interval > 0) {
                 secondsSinceAnnounce++
                 if (secondsSinceAnnounce >= interval) {
                     broadcast(activeMessage, current, now)
                     secondsSinceAnnounce = 0
                 }
             }
+            // Cập nhật mỗi tick: hai mục khác nhau cùng tên nối tiếp nhau (ví dụ tách khung qua nửa đêm)
+            // không qua nhánh đổi tên ở trên, nhưng lastPlanned vẫn phải trỏ đúng mục đang chạy
+            lastPlanned = currentPlanned
 
             if (bar == null) {
                 return@runAsyncTimer
@@ -100,6 +99,9 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
             if (current == null) {
                 if (bar.isVisible) {
                     runSync {
+                        if (stopped) {
+                            return@runSync
+                        }
                         bar.removeAll()
                         bar.isVisible = false
                     }
@@ -115,6 +117,9 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
             val progress = bossBarProgress(current, now)
             val color = bossBarColor(progress)
             runSync {
+                if (stopped) {
+                    return@runSync
+                }
                 bar.setTitle(title)
                 bar.progress = progress
                 bar.color = color
@@ -139,6 +144,9 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
     private fun broadcast(message: List<String>, announcement: Announcement, now: ZonedDateTime) {
         val lines = message.map { formatLine(it, announcement, now, main.language) }
         runSync {
+            if (stopped) {
+                return@runSync
+            }
             Bukkit.getOnlinePlayers().forEach { player -> lines.forEach { player.sendMessage(it) } }
         }
     }
@@ -159,9 +167,10 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
     }
 
     /**
-     * Hủy timer và bossbar; gọi trước khi tạo PlannedExtrasConfig mới hoặc khi disable plugin
+     * Hủy timer và bossbar; gọi trước khi tạo PlannedExtras mới hoặc khi disable plugin
      */
     fun stop() {
+        stopped = true
         tickTask?.cancel()
         tickTask = null
         bossBar?.removeAll()
@@ -185,10 +194,10 @@ class ExtraAnnouncer(private val extras: PlannedExtrasConfig) {
          * @return null nếu không có khuyến mãi nào đang áp dụng
          */
         internal fun resolveAnnouncement(
-            components: List<PlannedExtra>, legacyRate: Double, legacyUntil: Long, legacyName: String,
+            components: List<PlannedExtraEntry>, legacyRate: Double, legacyUntil: Long, legacyName: String,
             now: ZonedDateTime
         ): Announcement? {
-            PlannedExtrasConfig.pickCurrent(components, now)?.let { extra ->
+            PlannedExtras.pickCurrent(components, now)?.let { extra ->
                 val window = extra.schedule.window(now) ?: return null
                 return Announcement(extra.name, extra.getPercentage(), window.from, window.to)
             }
