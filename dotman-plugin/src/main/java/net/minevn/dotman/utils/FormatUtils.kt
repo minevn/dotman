@@ -38,7 +38,7 @@ fun parseConfigDateTime(text: String): Long {
             return date.time
         }
     }
-    throw ParseException("'$value' không đúng định dạng dd/MM/yyyy HH:mm hoặc dd/MM/yyyy HH:mm:ss", 0)
+    throw ParseException("'$value' không hợp lệ, cần đúng định dạng dd/MM/yyyy HH:mm hoặc dd/MM/yyyy HH:mm:ss ", 0)
 }
 
 private const val MINUTE_MILLIS = 60_000L

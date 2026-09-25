@@ -40,7 +40,7 @@ class MainConfig : FileConfig("config") {
         return try {
             parseConfigDateTime(value)
         } catch (e: ParseException) {
-            warning("extra-until trong config.yml không hợp lệ (${e.message}), khuyến mãi trong config.yml sẽ không được áp dụng")
+            warning("extra-until trong config.yml ${e.message}, khuyến mãi trong config.yml sẽ không được áp dụng")
             0
         }
     }
