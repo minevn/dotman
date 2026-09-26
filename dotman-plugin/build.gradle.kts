@@ -17,7 +17,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 
     // libs
-    compileOnly("net.minevn:minevnlib-plugin:26.1.2")
+    compileOnly("net.minevn:minevnlib-plugin:26.1.5-dev-2")
     compileOnly("org.black_ixx:playerpoints:3.3.5")
     compileOnly("me.clip:placeholderapi:2.12.3")
     implementation("org.bstats:bstats-bukkit:3.2.1")
