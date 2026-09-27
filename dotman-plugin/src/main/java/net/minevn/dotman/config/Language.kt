@@ -1,5 +1,7 @@
 package net.minevn.dotman.config
 
+import net.minevn.dotman.utils.PaginationStyle
+
 class Language : FileConfig("messages") {
 
     val updateLatest = get("update-latest")
@@ -36,4 +38,6 @@ class Language : FileConfig("messages") {
 
     val logOutPut = get("log-output")
     val transactionIdDetailsOutPut = getList("transaction-id-details-output")
+
+    val pagination = PaginationStyle.fromConfig(this)
 }

@@ -7,6 +7,7 @@ import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.database.PlayerInfoDAO
+import net.minevn.dotman.utils.Pagination
 import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
@@ -32,6 +33,7 @@ class AdminCmd {
             addSubCommand(napThuCong(), "napthucong", "manual")
             addSubCommand(traCuuGiaoDich(), "tracuugd", "magiaodich")
             addSubCommand(clearPlayerData(), "cleardata")
+            addSubCommand(testPagination(), "testphantrang")
 
             action {
                 sender.sendMessage("§b§lCác lệnh của plugin DotMan")
@@ -387,6 +389,44 @@ class AdminCmd {
 
                     removePlayerData(sender, playerName)
                 }
+            }
+        }
+
+        private fun testPagination() = command {
+            val usage = "[số mục] [trang]"
+            description("Test hiển thị phân trang của lệnh người chơi")
+
+            tabComplete {
+                when (args.size) {
+                    1 -> listOf("10", "25", "100").filter { it.startsWith(args.last()) }
+                    2 -> {
+                        val size = args.first().toIntOrNull()?.takeIf { it in 0..1000 }
+                            ?: return@tabComplete emptyList()
+                        val maxPage = Pagination((1..size).toList(), perPage = 5, requestedPage = 1).maxPage
+                        (1..maxPage).map { it.toString() }.filter { it.startsWith(args.last()) }
+                    }
+                    else -> emptyList()
+                }
+            }
+
+            action {
+                val size = args.getOrNull(0)?.toIntOrNull()?.takeIf { it in 0..1000 } ?: run {
+                    if (args.isNotEmpty()) {
+                        sender.send("§cCách dùng: /$commandTree $usage")
+                        return@action
+                    }
+                    25
+                }
+                val page = Pagination.parsePage(args.getOrNull(1)) ?: run {
+                    sender.send("§cCách dùng: /$commandTree $usage")
+                    return@action
+                }
+                val items = (1..size).map { "Mục thử $it" }
+                val pagination = Pagination(items, perPage = 5, requestedPage = page)
+
+                sender.send("Test phân trang: §e$size §rmục, §e5 §rmục/trang, trang §e${pagination.page}/${pagination.maxPage}")
+                pagination.pageItems.forEach { sender.sendMessage("§7- $it") }
+                pagination.sendNav(sender, DotMan.instance.language.pagination, "/$commandTree $size")
             }
         }
 
