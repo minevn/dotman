@@ -11,6 +11,7 @@ import net.minevn.dotman.gui.CardPriceUI
 import net.minevn.dotman.gui.CardTypeUI
 import net.minevn.dotman.providers.CardProvider
 import net.minevn.dotman.utils.Utils.Companion.format
+import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
 import net.minevn.dotman.utils.Utils.Companion.warning
 import net.minevn.guiapi.ConfiguredUI
@@ -40,8 +41,11 @@ class DotMan : MineVNPlugin() {
     lateinit var discord: Discord private set
     lateinit var plannedExtras: PlannedExtras private set
 
+    var bossBarSupported = true; private set
+
     override fun onEnable() {
         instance = this
+        checkServerVersion()
         server.pluginManager.registerEvents(DotManListener(), this)
         Metrics(this, 23982)
 
@@ -160,6 +164,15 @@ class DotMan : MineVNPlugin() {
             discord.webhooks.forEach { sender ->
                 sender.send(replacements)
             }
+        }
+    }
+
+    private fun checkServerVersion() {
+        val serverVersion = Bukkit.getBukkitVersion().substringBefore("-")
+        info("Phiên bản server: $serverVersion")
+        if (serverVersion.startsWith("1.8")) {
+            bossBarSupported = false
+            warning("Server $serverVersion không hỗ trợ BossBar, tính năng bossbar sẽ không hoạt động.")
         }
     }
 
