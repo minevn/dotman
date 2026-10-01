@@ -32,8 +32,8 @@ class ExtraAnnouncer(private val extras: PlannedExtras) {
     fun start() {
         val config = extras.config
         val chatEnabled = config.getBoolean("thong-bao.chat.enabled", true)
-        val activeMessage = extras.getListAllowEmpty("thong-bao.chat.message.active")
-        val endedMessage = extras.getListAllowEmpty("thong-bao.chat.message.ended")
+        val activeMessage = extras.getOptionalList("thong-bao.chat.message.active")
+        val endedMessage = extras.getOptionalList("thong-bao.chat.message.ended")
         val interval = config.getInt("thong-bao.chat.interval", 300).coerceAtLeast(0)
         val chatReady = chatEnabled && (activeMessage.isNotEmpty() || endedMessage.isNotEmpty())
 
