@@ -37,7 +37,7 @@ class ExtraAnnouncer(private val extras: PlannedExtras) {
         val interval = config.getInt("thong-bao.chat.interval", 300).coerceAtLeast(0)
         val chatReady = chatEnabled && (activeMessage.isNotEmpty() || endedMessage.isNotEmpty())
 
-        val bossBarEnabled = config.getBoolean("thong-bao.bossbar.enabled", false)
+        val bossBarEnabled = main.bossBarSupported && config.getBoolean("thong-bao.bossbar.enabled", false)
         val titles = extras.getList("thong-bao.bossbar.titles")
         val rotate = config.getInt("thong-bao.bossbar.rotate", 5).coerceAtLeast(1)
         val bar = if (bossBarEnabled && titles.isNotEmpty()) newBossBar(config) else null
