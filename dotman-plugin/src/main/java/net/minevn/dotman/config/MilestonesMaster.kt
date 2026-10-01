@@ -1,5 +1,6 @@
 package net.minevn.dotman.config
 
+import net.minevn.dotman.DotMan
 import net.minevn.dotman.config.Milestones.Component
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.warning
@@ -20,7 +21,11 @@ class MilestonesMaster : FileConfig("mocnaptong") {
             try {
                 it as Map<*, *>
                 val type = it["type"]
-                val bossBar = (it.getOrDefault("bossbar", null) as String?)?.color()
+                val bossBar = if (DotMan.instance.bossBarSupported) {
+                    (it.getOrDefault("bossbar", null) as String?)?.color()
+                } else {
+                    null
+                }
                 val from = it.getOrDefault("from", 0) as Int
                 val barColor = it.getOrDefault("bossbar-color", "GREEN") as String
                 val barStyle = it.getOrDefault("bossbar-style", "SEGMENTED_10") as String
