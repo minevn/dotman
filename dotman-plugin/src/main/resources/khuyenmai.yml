@@ -136,6 +136,7 @@ khuyen-mai:
 
 # Thông báo khuyến mãi cho toàn server
 thong-bao:
+  # Chat và bossbar bật/tắt độc lập nhau (thong-bao.chat.enabled / thong-bao.bossbar.enabled)
   chat:
     enabled: true
     # Số giây giữa các lần lặp lại message.active trong khi khuyến mãi đang áp dụng. Đặt 0 để không lặp lại
@@ -146,8 +147,8 @@ thong-bao:
     # hoặc khuyến mãi trong config.yml nếu file này không có mục nào đang chạy.
     # Placeholder: %NAME%, %RATE%, %FROM%, %TO%, %REMAINING%, %PREFIX%
     message:
-      # Gửi ngay khi khuyến mãi bắt đầu áp dụng, sau đó lặp lại mỗi `interval` giây trong khi còn hiệu lực
-      # Đặt `active: []` để không gửi thông báo bắt đầu/lặp lại
+      # Gửi ngay khi khuyến mãi bắt đầu áp dụng, sau đó lặp lại mỗi `interval` giây trong khi còn hiệu lực.
+      # Đặt `active: []` để không gửi thông báo bắt đầu/lặp lại.
       active:
         - '&8&m                                                  '
         - '   &e&l✦ KHUYẾN MÃI NẠP THẺ &e&l✦'
@@ -160,8 +161,8 @@ thong-bao:
         - ''
         - '   &a➜ &fGõ &a/napthe &fhoặc &a/bank &fđể nạp ngay'
         - '&8&m                                                  '
-      # Gửi đúng 1 lần khi khuyến mãi kết thúc. %REMAINING% không còn ý nghĩa nên không dùng ở đây
-      # Đặt `ended: []` để không gửi thông báo kết thúc
+      # Gửi đúng 1 lần khi khuyến mãi kết thúc.
+      # Đặt `ended: []` để không gửi thông báo kết thúc.
       ended:
         - '&8&m                                                  '
         - ''
@@ -176,7 +177,7 @@ thong-bao:
   bossbar:
     enabled: false
     style: SOLID
-    # Số giây giữa các lần đổi tiêu đề
+    # Số giây giữa hai lần đổi tiêu đề
     rotate: 5
     # Các tiêu đề luân phiên, placeholder giống message
     titles:
