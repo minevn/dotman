@@ -1,11 +1,13 @@
 package net.minevn.dotman.config
 
 import net.minevn.dotman.extras.AppliedExtra
+import net.minevn.dotman.extras.ExtraFormat
 import net.minevn.dotman.extras.FixedSchedule
 import net.minevn.dotman.extras.MINUTES_PER_DAY
 import net.minevn.dotman.extras.PlannedExtraEntry
 import net.minevn.dotman.extras.Schedule
 import net.minevn.dotman.extras.WeeklySchedule
+import net.minevn.dotman.extras.toZoned
 import net.minevn.dotman.utils.Utils.Companion.color
 import net.minevn.dotman.utils.Utils.Companion.info
 import net.minevn.dotman.utils.Utils.Companion.send
@@ -67,16 +69,24 @@ class PlannedExtras : FileConfig("khuyenmai") {
             }
         }
 
-        val activeComponents = components.filter { it.isActive(now) }.sortedByDescending { it.rate }
-        val applied = activeComponents.firstOrNull()
+        val cfg = main.config
+        val legacyText = "$legacyName §r(§b${(cfg.extraRate * 100).toInt()}%§r, đến " +
+            "${cfg.extraUntil.toZoned(now).format(ExtraFormat.DISPLAY_FORMAT)})"
+        val applied = getAppliedExtra(now)
+        val appliedPlanned = applied?.planned
         if (applied == null) {
             console.send("Không có chương trình khuyến mãi nào đang hoạt động.")
+        } else if (appliedPlanned == null) {
+            console.send("Áp dụng khuyến mãi legacy (extra-rate trong config.yml): $legacyText")
         } else {
             console.send("Áp dụng khuyến mãi: ${applied.name.color()} §r(§b${applied.getPercentage()}%§r)")
-            val ignored = activeComponents.drop(1)
+            val ignored = components.filter { it !== appliedPlanned && it.isActive(now) }.sortedByDescending { it.rate }
             if (ignored.isNotEmpty()) {
-                console.send("Đang có ${activeComponents.size} khuyến mãi cùng hoạt động, khuyến mãi có tỉ lệ cao nhất đã được áp dụng, các khuyến mãi còn lại bị bỏ qua:")
+                console.send("Đang có ${ignored.size + 1} khuyến mãi cùng hoạt động, khuyến mãi có tỉ lệ cao nhất đã được áp dụng, các khuyến mãi còn lại bị bỏ qua:")
                 ignored.forEach { console.send(" - ${it.name.color()} §r(§b${it.getPercentage()}%§r)") }
+            }
+            if (isLegacyActive(cfg.extraRate, cfg.extraUntil, now)) {
+                console.send("Khuyến mãi legacy (extra-rate trong config.yml) $legacyText cũng đang hoạt động nhưng bị bỏ qua vì khuyenmai.yml được ưu tiên.")
             }
         }
     }
