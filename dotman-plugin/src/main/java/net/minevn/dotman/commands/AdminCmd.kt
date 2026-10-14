@@ -189,7 +189,6 @@ class AdminCmd {
             action {
                 val args = args.toMutableList()
                 val main = DotMan.instance
-                val cfg = main.config
 
                 var playerName: String? = null
                 var amount: Int? = null
@@ -245,18 +244,12 @@ class AdminCmd {
 
                 // Tính số point dựa trên số tiền nạp nếu user không truyền option -p
                 if (point == null) {
-                    // Giá trị khuyến mãi cũ từ config.yml
-                    val legacyExtraRate = if (cfg.extraUntil > System.currentTimeMillis()) cfg.extraRate else 0.0
-                    // Giá trị khuyến mãi mới từ PlannedExtras
-                    val plannedExtra = main.plannedExtras.getCurrentExtra()
-
-                    // Giá trị khuyến mãi chính thức: Nếu có khuyến mãi planned thì dùng, không thì lấy legacyExtraRate
-                    val extraRate = plannedExtra?.rate ?: legacyExtraRate
-                    point = calculateManualPoint(amount, extraRate)
+                    val appliedExtra = main.plannedExtras.getAppliedExtra()
+                    point = calculateManualPoint(amount, appliedExtra?.rate ?: 0.0)
 
                     // Lấy % khuyến mãi, đồng thời nếu là planned thì lấy tên để gửi thông báo
-                    extraRatePercent = (extraRate * 100).toInt()
-                    plannedExtraName = plannedExtra?.name
+                    extraRatePercent = appliedExtra?.getPercentage() ?: 0
+                    plannedExtraName = appliedExtra?.planned?.name
                 }
 
                 runNotSync { transactional {
