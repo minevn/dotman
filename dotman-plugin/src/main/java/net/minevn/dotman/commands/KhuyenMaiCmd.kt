@@ -91,14 +91,14 @@ class KhuyenMaiCmd {
             components: List<PlannedExtraEntry>, legacyRate: Double, legacyUntil: Long, legacyName: String,
             now: ZonedDateTime
         ): List<Entry> {
-            // Khuyến mãi thực sự được áp dụng khi có nhiều khuyến mãi active cùng lúc, cùng logic với getCurrentExtra
-            val appliedComponent = PlannedExtras.pickCurrent(components, now)
+            // Khuyến mãi thực sự được áp dụng khi có nhiều khuyến mãi active cùng lúc, cùng logic với getAppliedExtra
+            val applied = PlannedExtras.pickApplied(components, legacyRate, legacyUntil, legacyName, now)
             val planned = components
                 .mapNotNull { component ->
                     component.schedule.window(now)?.let { window ->
                         Entry(
                             component.name, component.getPercentage(), window.from, window.to,
-                            window.active, component.schedule.isRepeating, component === appliedComponent
+                            window.active, component.schedule.isRepeating, component === applied?.planned
                         )
                     }
                 }
@@ -108,13 +108,11 @@ class KhuyenMaiCmd {
                         .thenBy { if (it.active) null else it.from }
                 )
 
-            val legacyApplied = appliedComponent == null
-                && legacyRate > 0 && legacyUntil > now.toInstant().toEpochMilli()
-            if (!legacyApplied) {
+            if (applied == null || applied.planned != null) {
                 return planned
             }
             val until = ZonedDateTime.ofInstant(Instant.ofEpochMilli(legacyUntil), now.zone)
-            return listOf(Entry(legacyName, (legacyRate * 100).toInt(), null, until, true, false, true)) + planned
+            return listOf(Entry(applied.name, applied.getPercentage(), null, until, true, false, true)) + planned
         }
 
         /**

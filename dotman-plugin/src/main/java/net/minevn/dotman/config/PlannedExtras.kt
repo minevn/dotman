@@ -1,5 +1,6 @@
 package net.minevn.dotman.config
 
+import net.minevn.dotman.extras.AppliedExtra
 import net.minevn.dotman.extras.FixedSchedule
 import net.minevn.dotman.extras.MINUTES_PER_DAY
 import net.minevn.dotman.extras.PlannedExtraEntry
@@ -155,6 +156,15 @@ class PlannedExtras : FileConfig("khuyenmai") {
      */
     fun getCurrentExtra(now: ZonedDateTime = ZonedDateTime.now()): PlannedExtraEntry? = pickCurrent(components, now)
 
+    /**
+     * Lấy khuyến mãi đang được áp dụng, tính cả khuyến mãi legacy trong config.yml (extra-rate/extra-until)
+     *
+     * @param now Thời điểm cần kiểm tra, mặc định là hiện tại
+     * @return Khuyến mãi đang được áp dụng, hoặc null nếu không có
+     */
+    fun getAppliedExtra(now: ZonedDateTime = ZonedDateTime.now()): AppliedExtra? =
+        pickApplied(components, main.config.extraRate, main.config.extraUntil, legacyName, now)
+
     companion object {
         private val HOURS_REGEX = Regex("^(\\d{1,2}):(\\d{2})-(\\d{1,2}):(\\d{2})$")
 
@@ -163,6 +173,26 @@ class PlannedExtras : FileConfig("khuyenmai") {
          */
         internal fun pickCurrent(components: List<PlannedExtraEntry>, now: ZonedDateTime): PlannedExtraEntry? =
             components.filter { it.isActive(now) }.maxByOrNull { it.rate }
+
+        /**
+         * Khuyến mãi legacy trong config.yml còn hiệu lực không, cùng điều kiện với CardProvider
+         */
+        internal fun isLegacyActive(legacyRate: Double, legacyUntil: Long, now: ZonedDateTime): Boolean =
+            legacyRate > 0 && legacyUntil > now.toInstant().toEpochMilli()
+
+        /**
+         * Logic thuần của getAppliedExtra: mục planned tỉ lệ cao nhất trước, không có thì mới xét legacy
+         */
+        internal fun pickApplied(
+            components: List<PlannedExtraEntry>, legacyRate: Double, legacyUntil: Long, legacyName: String,
+            now: ZonedDateTime
+        ): AppliedExtra? {
+            pickCurrent(components, now)?.let { return AppliedExtra(it.name, it.rate, it) }
+            if (isLegacyActive(legacyRate, legacyUntil, now)) {
+                return AppliedExtra(legacyName, legacyRate, null)
+            }
+            return null
+        }
 
         /**
          * Parse thứ trong tuần: [7, 8] / "7, 8" / 7 -> {SATURDAY, SUNDAY}.

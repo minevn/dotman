@@ -66,7 +66,7 @@ class ExtraAnnouncer(private val extras: PlannedExtras) {
                 val previousStillActive = when {
                     previousPlanned != null -> previousPlanned.isActive(now)
                     lastAnnouncement != null ->
-                        main.config.extraRate > 0 && main.config.extraUntil > now.toInstant().toEpochMilli()
+                        PlannedExtras.isLegacyActive(main.config.extraRate, main.config.extraUntil, now)
                     else -> false
                 }
                 if (chatReady) {
@@ -194,14 +194,13 @@ class ExtraAnnouncer(private val extras: PlannedExtras) {
             components: List<PlannedExtraEntry>, legacyRate: Double, legacyUntil: Long, legacyName: String,
             now: ZonedDateTime
         ): Announcement? {
-            PlannedExtras.pickCurrent(components, now)?.let { extra ->
-                val window = extra.schedule.window(now) ?: return null
-                return Announcement(extra.name, extra.getPercentage(), window.from, window.to)
+            val applied = PlannedExtras.pickApplied(components, legacyRate, legacyUntil, legacyName, now) ?: return null
+            val planned = applied.planned
+            if (planned == null) {
+                return Announcement(applied.name, applied.getPercentage(), null, legacyUntil.toZoned(now))
             }
-            if (legacyRate > 0 && legacyUntil > now.toInstant().toEpochMilli()) {
-                return Announcement(legacyName, (legacyRate * 100).toInt(), null, legacyUntil.toZoned(now))
-            }
-            return null
+            val window = planned.schedule.window(now) ?: return null
+            return Announcement(applied.name, applied.getPercentage(), window.from, window.to)
         }
 
         /**

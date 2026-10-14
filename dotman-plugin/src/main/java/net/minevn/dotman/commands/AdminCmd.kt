@@ -453,11 +453,10 @@ class AdminCmd {
                 val main = DotMan.instance
                 val cfg = main.config
 
-                val plannedExtra = main.plannedExtras.getCurrentExtra()
-                val legacyExtraRate = if (cfg.extraUntil > System.currentTimeMillis()) cfg.extraRate else 0.0
-                val extraRate = plannedExtra?.rate ?: legacyExtraRate
-                val extraPercent = (extraRate * 100).toInt()
-                val extraName = plannedExtra?.name ?: main.plannedExtras.legacyName
+                val applied = main.plannedExtras.getAppliedExtra()
+                val extraRate = applied?.rate ?: 0.0
+                val extraPercent = applied?.getPercentage() ?: 0
+                val extraName = applied?.name.orEmpty()
 
                 sender.send("§b§lTính toán point")
                 sender.sendMessage(
