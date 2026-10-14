@@ -1,91 +1,76 @@
-Donation Manager [![GitHub Release](https://img.shields.io/github/v/release/minevn/DotMan?style=flat)](https://github.com/minevn/dotman/releases) [![Discord](https://img.shields.io/discord/1068181110036635678.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://minevn.studio/discord) ![Supported server version](https://img.shields.io/badge/minecraft-1.8%20--_1.20-green)
-===========
+<div align="center">
 
-Plugin tích hợp donate qua thẻ cào tốt nhất cho server Minecraft, nhiều tính năng hữu ích, tăng cường sự quản lý của admin và hỗ trợ nhiều dịch vụ gạch thẻ
+<a href="https://dotman.minevn.net">
+  <img src="https://i.imgur.com/Wds3sRi.png" alt="DotMan - Plugin nạp thẻ cho server Minecraft" width="720">
+</a>
 
-**Dịch vụ đang hỗ trợ:** [gamebank](https://sv.gamebank.vn/user/nap-the), [thesieutoc](https://thesieutoc.net/), [gachthe5s](https://gachthe5s.com/) (premium)
+# DotMan
 
-Tính năng hiện có
-===========
+**Plugin nạp thẻ cào & chuyển khoản ngân hàng cho server Minecraft Việt Nam**
 
-- Nạp thẻ tự động
-- Hẹn giờ kết thúc khuyến mãi
-- Config giao diện linh hoạt, có thể thay đổi được vị trí của icon
-- Top nạp thẻ
-- Phần thưởng theo mốc nạp
-- Lệnh nạp nhanh với auto-complete, hỗ trợ cho phiên bản 1.8
-- Top nạp theo tuần/tháng (✨ premium)
-- Mốc nạp theo tuần/tháng (✨ premium)
-- Giao diện Bedrock (✨ premium)
-- Lịch sử giao dịch point (✨ premium)
-- Hỗ trợ nhiều API gạch thẻ hơn, và bổ sung API gạch thẻ theo yêu cầu (✨ premium)
+[![GitHub Release](https://img.shields.io/github/v/release/minevn/dotman?style=flat-square)](https://dotman.minevn.net/docs/releases/dotman)
+[![Minecraft](https://img.shields.io/badge/minecraft-1.8%20--%201.21-green?style=flat-square)](https://dotman.minevn.net/docs/huong-dan/gioi-thieu#yeu-cau-he-thong)
+[![Folia](https://img.shields.io/badge/folia-supported-blue?style=flat-square)](https://dotman.minevn.net/docs/huong-dan/gioi-thieu#yeu-cau-he-thong)
+[![bStats](https://img.shields.io/bstats/servers/23982?label=servers&style=flat-square)](https://bstats.org/plugin/bukkit/DotMan%20-%20Donation%20Manager/23982)
+[![Discord](https://img.shields.io/discord/1068181110036635678?label=discord&logo=discord&logoColor=white&color=5865F2&style=flat-square)](https://minevn.net/studio)
 
-Hướng dẫn sử dụng
-===========
+[🌐 Website](https://dotman.minevn.net) •
+[📖 Hướng dẫn](https://dotman.minevn.net/docs) •
+[⬇️ Tải về](https://dotman.minevn.net/docs/releases/dotman) •
+[⌨️ Lệnh & Permission](https://dotman.minevn.net/docs/tham-khao/danh-sach-lenh-va-permission) •
+[✨ Premium](https://dotman.minevn.net/docs/huong-dan/tinh-nang#so-sanh-ban-mien-phi-va-premium)
 
-**Cài đặt plugin:**
+</div>
 
-- Plugin cần có [PlayerPoints](https://www.spigotmc.org/resources/playerpoints.80745/) và [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) để hoạt động
-- Tải plugin [tại đây](https://github.com/minevn/dotman/releases), giải nén và cài DotMan.jar và MineVNLib.jar và server của bạn
-- MineVNLib là thư viện liên quan đến SQL và Kotlin nên dung lượng sẽ hơi nặng, nhưng sẽ không gây lag cho server của bạn
+---
 
-**Danh sách lệnh:**
+## Giới thiệu
 
-| Lệnh                                             | Chức năng                             | Permission    |
-|--------------------------------------------------|---------------------------------------|---------------|
-| /napthe                                          | Mở menu nạp thẻ                       | Người chơi    |
-| /napthe <loại thẻ> <mệnh giá> <số seri> <mã thẻ> | Nạp thẻ nhanh                         | Người chơi    |
-| /topnap                                          | Xem top nạp thẻ                       | dotman.topnap |
-| /dotman reload                                   | Reload lại config                     | dotman.admin  |
-| /dotman thongbao                                 | Thay đổi thông báo trong menu nạp thẻ | dotman.admin  |
-| /dotman chuyenkhoan                              | Đặt vị trí xem hướng dẫn chuyển khoản | dotman.admin  |
-| /dotman lichsu                                   | Xem lịch sử nạp thẻ                   | dotman.admin  |
+[DotMan](https://dotman.minevn.net) (Donation Manager) là plugin nạp thẻ cho server Minecraft: nạp thẻ cào tự động, chuyển khoản ngân hàng, khuyến mãi, mốc nạp, top nạp và thống kê doanh thu — tất cả trong một plugin. Bản miễn phí là mã nguồn mở.
 
-**Placeholder:**
+## Tính năng
 
-Placeholder có thể sử dụng để hiển thị top nạp và dữ liệu cá nhân
+- 💳 [Nạp thẻ cào tự động](https://dotman.minevn.net/docs/nap-tien/the-cao) qua nhiều cổng gạch thẻ
+- 🏦 [Chuyển khoản ngân hàng](https://dotman.minevn.net/docs/nap-tien/ngan-hang) (✨ Premium)
+- 🎉 [Lịch khuyến mãi](https://dotman.minevn.net/docs/khuyen-mai/lich-khuyen-mai) và [khuyến mãi nạp lần đầu](https://dotman.minevn.net/docs/khuyen-mai/nap-lan-dau)
+- 🎁 [Mốc nạp cá nhân](https://dotman.minevn.net/docs/phan-thuong/moc-nap-ca-nhan) & [mốc nạp toàn server](https://dotman.minevn.net/docs/phan-thuong/moc-nap-tong)
+- 🏆 [Top nạp](https://dotman.minevn.net/docs/phan-thuong/top-nap) theo ngày/tuần/tháng và [khung thời gian tuỳ chỉnh](https://dotman.minevn.net/docs/phan-thuong/khung-thoi-gian)
+- 📊 [Lịch sử giao dịch & thống kê](https://dotman.minevn.net/docs/quan-tri/lich-su-va-thong-ke)
+- 🔔 [Thông báo qua Discord Webhook](https://dotman.minevn.net/docs/tich-hop/discord-webhook)
+- 🧩 [PlaceholderAPI](https://dotman.minevn.net/docs/tham-khao/placeholder-api), giao diện menu tuỳ chỉnh, giao diện Bedrock (✨ Premium)
 
-| Placeholder                              | Chức năng                                      | Ghi chú                                                                                                                                                                          |
-|------------------------------------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| %DOTMAN_TOP_DONATE_TOTAL_XXX_PLAYER%     | Trả về tên người chơi đứng top XXX            | Thay `TOP` thành `TOPWEEK`, `TOPMONTH`, `TOPDAY` để lấy top tuần/tháng/ngày<br>Dùng `TOPFRAME_<frameId>` để lấy top theo khung giờ tuỳ chỉnh (✨ premium)                      |
-| %DOTMAN_TOP_DONATE_TOTAL_XXX_VALUE%      | Trả về giá trị nạp của người đứng top XXX     | Thay `TOP` thành `TOPWEEK`, `TOPMONTH`, `TOPDAY` để lấy top tuần/tháng/ngày<br>Dùng `TOPFRAME_<frameId>` để lấy top theo khung giờ tuỳ chỉnh (✨ premium)                      |
-| %DOTMAN_DATA_DONATE_TOTAL%               | Trả về số point người chơi hiện tại đã nạp    | Thay `DATA` thành `DATAWEEK`, `DATAMONTH`, `DATADAY` để lấy dữ liệu tuần/tháng/ngày<br>Dùng `DATAFRAME_<frameId>` để lấy dữ liệu theo khung giờ tuỳ chỉnh (✨ premium)        |
-| %DOTMAN_MASTERDATA_DONATE_TOTAL%         | Trả về tổng point toàn server đã nạp          | Thay `MASTERDATA` thành `MASTERDATAWEEK`, `MASTERDATAMONTH`, `MASTERDATADAY` để lấy dữ liệu tuần/tháng/ngày<br>Dùng `MASTERDATAFRAME_<frameId>` cho khung giờ tuỳ chỉnh (✨ premium) |
+👉 Xem đầy đủ và so sánh bản miễn phí / Premium tại [dotman.minevn.net](https://dotman.minevn.net/docs/huong-dan/tinh-nang).
 
-> Ví dụ: `%DOTMAN_TOP_DONATE_TOTAL_1_PLAYER%` trả về tên người đứng top 1, `%DOTMAN_TOP_DONATE_TOTAL_1_VALUE%` trả về số tiền nạp của người đó, `%DOTMAN_DATA_DONATE_TOTAL%` trả về số point cá nhân đã nạp tổng cộng
+## Cài đặt nhanh
 
-**Config plugin:**
+1. Cài [PlayerPoints](https://www.spigotmc.org/resources/playerpoints.80745/) (bắt buộc) và [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) (khuyến nghị)
+2. Tải [DotMan](https://dotman.minevn.net/docs/releases/dotman) và [MineVNLib](https://dotman.minevn.net/docs/releases/minevnlib), bỏ vào thư mục `plugins/`
+3. Khởi động server, sau đó [cấu hình cổng gạch thẻ](https://dotman.minevn.net/docs/nap-tien/the-cao#chon-cong-gach-the)
 
-Cấu trúc thư mục `./plugins/DotMan` như sau
-```
-DotMan/
-├── menu/
-│   └── napthe/
-│       ├── loaithe.yml
-│       └── menhgia.yml
-├── providers/
-│   ├── gamebank.yml
-│   └── thesieutoc.yml
-├── config.yml
-├── messages.yml
-└── mocnap.yml
-```
+Chi tiết: [Hướng dẫn cài đặt DotMan](https://dotman.minevn.net/docs/huong-dan/cai-dat)
 
-- Bạn có thể config giao diện tại các file `loaithe.yml` và `menhgia.yml`
-- Để thêm API Key cho các dịch vụ tương ứng, hãy thêm tại các file `gamebank.yml` và `thesieutoc.yml`
-- Cài đặt chung của plugin được đặt tại `config.yml`, các message đặt tại `messages.yml`
-- Cài đặt mốc nạp tích luỹ tại `mocnap.yml`
+## Tài liệu
 
-Hình ảnh
-===========
-![](https://i.imgur.com/Wds3sRi.png)
+| | |
+|---|---|
+| 📖 [Hướng dẫn sử dụng](https://dotman.minevn.net/docs) | Toàn bộ tài liệu của plugin |
+| ⚙️ [Cấu hình chung](https://dotman.minevn.net/docs/huong-dan/cau-hinh-chung) | Giải thích `config.yml` và các file cấu hình |
+| ⌨️ [Lệnh & Permission](https://dotman.minevn.net/docs/tham-khao/danh-sach-lenh-va-permission) | Danh sách lệnh và quyền |
+| 🧩 [Placeholder](https://dotman.minevn.net/docs/tham-khao/placeholder-api) | Placeholder hiển thị top nạp, dữ liệu nạp |
+| 🛠️ [Công cụ online](https://dotman.minevn.net/docs/cong-cu/) | Tính point, tạo lịch khuyến mãi, mốc nạp, Discord embed... |
+| 📝 [Releases](https://dotman.minevn.net/docs/releases/) | Lịch sử cập nhật |
 
-![](https://i.imgur.com/LUYYbdR.png)
+## Hỗ trợ
 
-![](https://i.imgur.com/giSRIkg.png)
+- 💬 Discord & mua Premium: [minevn.net/studio](https://minevn.net/studio)
+- 🐛 Báo lỗi / góp ý: [GitHub Issues](https://github.com/minevn/dotman/issues)
 
-![](https://i.imgur.com/zr3Mhdy.gif)
+---
 
-![](https://i.imgur.com/4Xng6eR.gif)
+<div align="center">
 
-Plugin được thiết kế và phát triển kĩ lưỡng nhằm đảm bảo tính ổn định và chất lượng. Nếu plugin có ích cho server của bạn, hãy [mua bản premium](https://minecraftvn.net/resources/donation-manager-update-21-1-plugin-nap-the-tot-nhat-cho-minecraft.3657/) để trải nghiệm các tính năng mở rộng và đánh giá 5 sao [tại forum](https://minecraftvn.net/resources/donation-manager-update-21-1-plugin-nap-the-tot-nhat-cho-minecraft.3657/) nhé
+Nếu DotMan hữu ích cho server của bạn, hãy để lại ⭐ cho repo và dùng thử [DotMan Premium](https://dotman.minevn.net) nhé!
+
+<sub>Made with ❤️ by <a href="https://minevn.net/studio">MineVN Studio</a></sub>
+
+</div>
