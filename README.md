@@ -9,7 +9,9 @@ Tính năng hiện có
 ===========
 
 - Nạp thẻ tự động
-- Hẹn giờ kết thúc khuyến mãi
+- Hẹn giờ kết thúc khuyến mãi, hoặc lặp lại theo thứ trong tuần / khung giờ
+- Thông báo khuyến mãi định kỳ toàn server (chat + bossbar)
+- Lệnh xem danh sách khuyến mãi đang và sắp diễn ra
 - Config giao diện linh hoạt, có thể thay đổi được vị trí của icon
 - Top nạp thẻ
 - Phần thưởng theo mốc nạp
@@ -36,6 +38,7 @@ Hướng dẫn sử dụng
 | /napthe                                          | Mở menu nạp thẻ                       | Người chơi    |
 | /napthe <loại thẻ> <mệnh giá> <số seri> <mã thẻ> | Nạp thẻ nhanh                         | Người chơi    |
 | /topnap                                          | Xem top nạp thẻ                       | dotman.topnap |
+| /khuyenmai [trang]                               | Xem danh sách khuyến mãi              | Người chơi    |
 | /dotman reload                                   | Reload lại config                     | dotman.admin  |
 | /dotman thongbao                                 | Thay đổi thông báo trong menu nạp thẻ | dotman.admin  |
 | /dotman chuyenkhoan                              | Đặt vị trí xem hướng dẫn chuyển khoản | dotman.admin  |

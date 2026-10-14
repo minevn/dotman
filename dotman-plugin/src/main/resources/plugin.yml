@@ -12,3 +12,6 @@ commands:
   topnap:
     permission: dotman.topnap
   napthe:
+  khuyenmai:
+    aliases: [lichkhuyenmai]
+    description: Xem danh sách khuyến mãi

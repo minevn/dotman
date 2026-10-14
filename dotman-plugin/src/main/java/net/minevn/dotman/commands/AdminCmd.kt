@@ -3,11 +3,13 @@ package net.minevn.dotman.commands
 import net.minevn.dotman.DotMan
 import net.minevn.dotman.DotMan.Companion.transactional
 import net.minevn.dotman.TopupType
+import net.minevn.dotman.card.CardPrice
 import net.minevn.dotman.database.ConfigDAO
 import net.minevn.dotman.database.LogDAO
 import net.minevn.dotman.database.PlayerDataDAO
 import net.minevn.dotman.database.PlayerInfoDAO
 import net.minevn.dotman.utils.Pagination
+import net.minevn.dotman.utils.Utils.Companion.color
 import net.minevn.dotman.utils.Utils.Companion.format
 import net.minevn.dotman.utils.Utils.Companion.makePagination
 import net.minevn.dotman.utils.Utils.Companion.runNotSync
@@ -34,6 +36,7 @@ class AdminCmd {
             addSubCommand(traCuuGiaoDich(), "tracuugd", "magiaodich")
             addSubCommand(clearPlayerData(), "cleardata")
             addSubCommand(testPagination(), "testphantrang")
+            addSubCommand(testPointCalculation(), "testpoint", "tp")
 
             action {
                 sender.sendMessage("§b§lCác lệnh của plugin DotMan")
@@ -186,7 +189,6 @@ class AdminCmd {
             action {
                 val args = args.toMutableList()
                 val main = DotMan.instance
-                val cfg = main.config
 
                 var playerName: String? = null
                 var amount: Int? = null
@@ -242,19 +244,12 @@ class AdminCmd {
 
                 // Tính số point dựa trên số tiền nạp nếu user không truyền option -p
                 if (point == null) {
-                    // Giá trị khuyến mãi cũ từ config.yml
-                    val legacyExtraRate = if (cfg.extraUntil > System.currentTimeMillis()) cfg.extraRate else 0.0
-                    // Giá trị khuyến mãi mới từ PlannedExtras
-                    val plannedExtra = main.plannedExtras.getCurrentExtra()
-
-                    // Giá trị khuyến mãi chính thức: Nếu có khuyến mãi planned thì dùng, không thì lấy legacyExtraRate
-                    val extraRate = plannedExtra?.rate ?: legacyExtraRate
-                    val pointPer1K = cfg.manualBase + cfg.manualExtra + (cfg.manualBase * extraRate)
-                    point = (amount / 1000) * pointPer1K
+                    val appliedExtra = main.plannedExtras.getAppliedExtra()
+                    point = calculateManualPoint(amount, appliedExtra?.rate ?: 0.0)
 
                     // Lấy % khuyến mãi, đồng thời nếu là planned thì lấy tên để gửi thông báo
-                    extraRatePercent = (extraRate * 100).toInt()
-                    plannedExtraName = plannedExtra?.name
+                    extraRatePercent = appliedExtra?.getPercentage() ?: 0
+                    plannedExtraName = appliedExtra?.planned?.name
                 }
 
                 runNotSync { transactional {
@@ -428,6 +423,73 @@ class AdminCmd {
                 pagination.pageItems.forEach { sender.sendMessage("§7- $it") }
                 pagination.sendNav(sender, DotMan.instance.language.pagination, "/$commandTree $size")
             }
+        }
+
+        private fun testPointCalculation() = command {
+            val usage = "<số tiền>"
+            description("Test flow tính toán nạp thẻ & nạp thủ công (dry-run, không cộng point thật)")
+
+            tabComplete {
+                if (args.size != 1) {
+                    return@tabComplete emptyList()
+                }
+                CardPrice.entries.map { it.value.toString() }.filter { it.startsWith(args.last()) }
+            }
+
+            action {
+                val amountArg = args.getOrNull(0)?.toIntOrNull() ?: run {
+                    sender.send("§cCách dùng: /$commandTree $usage")
+                    return@action
+                }
+
+                val main = DotMan.instance
+                val cfg = main.config
+
+                val applied = main.plannedExtras.getAppliedExtra()
+                val extraRate = applied?.rate ?: 0.0
+
+                sender.send("§b§lTính toán point")
+                sender.sendMessage(
+                    if (applied != null) {
+                        "${main.language.khuyenmaiAppliedTag} §e${applied.name.color()} §7(§b${applied.getPercentage()}%§7)"
+                    } else {
+                        "§cKhông có khuyến mãi áp dụng"
+                    }
+                )
+
+                fun sendFlow(title: String, basePoint: Int, bonus: Int) {
+                    sender.sendMessage("§7")
+                    sender.sendMessage("§6§l$title:")
+                    sender.sendMessage("§7- Số tiền nhập: §f${amountArg.format()} §7VNĐ")
+                    sender.sendMessage("§7- Point chưa khuyến mãi: §f${basePoint.format()} ${cfg.pointUnit}")
+                    sender.sendMessage("§7- Point khuyến mãi thêm: §a+${bonus.format()} ${cfg.pointUnit}")
+                    sender.sendMessage("§a§lTổng nhận được: §b§l${(basePoint + bonus).format()} ${cfg.pointUnit}")
+                }
+
+                val cardPrice = CardPrice[amountArg]
+                if (cardPrice == null) {
+                    sender.sendMessage("§7")
+                    sender.sendMessage("§6§lFlow nạp thẻ cào:")
+                    sender.sendMessage("§cSố tiền §b${amountArg.format()} §ckhông khớp mệnh giá thẻ nào đã cấu hình (xem donate-amounts trong config.yml)")
+                } else {
+                    val basePoint = cardPrice.getPointAmount()
+                    sendFlow("Flow nạp thẻ cào", basePoint, (basePoint * extraRate).toInt())
+                }
+
+                // Bonus = tổng - phần gốc, để tổng in ra đúng bằng số point napThuCong thực sự cộng
+                val manualBasePoint = calculateManualPoint(amountArg, 0.0).toInt()
+                val manualTotal = calculateManualPoint(amountArg, extraRate).toInt()
+                sendFlow("Flow nạp thủ công", manualBasePoint, manualTotal - manualBasePoint)
+            }
+        }
+
+        /**
+         * Số point nạp thủ công cho số tiền [amount] với tỉ lệ khuyến mãi [extraRate], theo
+         * manual.point-base/manual.point-extra trong config.yml. Chưa làm tròn: caller chỉ toInt() một lần ở cuối
+         */
+        private fun calculateManualPoint(amount: Int, extraRate: Double): Double {
+            val cfg = DotMan.instance.config
+            return (amount / 1000) * (cfg.manualBase + cfg.manualExtra + (cfg.manualBase * extraRate))
         }
 
         /**

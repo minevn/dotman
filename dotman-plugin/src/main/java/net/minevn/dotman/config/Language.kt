@@ -40,4 +40,23 @@ class Language : FileConfig("messages") {
     val transactionIdDetailsOutPut = getList("transaction-id-details-output")
 
     val pagination = PaginationStyle.fromConfig(this)
+
+    val durationDay = get("duration-day")
+    val durationHour = get("duration-hour")
+    val durationMinute = get("duration-minute")
+    val durationNow = get("duration-now")
+    val durationSeparator = get("duration-separator")
+
+    val khuyenmaiUsage = get("khuyenmai-usage")
+    val khuyenmaiEmpty = get("khuyenmai-empty")
+    val khuyenmaiHeader = get("khuyenmai-header")
+    val khuyenmaiEntry = getList("khuyenmai-entry")
+    val khuyenmaiStatusActive = get("khuyenmai-status-active")
+    val khuyenmaiStatusUpcoming = get("khuyenmai-status-upcoming")
+    val khuyenmaiRepeat = get("khuyenmai-repeat")
+    val khuyenmaiAppliedTag = get("khuyenmai-applied-tag")
+    val khuyenmaiNoteActive = get("khuyenmai-note-active")
+    val khuyenmaiNoteUpcoming = get("khuyenmai-note-upcoming")
+    val khuyenmaiTimeNow = get("khuyenmai-time-now")
+    val khuyenmaiTimeUnlimited = get("khuyenmai-time-unlimited")
 }
