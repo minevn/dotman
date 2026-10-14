@@ -252,8 +252,7 @@ class AdminCmd {
 
                     // Giá trị khuyến mãi chính thức: Nếu có khuyến mãi planned thì dùng, không thì lấy legacyExtraRate
                     val extraRate = plannedExtra?.rate ?: legacyExtraRate
-                    val pointPer1K = cfg.manualBase + cfg.manualExtra + (cfg.manualBase * extraRate)
-                    point = (amount / 1000) * pointPer1K
+                    point = calculateManualPoint(amount, extraRate)
 
                     // Lấy % khuyến mãi, đồng thời nếu là planned thì lấy tên để gửi thông báo
                     extraRatePercent = (extraRate * 100).toInt()
@@ -455,13 +454,11 @@ class AdminCmd {
 
                 val applied = main.plannedExtras.getAppliedExtra()
                 val extraRate = applied?.rate ?: 0.0
-                val extraPercent = applied?.getPercentage() ?: 0
-                val extraName = applied?.name.orEmpty()
 
                 sender.send("§b§lTính toán point")
                 sender.sendMessage(
-                    if (extraPercent > 0) {
-                        "${main.language.khuyenmaiAppliedTag} §e${extraName.color()} §7(§b$extraPercent%§7)"
+                    if (applied != null) {
+                        "${main.language.khuyenmaiAppliedTag} §e${applied.name.color()} §7(§b${applied.getPercentage()}%§7)"
                     } else {
                         "§cKhông có khuyến mãi áp dụng"
                     }
@@ -486,10 +483,20 @@ class AdminCmd {
                     sendFlow("Flow nạp thẻ cào", basePoint, (basePoint * extraRate).toInt())
                 }
 
-                val manualBasePoint = ((amountArg / 1000) * (cfg.manualBase + cfg.manualExtra)).toInt()
-                val manualBonus = ((amountArg / 1000) * (cfg.manualBase * extraRate)).toInt()
-                sendFlow("Flow nạp thủ công", manualBasePoint, manualBonus)
+                // Bonus = tổng - phần gốc, để tổng in ra đúng bằng số point napThuCong thực sự cộng
+                val manualBasePoint = calculateManualPoint(amountArg, 0.0).toInt()
+                val manualTotal = calculateManualPoint(amountArg, extraRate).toInt()
+                sendFlow("Flow nạp thủ công", manualBasePoint, manualTotal - manualBasePoint)
             }
+        }
+
+        /**
+         * Số point nạp thủ công cho số tiền [amount] với tỉ lệ khuyến mãi [extraRate], theo
+         * manual.point-base/manual.point-extra trong config.yml. Chưa làm tròn: caller chỉ toInt() một lần ở cuối
+         */
+        private fun calculateManualPoint(amount: Int, extraRate: Double): Double {
+            val cfg = DotMan.instance.config
+            return (amount / 1000) * (cfg.manualBase + cfg.manualExtra + (cfg.manualBase * extraRate))
         }
 
         /**
