@@ -40,10 +40,9 @@ class ExtraAnnouncer(private val extras: PlannedExtras) {
         val bossBarEnabled = main.bossBarSupported && config.getBoolean("thong-bao.bossbar.enabled", false)
         val titles = extras.getList("thong-bao.bossbar.titles")
         val rotate = config.getInt("thong-bao.bossbar.rotate", 5).coerceAtLeast(1)
-        val bar = if (bossBarEnabled && titles.isNotEmpty()) newBossBar(config) else null
-        bossBar = bar
+        bossBar = if (bossBarEnabled && titles.isNotEmpty()) newBossBar(config) else null
 
-        if (!chatReady && bar == null) {
+        if (!chatReady && bossBar == null) {
             return
         }
 
@@ -93,9 +92,7 @@ class ExtraAnnouncer(private val extras: PlannedExtras) {
             // không qua nhánh đổi tên ở trên, nhưng lastPlanned vẫn phải trỏ đúng mục đang chạy
             lastPlanned = currentPlanned
 
-            if (bar == null) {
-                return@runAsyncTimer
-            }
+            val bar = bossBar ?: return@runAsyncTimer
             if (current == null) {
                 if (bar.isVisible) {
                     runSync {
