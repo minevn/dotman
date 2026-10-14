@@ -27,6 +27,7 @@ class ExtraAnnouncer(private val extras: PlannedExtras) {
     private val main = DotMan.instance
     private var tickTask: BukkitTask? = null
     private var bossBar: BukkitBossBar? = null
+    @Volatile
     private var stopped = false
 
     fun start() {
