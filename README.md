@@ -9,9 +9,6 @@
 **Plugin nạp thẻ cào & chuyển khoản ngân hàng cho server Minecraft Việt Nam**
 
 [![GitHub Release](https://img.shields.io/github/v/release/minevn/dotman?style=flat-square)](https://dotman.minevn.net/docs/releases/dotman)
-[![Minecraft](https://img.shields.io/badge/minecraft-1.8.8%2B-green?style=flat-square)](https://dotman.minevn.net/docs/huong-dan/gioi-thieu#yeu-cau-he-thong)
-[![Platform](https://img.shields.io/badge/spigot%20%7C%20paper%20%7C%20folia-supported-blue?style=flat-square)](https://dotman.minevn.net/docs/huong-dan/gioi-thieu#yeu-cau-he-thong)
-[![bStats Servers](https://img.shields.io/bstats/servers/23982?label=servers&style=flat-square)](https://bstats.org/plugin/bukkit/DotMan%20-%20Donation%20Manager/23982)
 [![bStats Players](https://img.shields.io/bstats/players/23982?label=players&style=flat-square)](https://bstats.org/plugin/bukkit/DotMan%20-%20Donation%20Manager/23982)
 [![Discord](https://img.shields.io/discord/1068181110036635678?label=discord&logo=discord&logoColor=white&color=5865F2&style=flat-square)](https://minevn.net/studio)
 
@@ -19,6 +16,7 @@
 [📖 Hướng dẫn](https://dotman.minevn.net/docs) •
 [⬇️ Tải plugin](https://dotman.minevn.net/docs/releases/dotman) •
 [⌨️ Lệnh & Permission](https://dotman.minevn.net/docs/tham-khao/danh-sach-lenh-va-permission) •
+[💬 Forum](https://minevn.net/resources/dotman-donation-manager-plugin-nap-the-tot-thu-nhi-cho-minecraft.3657/) •
 [✨ Dùng thử Premium](https://dotman.minevn.net/#dung-thu)
 
 </div>
@@ -27,7 +25,7 @@
 
 ## Giới thiệu
 
-[DotMan](https://dotman.minevn.net) là **plugin nạp thẻ cho server Minecraft** do MineVN Studio phát triển. Người chơi nạp bằng thẻ cào hoặc quét QR chuyển khoản ngay trong game, point và quà được cộng tự động. Kèm theo khuyến mãi, mốc nạp, top nạp, thống kê, lịch sử nạp và quản lý dòng tiền.
+[DotMan](https://dotman.minevn.net) là **plugin nạp thẻ cho server Minecraft** do MineVN Studio phát triển. Người chơi nạp bằng thẻ cào hoặc quét QR chuyển khoản ngay trong game, point và quà được cộng tự động. Kèm theo khuyến mãi, mốc nạp, top nạp, lịch sử nạp, thống kê doanh thu và quản lý dòng tiền.
 
 Bản miễn phí là mã nguồn mở, bản Premium có thể [dùng thử miễn phí 14 ngày](https://dotman.minevn.net/#dung-thu).
 
@@ -105,6 +103,7 @@ Chi tiết: [Hướng dẫn cài đặt DotMan](https://dotman.minevn.net/docs/h
 ## Hỗ trợ
 
 - 💬 [Discord MineVN Studio](https://minevn.net/studio): mua Premium, đăng ký dùng thử, hỏi đáp
+- 📌 [Trang plugin trên MineVN Forum](https://minevn.net/resources/dotman-donation-manager-plugin-nap-the-tot-thu-nhi-cho-minecraft.3657/): đánh giá, thảo luận
 - 🐛 [GitHub Issues](https://github.com/minevn/dotman/issues): báo lỗi, góp ý
 
 ## Hình ảnh
