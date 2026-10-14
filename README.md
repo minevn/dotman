@@ -9,14 +9,13 @@
 **Plugin nạp thẻ cào & chuyển khoản ngân hàng cho server Minecraft Việt Nam**
 
 [![GitHub Release](https://img.shields.io/github/v/release/minevn/dotman?style=flat-square)](https://dotman.minevn.net/docs/releases/dotman)
-[![bStats Players](https://img.shields.io/bstats/players/23982?label=players&style=flat-square)](https://bstats.org/plugin/bukkit/DotMan%20-%20Donation%20Manager/23982)
 [![Discord](https://img.shields.io/discord/1068181110036635678?label=discord&logo=discord&logoColor=white&color=5865F2&style=flat-square)](https://minevn.net/studio)
 
 [🌐 Website](https://dotman.minevn.net) •
 [📖 Hướng dẫn](https://dotman.minevn.net/docs) •
 [⬇️ Tải plugin](https://dotman.minevn.net/docs/releases/dotman) •
 [⌨️ Lệnh & Permission](https://dotman.minevn.net/docs/tham-khao/danh-sach-lenh-va-permission) •
-[💬 Forum](https://minevn.net/resources/dotman-donation-manager-plugin-nap-the-tot-thu-nhi-cho-minecraft.3657/) •
+[💬 Diễn đàn](https://minevn.net/resources/dotman-donation-manager-plugin-nap-the-tot-thu-nhi-cho-minecraft.3657/) •
 [✨ Dùng thử Premium](https://dotman.minevn.net/#dung-thu)
 
 </div>
@@ -96,15 +95,13 @@ Chi tiết: [Hướng dẫn cài đặt DotMan](https://dotman.minevn.net/docs/h
 
 [**✨ Dùng thử Premium 14 ngày**](https://dotman.minevn.net/#dung-thu) • [**⬇️ Tải bản miễn phí**](https://dotman.minevn.net/docs/releases/dotman)
 
-## DotMan trong thực tế
-
-[![bStats](https://bstats.org/signatures/bukkit/DotMan%20-%20Donation%20Manager.svg)](https://bstats.org/plugin/bukkit/DotMan%20-%20Donation%20Manager/23982)
-
 ## Hỗ trợ
 
 - 💬 [Discord MineVN Studio](https://minevn.net/studio): mua Premium, đăng ký dùng thử, hỏi đáp
-- 📌 [Trang plugin trên MineVN Forum](https://minevn.net/resources/dotman-donation-manager-plugin-nap-the-tot-thu-nhi-cho-minecraft.3657/): đánh giá, thảo luận
+- 📌 [Trang plugin trên diễn đàn MineVN](https://minevn.net/resources/dotman-donation-manager-plugin-nap-the-tot-thu-nhi-cho-minecraft.3657/): đánh giá, thảo luận
 - 🐛 [GitHub Issues](https://github.com/minevn/dotman/issues): báo lỗi, góp ý
+
+[![bStats](https://bstats.org/signatures/bukkit/DotMan%20-%20Donation%20Manager.svg)](https://bstats.org/plugin/bukkit/DotMan%20-%20Donation%20Manager/23982)
 
 ## Hình ảnh
 
@@ -122,7 +119,7 @@ Chi tiết: [Hướng dẫn cài đặt DotMan](https://dotman.minevn.net/docs/h
 
 <div align="center">
 
-Nếu DotMan hữu ích cho server của bạn, hãy để lại ⭐ cho repo nhé!
+Nếu DotMan hữu ích cho server của bạn, hãy để lại ⭐ cho repo và chia sẻ cho nhiều người cùng biết nhé!
 
 <sub>Made with ❤️ by <a href="https://minevn.net/studio">MineVN Studio</a> • <a href="https://dotman.minevn.net">dotman.minevn.net</a></sub>
 
