@@ -11,12 +11,12 @@
 [![GitHub Release](https://img.shields.io/github/v/release/minevn/dotman?style=flat-square)](https://dotman.minevn.net/docs/releases/dotman)
 [![Discord](https://img.shields.io/discord/1068181110036635678?label=discord&logo=discord&logoColor=white&color=5865F2&style=flat-square)](https://minevn.net/studio)
 
-[🌐 Website](https://dotman.minevn.net) •
-[📖 Hướng dẫn](https://dotman.minevn.net/docs) •
-[⬇️ Tải plugin](https://dotman.minevn.net/docs/releases/dotman) •
-[⌨️ Lệnh & Permission](https://dotman.minevn.net/docs/tham-khao/danh-sach-lenh-va-permission) •
-[💬 Diễn đàn](https://minevn.net/resources/dotman-donation-manager-plugin-nap-the-tot-thu-nhi-cho-minecraft.3657/) •
-[✨ Dùng thử Premium](https://dotman.minevn.net/#dung-thu)
+[Website](https://dotman.minevn.net) •
+[Hướng dẫn](https://dotman.minevn.net/docs) •
+[Tải plugin](https://dotman.minevn.net/docs/releases/dotman) •
+[Lệnh & Permission](https://dotman.minevn.net/docs/tham-khao/danh-sach-lenh-va-permission) •
+[Diễn đàn](https://minevn.net/resources/dotman-donation-manager-plugin-nap-the-tot-thu-nhi-cho-minecraft.3657/) •
+[Dùng thử Premium](https://dotman.minevn.net/#dung-thu)
 
 </div>
 
@@ -75,14 +75,14 @@ Chi tiết: [Hướng dẫn cài đặt DotMan](https://dotman.minevn.net/docs/h
 
 ## Tài liệu & công cụ
 
-| | |
+| Trang | Nội dung |
 |---|---|
-| 📖 [Hướng dẫn sử dụng](https://dotman.minevn.net/docs) | Toàn bộ tài liệu của plugin |
-| ⚙️ [Cấu hình chung](https://dotman.minevn.net/docs/huong-dan/cau-hinh-chung) | Giải thích các file cấu hình |
-| ⌨️ [Lệnh & Permission](https://dotman.minevn.net/docs/tham-khao/danh-sach-lenh-va-permission) | Danh sách lệnh và quyền |
-| 🧩 [Placeholder](https://dotman.minevn.net/docs/tham-khao/placeholder-api) | Hiển thị top nạp, dữ liệu nạp |
-| 🛠️ [Công cụ online](https://dotman.minevn.net/docs/cong-cu/) | Tính point, tạo lịch khuyến mãi, mốc nạp, Discord embed, cấu hình ngân hàng... |
-| 📝 [Releases](https://dotman.minevn.net/docs/releases/) | Lịch sử cập nhật |
+| [Hướng dẫn sử dụng](https://dotman.minevn.net/docs) | Toàn bộ tài liệu của plugin |
+| [Cấu hình chung](https://dotman.minevn.net/docs/huong-dan/cau-hinh-chung) | Giải thích các file cấu hình |
+| [Lệnh & Permission](https://dotman.minevn.net/docs/tham-khao/danh-sach-lenh-va-permission) | Danh sách lệnh và quyền |
+| [Placeholder](https://dotman.minevn.net/docs/tham-khao/placeholder-api) | Hiển thị top nạp, dữ liệu nạp |
+| [Công cụ config](https://dotman.minevn.net/docs/cong-cu/) | Tính point, tạo lịch khuyến mãi, mốc nạp, Discord embed, cấu hình ngân hàng... |
+| [Releases](https://dotman.minevn.net/docs/releases/) | Lịch sử cập nhật |
 
 ## Miễn phí hay Premium?
 
@@ -97,9 +97,9 @@ Chi tiết: [Hướng dẫn cài đặt DotMan](https://dotman.minevn.net/docs/h
 
 ## Hỗ trợ
 
-- 💬 [Discord MineVN Studio](https://minevn.net/studio): mua Premium, đăng ký dùng thử, hỏi đáp
-- 📌 [Trang plugin trên diễn đàn MineVN](https://minevn.net/resources/dotman-donation-manager-plugin-nap-the-tot-thu-nhi-cho-minecraft.3657/): đánh giá, thảo luận
-- 🐛 [GitHub Issues](https://github.com/minevn/dotman/issues): báo lỗi, góp ý
+- [Discord MineVN Studio](https://minevn.net/studio): mua Premium, đăng ký dùng thử, trợ giúp
+- [Diễn đàn MineVN](https://minevn.net/resources/dotman-donation-manager-plugin-nap-the-tot-thu-nhi-cho-minecraft.3657/): đánh giá, thảo luận
+- [GitHub Issues](https://github.com/minevn/dotman/issues): báo lỗi, góp ý
 
 [![bStats](https://bstats.org/signatures/bukkit/DotMan%20-%20Donation%20Manager.svg)](https://bstats.org/plugin/bukkit/DotMan%20-%20Donation%20Manager/23982)
 
@@ -119,7 +119,7 @@ Chi tiết: [Hướng dẫn cài đặt DotMan](https://dotman.minevn.net/docs/h
 
 <div align="center">
 
-Nếu DotMan hữu ích cho server của bạn, hãy để lại ⭐ cho repo và chia sẻ cho nhiều người cùng biết nhé!
+Nếu DotMan hữu ích cho server của bạn, hãy để lại ⭐ và chia sẻ cho nhiều người cùng biết nhé!
 
 <sub>Made with ❤️ by <a href="https://minevn.net/studio">MineVN Studio</a> • <a href="https://dotman.minevn.net">dotman.minevn.net</a></sub>
 
