@@ -116,16 +116,11 @@ abstract class CardProvider {
         var extraPercent = 0
         var plannedExtraName: String? = null
         
-        // Check for planned extras first
-        val plannedExtra = main.plannedExtras.getCurrentExtra()
-        if (plannedExtra != null) {
-            amount = plannedExtra.calculateAmount(amount)
-            extraPercent = plannedExtra.getPercentage()
-            plannedExtraName = plannedExtra.name
-        } else if (config.extraRate > 0 && config.extraUntil > System.currentTimeMillis()) {
-            // If no planned extra, check legacy extra
-            amount += (amount * config.extraRate).toInt()
-            extraPercent = (config.extraRate * 100).toInt()
+        val appliedExtra = main.plannedExtras.getAppliedExtra()
+        if (appliedExtra != null) {
+            amount += (amount * appliedExtra.rate).toInt()
+            extraPercent = appliedExtra.getPercentage()
+            plannedExtraName = appliedExtra.planned?.name
         }
         DotMan.instance.playerPoints.api.give(player.uniqueId, amount)
 
